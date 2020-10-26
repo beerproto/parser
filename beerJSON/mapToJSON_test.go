@@ -212,7 +212,7 @@ var _ = Describe("IBUEstimateType", func() {
 	})
 })
 
-var _ = FDescribe("DiastaticPowerType", func() {
+var _ = Describe("DiastaticPowerType", func() {
 
 	Describe("Rager", func() {
 		var json *beerjson.DiastaticPowerType
@@ -230,6 +230,34 @@ var _ = FDescribe("DiastaticPowerType", func() {
 
 				Expect(json.Value).To(Equal(float64(10)))
 				Expect(json.Unit).To(Equal(beerjson.DiastaticPowerUnitType_Lintner))
+			})
+
+			Context("revert mapping", func() {
+				It("should be proto", func() {
+					result := ToProtoDiastaticPowerType(json)
+					Expect(result, Not(BeNil()))
+					Expect(result).To(Equal(diastaticPower))
+				})
+			})
+		})
+	})
+
+	Describe("Rager", func() {
+		var json *beerjson.DiastaticPowerType
+
+		diastaticPower := &beerproto.DiastaticPowerType{
+			Value: float64(10),
+			Unit: beerproto.DiastaticPowerUnitType_WK,
+		}
+
+		Context("Mapping", func() {
+			It("should be json", func() {
+				json  = ToJSONDiastaticPowerType(diastaticPower)
+				Expect(json, Not(BeNil()))
+
+
+				Expect(json.Value).To(Equal(float64(10)))
+				Expect(json.Unit).To(Equal(beerjson.DiastaticPowerUnitType_WK))
 			})
 
 			Context("revert mapping", func() {

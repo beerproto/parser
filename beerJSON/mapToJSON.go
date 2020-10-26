@@ -390,6 +390,10 @@ func ToJSONDiastaticPowerUnitType(i beerproto.DiastaticPowerUnitType) beerjson.D
 		return beerjson.DiastaticPowerUnitType_Lintner
 	}
 
+	if i == beerproto.DiastaticPowerUnitType_WK {
+		return beerjson.DiastaticPowerUnitType_WK
+	}
+
 	unit := beerproto.DiastaticPowerUnitType_name[int32(i)]
 	return beerjson.DiastaticPowerUnitType(strings.Title(strings.ToLower(unit)))
 }
