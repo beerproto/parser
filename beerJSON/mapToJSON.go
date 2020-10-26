@@ -284,6 +284,7 @@ func ToJSONZymocide(i *beerproto.Zymocide) *beerjson.Zymocide {
 		Neutral: &i.Neutral,
 	}
 }
+
 func ToJSONQualitativeRangeType(i beerproto.QualitativeRangeType) *beerjson.QualitativeRangeType {
 	if i == beerproto.QualitativeRangeType_NULL_QUALITATIVERANGETYPE {
 		return nil
@@ -898,9 +899,18 @@ func ToJSONConcentrationUnitType(i beerproto.ConcentrationUnitType) *beerjson.Co
 		return nil
 	}
 
-	unit := beerproto.ConcentrationUnitType_name[int32(i)]
-	t := beerjson.ConcentrationUnitType(strings.ToLower(unit))
-	return &t
+	if i == beerproto.ConcentrationUnitType_MGL {
+		t := beerjson.ConcentrationUnitType_MgL
+		return &t
+	}
+
+	if unit, ok := beerproto.ConcentrationUnitType_name[int32(i)]; ok {
+		t := beerjson.ConcentrationUnitType(strings.ToLower(unit))
+		return &t
+	}
+
+
+	return nil
 }
 
 func ToJSONCultureAdditionType(i *beerproto.CultureAdditionType) *beerjson.CultureAdditionType {
