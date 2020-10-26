@@ -1123,7 +1123,7 @@ func ToProtoIBUMethodType(i *beerjson.IBUMethodType) beerproto.IBUEstimateType_I
 	if i == nil {
 		return beerproto.IBUEstimateType_NULL_IBUMETHODTYPE
 	}
-	unit := beerproto.IBUEstimateType_IBUMethodType_value[string(*i)]
+	unit := beerproto.IBUEstimateType_IBUMethodType_value[strings.ToUpper(string(*i))]
 	return beerproto.IBUEstimateType_IBUMethodType(unit)
 }
 

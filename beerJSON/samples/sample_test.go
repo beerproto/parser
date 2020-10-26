@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/beerproto/beerjson.go"
-	mapping "github.com/beerproto/tools/mapping/beerJSON"
+	mapping "github.com/beerproto/parser/beerJSON"
 )
 
 func TestSchemas_Generate(t *testing.T) {
@@ -97,6 +97,7 @@ func TestSchemas_Generate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+
 			data, err := ioutil.ReadFile(tt.json)
 			if err != nil {
 				t.Error(err)
@@ -116,7 +117,7 @@ func TestSchemas_Generate(t *testing.T) {
 
 			recipe := mapping.MapToProto(beer)
 
-			j := mapping.MapToJSON(recipe)
+			j, _ := mapping.MapToJSON(recipe)
 
 			bytes, err := json.Marshal(j)
 			if err != nil {

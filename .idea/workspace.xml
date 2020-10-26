@@ -20,8 +20,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="650c5c4e-5a1c-4b34-bda6-d6c614c70650" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/beerJSON/mapToJSON.go" beforeDir="false" afterPath="$PROJECT_DIR$/beerJSON/mapToJSON.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/beerJSON/mapToJSON_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/beerJSON/mapToJSON_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/beerJSON/mapToProto.go" beforeDir="false" afterPath="$PROJECT_DIR$/beerJSON/mapToProto.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/beerJSON/samples/BrettDosedKegsSaison.json" beforeDir="false" afterPath="$PROJECT_DIR$/beerJSON/samples/BrettDosedKegsSaison.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/beerJSON/samples/MashSingleStepInfusion.json" beforeDir="false" afterPath="$PROJECT_DIR$/beerJSON/samples/MashSingleStepInfusion.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/beerJSON/samples/sample_test.go_" beforeDir="false" afterPath="$PROJECT_DIR$/beerJSON/samples/sample_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,13 +63,25 @@
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../tools" />
+    <property name="restartRequiresConfirmation" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Test.go test parser">
+  <component name="RunManager" selected="Go Test.go test beerJSON">
+    <configuration name="TestSchemas_Generate in github.com/beerproto/parser/beerJSON/samples" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="parser" />
+      <working_directory value="$PROJECT_DIR$/beerJSON/samples" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/beerproto/parser/beerJSON/samples" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <pattern value="^\QTestSchemas_Generate\E$" />
+      <method v="2" />
+    </configuration>
     <configuration name="TestWater in github.com/beerproto/parser/beerJSON" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="parser" />
       <working_directory value="$PROJECT_DIR$/beerJSON" />
@@ -74,6 +91,16 @@
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <pattern value="^\QTestWater\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go test beerJSON" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="parser" />
+      <working_directory value="$PROJECT_DIR$/beerJSON" />
+      <framework value="gotest" />
+      <kind value="DIRECTORY" />
+      <package value="github.com/beerproto/parser" />
+      <directory value="$PROJECT_DIR$/beerJSON" />
+      <filePath value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
     <configuration name="go test parser" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -88,8 +115,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.go test parser" />
+        <item itemvalue="Go Test.go test beerJSON" />
+        <item itemvalue="Go Test.TestSchemas_Generate in github.com/beerproto/parser/beerJSON/samples" />
         <item itemvalue="Go Test.TestWater in github.com/beerproto/parser/beerJSON" />
+        <item itemvalue="Go Test.go test parser" />
       </list>
     </recent_temporary>
   </component>
@@ -117,42 +146,63 @@
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
     <state x="729" y="571" key="FileChooserDialogImpl/0.27.3840.1573@0.27.3840.1573" timestamp="1603723464923" />
-    <state width="1852" height="550" key="GridCell.Tab.0.bottom" timestamp="1603725622629">
+    <state width="1872" height="449" key="GridCell.Tab.0.bottom" timestamp="1603731177933">
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
-    <state width="1852" height="550" key="GridCell.Tab.0.bottom/0.27.3840.1573@0.27.3840.1573" timestamp="1603725622629" />
-    <state width="1852" height="550" key="GridCell.Tab.0.center" timestamp="1603725622629">
+    <state width="1872" height="449" key="GridCell.Tab.0.bottom/0.27.3840.1573@0.27.3840.1573" timestamp="1603731177933" />
+    <state width="1872" height="449" key="GridCell.Tab.0.center" timestamp="1603731177933">
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
-    <state width="1852" height="550" key="GridCell.Tab.0.center/0.27.3840.1573@0.27.3840.1573" timestamp="1603725622629" />
-    <state width="1852" height="550" key="GridCell.Tab.0.left" timestamp="1603725622629">
+    <state width="1872" height="449" key="GridCell.Tab.0.center/0.27.3840.1573@0.27.3840.1573" timestamp="1603731177933" />
+    <state width="1872" height="449" key="GridCell.Tab.0.left" timestamp="1603731177932">
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
-    <state width="1852" height="550" key="GridCell.Tab.0.left/0.27.3840.1573@0.27.3840.1573" timestamp="1603725622629" />
-    <state width="1852" height="550" key="GridCell.Tab.0.right" timestamp="1603725622629">
+    <state width="1872" height="449" key="GridCell.Tab.0.left/0.27.3840.1573@0.27.3840.1573" timestamp="1603731177932" />
+    <state width="1872" height="449" key="GridCell.Tab.0.right" timestamp="1603731177933">
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
-    <state width="1852" height="550" key="GridCell.Tab.0.right/0.27.3840.1573@0.27.3840.1573" timestamp="1603725622629" />
-    <state width="1852" height="550" key="GridCell.Tab.1.bottom" timestamp="1603725622630">
+    <state width="1872" height="449" key="GridCell.Tab.0.right/0.27.3840.1573@0.27.3840.1573" timestamp="1603731177933" />
+    <state width="1872" height="550" key="GridCell.Tab.1.bottom" timestamp="1603731073691">
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
-    <state width="1852" height="550" key="GridCell.Tab.1.bottom/0.27.3840.1573@0.27.3840.1573" timestamp="1603725622630" />
-    <state width="1852" height="550" key="GridCell.Tab.1.center" timestamp="1603725622630">
+    <state width="1872" height="550" key="GridCell.Tab.1.bottom/0.27.3840.1573@0.27.3840.1573" timestamp="1603731073691" />
+    <state width="1872" height="550" key="GridCell.Tab.1.center" timestamp="1603731073691">
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
-    <state width="1852" height="550" key="GridCell.Tab.1.center/0.27.3840.1573@0.27.3840.1573" timestamp="1603725622630" />
-    <state width="1852" height="550" key="GridCell.Tab.1.left" timestamp="1603725622629">
+    <state width="1872" height="550" key="GridCell.Tab.1.center/0.27.3840.1573@0.27.3840.1573" timestamp="1603731073691" />
+    <state width="1872" height="550" key="GridCell.Tab.1.left" timestamp="1603731073691">
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
-    <state width="1852" height="550" key="GridCell.Tab.1.left/0.27.3840.1573@0.27.3840.1573" timestamp="1603725622629" />
-    <state width="1852" height="550" key="GridCell.Tab.1.right" timestamp="1603725622630">
+    <state width="1872" height="550" key="GridCell.Tab.1.left/0.27.3840.1573@0.27.3840.1573" timestamp="1603731073691" />
+    <state width="1872" height="550" key="GridCell.Tab.1.right" timestamp="1603731073691">
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
-    <state width="1852" height="550" key="GridCell.Tab.1.right/0.27.3840.1573@0.27.3840.1573" timestamp="1603725622630" />
+    <state width="1872" height="550" key="GridCell.Tab.1.right/0.27.3840.1573@0.27.3840.1573" timestamp="1603731073691" />
     <state x="467" y="525" width="956" height="576" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1603725619583">
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
     <state x="467" y="525" width="956" height="576" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.27.3840.1573@0.27.3840.1573" timestamp="1603725619583" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/beerJSON/mapToJSON_test.go</url>
+          <line>90</line>
+          <option name="timeStamp" value="39" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/beerJSON/mapToProto.go</url>
+          <line>1122</line>
+          <option name="timeStamp" value="41" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/beerJSON/mapToJSON_test.go</url>
+          <line>231</line>
+          <option name="timeStamp" value="42" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/parser$go_test_parser.out" NAME="go test parser Coverage Results" MODIFIED="1603725548445" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

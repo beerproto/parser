@@ -1,13 +1,14 @@
 package beerJSON
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/beerproto/beerjson.go"
 	beerproto "github.com/beerproto/beerproto_go"
 )
 
-func MapToJSON(i *beerproto.Recipe) *beerjson.Beerjson {
+func MapToJSON(i *beerproto.Recipe) (*beerjson.Beerjson, error) {
 	output := &beerjson.Beerjson{
 		Mashes:                   []beerjson.MashProcedureType{},
 		Recipes:                  []beerjson.RecipeType{},
@@ -30,7 +31,11 @@ func MapToJSON(i *beerproto.Recipe) *beerjson.Beerjson {
 	}
 
 	for _, recipe := range i.Recipes {
-		output.Recipes = append(output.Recipes, *ToJSONRecipeType(recipe))
+		if r, err := ToJSONRecipeType(recipe); err != nil {
+			return nil, err
+		} else {
+			output.Recipes = append(output.Recipes, *r)
+		}
 	}
 
 	for _, ingredients := range i.MiscellaneousIngredients {
@@ -73,7 +78,7 @@ func MapToJSON(i *beerproto.Recipe) *beerjson.Beerjson {
 		output.Profiles = append(output.Profiles, *ToJSONWaterBase(profile))
 	}
 
-	return output
+	return output, nil
 }
 
 func ToJSONWaterBase(i *beerproto.WaterBase) *beerjson.WaterBase {
@@ -386,7 +391,7 @@ func ToJSONDiastaticPowerUnitType(i beerproto.DiastaticPowerUnitType) beerjson.D
 	}
 
 	unit := beerproto.DiastaticPowerUnitType_name[int32(i)]
-	return beerjson.DiastaticPowerUnitType(strings.ToLower(unit))
+	return beerjson.DiastaticPowerUnitType(strings.Title(strings.ToLower(unit)))
 }
 
 func ToJSONStyleType(i *beerproto.StyleType) *beerjson.StyleType {
@@ -558,17 +563,33 @@ func ToJSONMiscellaneousInventoryType(i *beerproto.MiscellaneousInventoryType) *
 	return miscellaneousInventoryType
 }
 
-func ToJSONRecipeType(i *beerproto.RecipeType) *beerjson.RecipeType {
+func ToJSONRecipeType(i *beerproto.RecipeType) (*beerjson.RecipeType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
 	}
 
 	var created beerjson.DateType
 	if i.Created != "" {
 		created = beerjson.DateType(i.Created)
 	}
+	efficiency := ToJSONEfficiencyType(i.Efficiency)
+
+	if efficiency == nil {
+		return nil, fmt.Errorf("efficiency is required")
+	}
+
+	ingredients := ToJSONIngredientsType(i.Ingredients)
+	if ingredients == nil {
+		return nil, fmt.Errorf("ingredients is required")
+	}
+
+	batchSize := ToJSONVolumeType(i.BatchSize)
+	if batchSize == nil {
+		return nil, fmt.Errorf("batchSize is required")
+	}
+
 	return &beerjson.RecipeType{
-		Efficiency:          *ToJSONEfficiencyType(i.Efficiency),
+		Efficiency:         *efficiency,
 		Style:               ToJSONRecipeStyleType(i.Style),
 		IbuEstimate:         ToJSONIBUEstimateType(i.IbuEstimate),
 		ColorEstimate:       ToJSONColorType(i.ColorEstimate),
@@ -581,18 +602,18 @@ func ToJSONRecipeType(i *beerproto.RecipeType) *beerjson.RecipeType {
 		Carbonation:         &i.Carbonation,
 		Fermentation:        ToJSONFermentationProcedureType(i.Fermentation),
 		Author:              i.Author,
-		Ingredients:         *ToJSONIngredientsType(i.Ingredients),
+		Ingredients:         *ingredients,
 		Mash:                ToJSONMashProcedureType(i.Mash),
 		Packaging:           ToJSONPackagingProcedureType(i.Packaging),
 		Boil:                ToJSONBoilProcedureType(i.Boil),
 		Taste:               ToJSONTasteType(i.Taste),
 		CaloriesPerPint:     &i.CaloriesPerPint,
 		Created:             &created,
-		BatchSize:           *ToJSONVolumeType(i.BatchSize),
+		BatchSize:           *batchSize,
 		Notes:               &i.Notes,
 		AlcoholByVolume:     ToJSONPercentType(i.AlcoholByVolume),
 		ApparentAttenuation: ToJSONPercentType(i.ApparentAttenuation),
-	}
+	}, nil
 }
 
 func ToJSONTasteType(i *beerproto.TasteType) *beerjson.TasteType {
@@ -1160,7 +1181,7 @@ func ToJSONIBUMethodType(i beerproto.IBUEstimateType_IBUMethodType) *beerjson.IB
 	}
 
 	unit := beerproto.IBUEstimateType_IBUMethodType_name[int32(i)]
-	t := beerjson.IBUMethodType(unit)
+	t := beerjson.IBUMethodType(strings.Title(strings.ToLower(unit)))
 	return &t
 }
 
@@ -1348,6 +1369,11 @@ func ToJSONTimeType(i *beerproto.TimeType) *beerjson.TimeType {
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == beerproto.TimeType_NULL {
+		return nil
+	}
+
 	return &beerjson.TimeType{
 		Value: i.Value,
 		Unit:  *ToJSONTimeUnitType(i.Unit),

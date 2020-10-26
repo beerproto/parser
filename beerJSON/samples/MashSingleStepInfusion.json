@@ -22,7 +22,7 @@
             },
             "step_time": {
               "unit": "min",
-              "value": 60.0
+              "value": 60
             }
           }
         ]
