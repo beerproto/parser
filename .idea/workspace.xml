@@ -20,12 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="650c5c4e-5a1c-4b34-bda6-d6c614c70650" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/beerJSON/mapToJSON_suite_water_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/beerJSON/mapToJSON_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/beerJSON/mapToJSON.go" beforeDir="false" afterPath="$PROJECT_DIR$/beerJSON/mapToJSON.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,78 +117,44 @@
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
     <state x="729" y="571" key="FileChooserDialogImpl/0.27.3840.1573@0.27.3840.1573" timestamp="1603723464923" />
-    <state width="1852" height="550" key="GridCell.Tab.0.bottom" timestamp="1603725391348">
+    <state width="1852" height="550" key="GridCell.Tab.0.bottom" timestamp="1603725622629">
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
-    <state width="1852" height="550" key="GridCell.Tab.0.bottom/0.27.3840.1573@0.27.3840.1573" timestamp="1603725391348" />
-    <state width="1852" height="550" key="GridCell.Tab.0.center" timestamp="1603725391348">
+    <state width="1852" height="550" key="GridCell.Tab.0.bottom/0.27.3840.1573@0.27.3840.1573" timestamp="1603725622629" />
+    <state width="1852" height="550" key="GridCell.Tab.0.center" timestamp="1603725622629">
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
-    <state width="1852" height="550" key="GridCell.Tab.0.center/0.27.3840.1573@0.27.3840.1573" timestamp="1603725391348" />
-    <state width="1852" height="550" key="GridCell.Tab.0.left" timestamp="1603725391348">
+    <state width="1852" height="550" key="GridCell.Tab.0.center/0.27.3840.1573@0.27.3840.1573" timestamp="1603725622629" />
+    <state width="1852" height="550" key="GridCell.Tab.0.left" timestamp="1603725622629">
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
-    <state width="1852" height="550" key="GridCell.Tab.0.left/0.27.3840.1573@0.27.3840.1573" timestamp="1603725391348" />
-    <state width="1852" height="550" key="GridCell.Tab.0.right" timestamp="1603725391348">
+    <state width="1852" height="550" key="GridCell.Tab.0.left/0.27.3840.1573@0.27.3840.1573" timestamp="1603725622629" />
+    <state width="1852" height="550" key="GridCell.Tab.0.right" timestamp="1603725622629">
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
-    <state width="1852" height="550" key="GridCell.Tab.0.right/0.27.3840.1573@0.27.3840.1573" timestamp="1603725391348" />
-    <state width="1852" height="550" key="GridCell.Tab.1.bottom" timestamp="1603725391837">
+    <state width="1852" height="550" key="GridCell.Tab.0.right/0.27.3840.1573@0.27.3840.1573" timestamp="1603725622629" />
+    <state width="1852" height="550" key="GridCell.Tab.1.bottom" timestamp="1603725622630">
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
-    <state width="1852" height="550" key="GridCell.Tab.1.bottom/0.27.3840.1573@0.27.3840.1573" timestamp="1603725391837" />
-    <state width="1852" height="550" key="GridCell.Tab.1.center" timestamp="1603725391837">
+    <state width="1852" height="550" key="GridCell.Tab.1.bottom/0.27.3840.1573@0.27.3840.1573" timestamp="1603725622630" />
+    <state width="1852" height="550" key="GridCell.Tab.1.center" timestamp="1603725622630">
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
-    <state width="1852" height="550" key="GridCell.Tab.1.center/0.27.3840.1573@0.27.3840.1573" timestamp="1603725391837" />
-    <state width="1852" height="550" key="GridCell.Tab.1.left" timestamp="1603725391836">
+    <state width="1852" height="550" key="GridCell.Tab.1.center/0.27.3840.1573@0.27.3840.1573" timestamp="1603725622630" />
+    <state width="1852" height="550" key="GridCell.Tab.1.left" timestamp="1603725622629">
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
-    <state width="1852" height="550" key="GridCell.Tab.1.left/0.27.3840.1573@0.27.3840.1573" timestamp="1603725391836" />
-    <state width="1852" height="550" key="GridCell.Tab.1.right" timestamp="1603725391837">
+    <state width="1852" height="550" key="GridCell.Tab.1.left/0.27.3840.1573@0.27.3840.1573" timestamp="1603725622629" />
+    <state width="1852" height="550" key="GridCell.Tab.1.right" timestamp="1603725622630">
       <screen x="0" y="27" width="3840" height="1573" />
     </state>
-    <state width="1852" height="550" key="GridCell.Tab.1.right/0.27.3840.1573@0.27.3840.1573" timestamp="1603725391837" />
+    <state width="1852" height="550" key="GridCell.Tab.1.right/0.27.3840.1573@0.27.3840.1573" timestamp="1603725622630" />
+    <state x="467" y="525" width="956" height="576" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1603725619583">
+      <screen x="0" y="27" width="3840" height="1573" />
+    </state>
+    <state x="467" y="525" width="956" height="576" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.27.3840.1573@0.27.3840.1573" timestamp="1603725619583" />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/beerJSON/mapToJSON_test.go</url>
-          <line>60</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/beerJSON/mapToJSON_test.go</url>
-          <line>65</line>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/beerJSON/mapToJSON_test.go</url>
-          <line>68</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/beerJSON/mapToJSON_test.go</url>
-          <line>71</line>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/beerJSON/mapToJSON_test.go</url>
-          <line>74</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/beerJSON/mapToJSON_test.go</url>
-          <line>77</line>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/beerJSON/mapToJSON.go</url>
-          <line>897</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/parser$go_test_parser.out" NAME="go test parser Coverage Results" MODIFIED="1603725548445" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
