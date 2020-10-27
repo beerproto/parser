@@ -164,6 +164,13 @@ func TestToJSONDiastaticPowerType(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Nil",
+			args: args{
+				i: &beerproto.DiastaticPowerType{
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -261,6 +268,13 @@ func TestToJSONConcentrationType(t *testing.T) {
 				i: &beerproto.ConcentrationType{
 					Value: 80,
 					Unit:  beerproto.ConcentrationUnitType_PPM,
+				},
+			},
+		},
+		{
+			name: "Nil",
+			args: args{
+				i: &beerproto.ConcentrationType{
 				},
 			},
 		},
@@ -1120,3 +1134,276 @@ func TestToJSONPercentType(t *testing.T) {
 		})
 	}
 }
+
+func TestToJSONZymocide(t *testing.T) {
+	type args struct {
+		i *beerproto.Zymocide
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "Basic",
+			args: args{
+				i: &beerproto.Zymocide{
+					No1: true,
+					No2: true,
+					No28: true,
+					Klus: true,
+					Neutral: true,
+				},
+			},
+		},
+		{
+			name: "Nil",
+			args: args{
+				i: &beerproto.Zymocide{
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			got := ToJSONZymocide(tt.args.i)
+			have := ToProtoZymocide(got)
+			if diff := deep.Equal(have, tt.args.i); diff != nil {
+				t.Errorf("ToJSONZymocide() %v", diff)
+			}
+		})
+	}
+}
+
+func TestToJSONCultureInventoryType(t *testing.T) {
+	type args struct {
+		i *beerproto.CultureInventoryType
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "Basic",
+			args: args{
+				i: &beerproto.CultureInventoryType{
+						Liquid: &beerproto.VolumeType{},
+						Dry: &beerproto.MassType{},
+						Slant: &beerproto.VolumeType{},
+						Culture: &beerproto.VolumeType{},
+				},
+			},
+		},
+		{
+			name: "Nil",
+			args: args{
+				i: &beerproto.CultureInventoryType{
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			got := ToJSONCultureInventoryType(tt.args.i)
+			have := ToProtoCultureInventoryType(got)
+			if diff := deep.Equal(have, tt.args.i); diff != nil {
+				t.Errorf("ToJSONCultureInventoryType() %v", diff)
+			}
+		})
+	}
+}
+
+func TestToJSONFermentableType(t *testing.T) {
+	type args struct {
+		i *beerproto.FermentableType
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "Basic",
+			args: args{
+				i: &beerproto.FermentableType{
+					MaxInBatch:     &beerproto.PercentType{},
+					RecommendMash:  true,
+					Protein:        &beerproto.PercentType{},
+					ProductId:      "ProductId",
+					GrainGroup:     beerproto.GrainGroup_BASE,
+					Yield:          &beerproto.YieldType{},
+					Type:           beerproto.FermentableBaseType_GRAIN,
+					Producer:       "Producer",
+					AlphaAmylase:   80,
+					Color:          &beerproto.ColorType{},
+					Name:           "Name",
+					DiastaticPower: &beerproto.DiastaticPowerType{},
+					Moisture:       &beerproto.PercentType{},
+					Origin:         "Origin",
+					Inventory:      &beerproto.FermentableInventoryType{},
+					KolbachIndex:   80,
+					Glassy:         &beerproto.PercentType{},
+					Plump:          &beerproto.PercentType{},
+					Half:           &beerproto.PercentType{},
+					Mealy:          &beerproto.PercentType{},
+					Thru:           &beerproto.PercentType{},
+					Friability:     &beerproto.PercentType{},
+					DiPh:           &beerproto.AcidityType{},
+					Viscosity:      &beerproto.ViscosityType{},
+					DmsP:           &beerproto.ConcentrationType{},
+					Fan:            &beerproto.ConcentrationType{},
+					Fermentability: &beerproto.PercentType{},
+					BetaGlucan:     &beerproto.ConcentrationType{},
+					Notes:          "Notes",
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := ToJSONFermentableType(tt.args.i)
+			have := ToProtoFermentableType(got)
+			if diff := deep.Equal(have, tt.args.i); diff != nil {
+				t.Errorf("ToJSONFermentableType() %v", diff)
+			}
+		})
+	}
+}
+
+func TestToJSONColorType(t *testing.T) {
+	type args struct {
+		i *beerproto.ColorType
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "EBC",
+			args: args{
+				i: &beerproto.ColorType{
+					Value: 10,
+					Unit: beerproto.ColorUnitType_EBC,
+				},
+			},
+		},
+		{
+			name: "Lovi",
+			args: args{
+				i: &beerproto.ColorType{
+					Value: 10,
+					Unit: beerproto.ColorUnitType_LOVI,
+				},
+			},
+		},
+		{
+			name: "SRM",
+			args: args{
+				i: &beerproto.ColorType{
+					Value: 10,
+					Unit: beerproto.ColorUnitType_SRM,
+				},
+			},
+		},
+		{
+			name: "Nil",
+			args: args{
+				i: &beerproto.ColorType{
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			got := ToJSONColorType(tt.args.i)
+			have := ToProtoColorType(got)
+			if diff := deep.Equal(have, tt.args.i); diff != nil {
+				t.Errorf("ToJSONColorType() %v", diff)
+			}
+		})
+	}
+}
+
+func TestToJSONAcidityType(t *testing.T) {
+	type args struct {
+		i *beerproto.AcidityType
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "pH",
+			args: args{
+				i: &beerproto.AcidityType{
+					Value: 10,
+					Unit: beerproto.AcidityUnitType_PH,
+				},
+			},
+		},
+		{
+			name: "Nil",
+			args: args{
+				i: &beerproto.AcidityType{
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := ToJSONAcidityType(tt.args.i)
+			have := ToProtoAcidityType(got)
+			if diff := deep.Equal(have, tt.args.i); diff != nil {
+				t.Errorf("ToJSONAcidityType() %v", diff)
+			}
+		})
+	}
+}
+
+func TestToJSONViscosityType(t *testing.T) {
+	type args struct {
+		i *beerproto.ViscosityType
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "mPa-s",
+			args: args{
+				i: &beerproto.ViscosityType{
+					Value: 10,
+					Unit: beerproto.ViscosityUnitType_MPAS,
+				},
+			},
+		},
+		{
+			name: "cP",
+			args: args{
+				i: &beerproto.ViscosityType{
+					Value: 10,
+					Unit: beerproto.ViscosityUnitType_CP,
+				},
+			},
+		},
+		{
+			name: "Nil",
+			args: args{
+				i: &beerproto.ViscosityType{
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			got := ToJSONViscosityType(tt.args.i)
+			have := ToProtoViscosityType(got)
+			if diff := deep.Equal(have, tt.args.i); diff != nil {
+				t.Errorf("ToJSONViscosityType() %v", diff)
+			}
+		})
+	}
+}
+

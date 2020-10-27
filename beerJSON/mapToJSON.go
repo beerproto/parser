@@ -370,7 +370,56 @@ func ToJSONFermentableType(i *beerproto.FermentableType) *beerjson.FermentableTy
 		Inventory:                 ToJSONFermentableInventoryType(i.Inventory),
 		KolbachIndex:              &i.KolbachIndex,
 		Notes:                     &i.Notes,
+		Glassy: ToJSONPercentType(i.Glassy),
+		Plump: ToJSONPercentType(i.Plump),
+		Half: ToJSONPercentType(i.Half),
+		Mealy: ToJSONPercentType(i.Mealy),
+		Thru: ToJSONPercentType(i.Thru),
+		Friability: ToJSONPercentType(i.Friability),
+		DipH: ToJSONAcidityType(i.DiPh),
+		Viscosity:ToJSONViscosityType(i.Viscosity),
+		DMSP: ToJSONConcentrationType(i.DmsP),
+		FAN: ToJSONConcentrationType(i.Fan),
+		Fermentability: ToJSONPercentType(i.Fermentability),
+		BetaGlucan: ToJSONConcentrationType(i.BetaGlucan),
 	}
+}
+
+func ToJSONViscosityType(i *beerproto.ViscosityType) *beerjson.ViscosityType {
+	if i == nil {
+		return nil
+	}
+
+	if i.Unit == beerproto.ViscosityUnitType_NULL_VISCOSITYUNITTYPE {
+		return &beerjson.ViscosityType{	}
+	}
+	return &beerjson.ViscosityType{
+		Value: i.Value,
+		Unit:  *ToJSONViscosityUnitType(i.Unit),
+	}
+}
+
+func ToJSONViscosityUnitType(i beerproto.ViscosityUnitType) *beerjson.ViscosityUnitType {
+	if i == beerproto.ViscosityUnitType_NULL_VISCOSITYUNITTYPE {
+		return nil
+	}
+
+	if i == beerproto.ViscosityUnitType_CP {
+		t := beerjson.ViscosityUnitType_CP
+		return &t
+	}
+
+	if i == beerproto.ViscosityUnitType_MPAS {
+		t := beerjson.ViscosityUnitType_MPAS
+		return &t
+	}
+
+	if unit, ok := beerproto.ViscosityUnitType_name[int32(i)]; ok {
+		t := beerjson.ViscosityUnitType(strings.ToLower(unit))
+		return &t
+	}
+
+	return nil
 }
 
 func ToJSONFermentableInventoryType(i *beerproto.FermentableInventoryType) *beerjson.FermentableInventoryType {
@@ -395,6 +444,11 @@ func ToJSONDiastaticPowerType(i *beerproto.DiastaticPowerType) *beerjson.Diastat
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == beerproto.DiastaticPowerUnitType_NULL_DIASTATICPOWERUNITTYPE {
+		return &beerjson.DiastaticPowerType{}
+	}
+
 	return &beerjson.DiastaticPowerType{
 		Value: i.Value,
 		Unit:  ToJSONDiastaticPowerUnitType(i.Unit),
@@ -940,9 +994,14 @@ func ToJSONWaterAdditionType(i *beerproto.WaterAdditionType) *beerjson.WaterAddi
 	}
 }
 
+
 func ToJSONConcentrationType(i *beerproto.ConcentrationType) *beerjson.ConcentrationType {
 	if i == nil {
 		return nil
+	}
+
+	if i.Unit == beerproto.ConcentrationUnitType_NULL_CONCENTRATIONUNITTYPE {
+		return &beerjson.ConcentrationType{	}
 	}
 
 	return &beerjson.ConcentrationType{
@@ -1186,6 +1245,11 @@ func ToJSONColorType(i *beerproto.ColorType) *beerjson.ColorType {
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == beerproto.ColorUnitType_NULL_COLORUNITTYPE {
+		return &beerjson.ColorType{	}
+	}
+
 	return &beerjson.ColorType{
 		Value: i.Value,
 		Unit:  *ToJSONColorUnitType(i.Unit),
@@ -1400,6 +1464,11 @@ func ToJSONAcidityType(i *beerproto.AcidityType) *beerjson.AcidityType {
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == beerproto.AcidityUnitType_NULL_ACIDITYUNITTYPE {
+		return &beerjson.AcidityType{}
+	}
+
 	return &beerjson.AcidityType{
 		Value: i.Value,
 		Unit:  *ToJSONAcidityUnitType(i.Unit),

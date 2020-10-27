@@ -312,7 +312,7 @@ func ToProtoEquipmentItemType(i *beerjson.EquipmentItemType) *beerproto.Equipmen
 		MaximumVolume:       ToProtoVolumeType(i.MaximumVolume),
 		Weight:              ToProtoMassType(i.Weight),
 		Loss:                ToProtoVolumeType(&i.Loss),
-		Notes: UseString(i.Notes),
+		Notes:               UseString(i.Notes),
 	}
 }
 
@@ -418,7 +418,7 @@ func ToProtoEquipmentType(i *beerjson.EquipmentType) *beerproto.EquipmentType {
 	}
 
 	equipmentType := &beerproto.EquipmentType{
-		Name:           i.Name,
+		Name: i.Name,
 	}
 
 	if i.EquipmentItems != nil {
@@ -552,12 +552,10 @@ func ToProtoTemperatureRangeType(i *beerjson.TemperatureRangeType) *beerproto.Te
 		return nil
 	}
 
-
-	temperatureRangeType :=  &beerproto.TemperatureRangeType{
+	temperatureRangeType := &beerproto.TemperatureRangeType{
 		Minimum: ToProtoTemperatureType(&i.Minimum),
 		Maximum: ToProtoTemperatureType(&i.Maximum),
 	}
-
 
 	return temperatureRangeType
 }
@@ -584,6 +582,18 @@ func ToProtoFermentableType(i *beerjson.FermentableType) *beerproto.FermentableT
 		Inventory:      ToProtoFermentableInventoryType(i.Inventory),
 		KolbachIndex:   UseFloat(i.KolbachIndex),
 		Notes:          UseString(i.Notes),
+		BetaGlucan:     ToProtoConcentrationType(i.BetaGlucan),
+		Glassy:         ToProtoPercentType(i.Glassy),
+		Plump:          ToProtoPercentType(i.Plump),
+		Half:           ToProtoPercentType(i.Half),
+		Mealy:          ToProtoPercentType(i.Mealy),
+		Thru:           ToProtoPercentType(i.Thru),
+		Friability:     ToProtoPercentType(i.Friability),
+		Fermentability: ToProtoPercentType(i.Fermentability),
+		DiPh:           ToProtoAcidityType(i.DipH),
+		Viscosity:      ToProtoViscosityType(i.Viscosity),
+		DmsP:           ToProtoConcentrationType(i.DMSP),
+		Fan:            ToProtoConcentrationType(i.FAN),
 	}
 }
 
@@ -609,10 +619,47 @@ func ToProtoFermentableInventoryType(i *beerjson.FermentableInventoryType) *beer
 	return fermentableInventoryType
 }
 
+func ToProtoViscosityType(i *beerjson.ViscosityType) *beerproto.ViscosityType {
+	if i == nil {
+		return nil
+	}
+
+	if i.Unit == "" {
+		return &beerproto.ViscosityType{}
+	}
+
+	return &beerproto.ViscosityType{
+		Value: i.Value,
+		Unit:  ToProtoViscosityUnitType(&i.Unit),
+	}
+}
+
+func ToProtoViscosityUnitType(i *beerjson.ViscosityUnitType) beerproto.ViscosityUnitType {
+	if i == nil {
+		return beerproto.ViscosityUnitType_NULL_VISCOSITYUNITTYPE
+	}
+
+	if *i == beerjson.ViscosityUnitType_MPAS {
+		return beerproto.ViscosityUnitType_MPAS
+	}
+
+	if *i == beerjson.ViscosityUnitType_CP {
+		return beerproto.ViscosityUnitType_CP
+	}
+
+	unit := beerproto.ViscosityUnitType_value[strings.ToUpper(string(*i))]
+	return beerproto.ViscosityUnitType(unit)
+}
+
 func ToProtoDiastaticPowerType(i *beerjson.DiastaticPowerType) *beerproto.DiastaticPowerType {
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == "" {
+		return &beerproto.DiastaticPowerType{}
+	}
+
 	return &beerproto.DiastaticPowerType{
 		Value: i.Value,
 		Unit:  ToProtoDiastaticPowerUnitType(&i.Unit),
@@ -727,7 +774,7 @@ func ToProtoIngredientsType(i *beerjson.IngredientsType) *beerproto.IngredientsT
 		return nil
 	}
 
-	ingredientsType :=  &beerproto.IngredientsType{}
+	ingredientsType := &beerproto.IngredientsType{}
 
 	if i.MiscellaneousAdditions != nil {
 		miscellaneousAdditions := make([]*beerproto.MiscellaneousAdditionType, 0)
@@ -920,6 +967,11 @@ func ToProtoConcentrationType(i *beerjson.ConcentrationType) *beerproto.Concentr
 		return nil
 	}
 
+	if i.Unit == "" {
+		return &beerproto.ConcentrationType{
+		}
+	}
+
 	return &beerproto.ConcentrationType{
 		Value: i.Value,
 		Unit:  ToProtoConcentrationUnitType(i.Unit),
@@ -1034,7 +1086,7 @@ func ToProtoMassType(i *beerjson.MassType) *beerproto.MassType {
 	}
 
 	if i.Unit == "" {
-		return &beerproto.MassType{	}
+		return &beerproto.MassType{}
 	}
 
 	return &beerproto.MassType{
@@ -1136,6 +1188,11 @@ func ToProtoColorType(i *beerjson.ColorType) *beerproto.ColorType {
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == "" {
+		return &beerproto.ColorType{}
+	}
+
 	return &beerproto.ColorType{
 		Value: i.Value,
 		Unit:  ToProtoColorUnitType(i.Unit),
@@ -1324,6 +1381,11 @@ func ToProtoAcidityType(i *beerjson.AcidityType) *beerproto.AcidityType {
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == "" {
+		return &beerproto.AcidityType{}
+	}
+
 	return &beerproto.AcidityType{
 		Value: i.Value,
 		Unit:  ToProtoAcidityUnitType(i.Unit),

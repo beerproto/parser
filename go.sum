@@ -4,8 +4,12 @@ github.com/RossMerr/beerxml.go v0.0.0-20200430134713-aefa6554daf8 h1:YJcaIdQbZs6
 github.com/RossMerr/beerxml.go v0.0.0-20200430134713-aefa6554daf8/go.mod h1:DTGt02O0bw1Ad5FMmRernwQmMYFnDD/vchyBi0EDsoM=
 github.com/beerproto/beerjson.go v0.0.0-20200515134641-6b68b6ff5624 h1:SI9MI1PnAJWcQDMlv4PD2LyVn7vbWyVXRfoZ5rYOk4s=
 github.com/beerproto/beerjson.go v0.0.0-20200515134641-6b68b6ff5624/go.mod h1:HncpRFQe2OhyO1AueGG3sLNcijFE6us54f7AHYUFfYw=
+github.com/beerproto/beerjson.go v0.0.0-20201027155333-5867dd9913e0 h1:9trjEaAIA4hl09A8FRoDQ6z+7xFCpjGEP0F/359+hv4=
+github.com/beerproto/beerjson.go v0.0.0-20201027155333-5867dd9913e0/go.mod h1:AWrkKG3NkMxkWxBn011oiq3QR01uhe5VAjUXwompHhk=
 github.com/beerproto/beerproto_go v1.52.0 h1:8hw5CR5oNYHf/xEG/VUB5BapJL4W2na52JztPcShsbg=
 github.com/beerproto/beerproto_go v1.52.0/go.mod h1:5RPAlJEi0Sp/EGcPYHBw9P1+NqSLwoNcBnllvYSKzv4=
+github.com/beerproto/beerproto_go v1.53.1-0.20201027155919-12446a1fd817 h1:5xcv6K+5LaeG+ofErzs9Vd9sPsU8Z8RAmqyDHgAVGsM=
+github.com/beerproto/beerproto_go v1.53.1-0.20201027155919-12446a1fd817/go.mod h1:5RPAlJEi0Sp/EGcPYHBw9P1+NqSLwoNcBnllvYSKzv4=
 github.com/beerproto/beerxml.go v0.0.0-20200430134713-aefa6554daf8 h1:r4Kph0iJtHfdp21qlNBQoYTnrglQ03c779YSN3zgH+w=
 github.com/beerproto/beerxml.go v0.0.0-20200430134713-aefa6554daf8/go.mod h1:vgQlBEPkvK7MHpPfYNQ1ivoXupihcpGGnbk6McHH2yI=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
