@@ -4,6 +4,7 @@ import (
 	"github.com/beerproto/beerjson.go"
 	beerproto "github.com/beerproto/beerproto_go"
 	"github.com/go-test/deep"
+	"reflect"
 	"testing"
 )
 
@@ -493,6 +494,12 @@ func TestToJSONEquipmentType(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "Nil",
+			args: args{
+				i: nil,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -823,7 +830,6 @@ func TestToJSONVolumeType(t *testing.T) {
 				},
 			},
 		},
-
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -850,7 +856,7 @@ func TestToJSONSpecificVolumeType(t *testing.T) {
 			args: args{
 				i: &beerproto.SpecificVolumeType{
 					Value: 30,
-					Unit: beerproto.SpecificVolumeType_QTLB,
+					Unit:  beerproto.SpecificVolumeType_QTLB,
 				},
 			},
 		},
@@ -859,7 +865,7 @@ func TestToJSONSpecificVolumeType(t *testing.T) {
 			args: args{
 				i: &beerproto.SpecificVolumeType{
 					Value: 30,
-					Unit: beerproto.SpecificVolumeType_GALLB,
+					Unit:  beerproto.SpecificVolumeType_GALLB,
 				},
 			},
 		},
@@ -868,7 +874,7 @@ func TestToJSONSpecificVolumeType(t *testing.T) {
 			args: args{
 				i: &beerproto.SpecificVolumeType{
 					Value: 30,
-					Unit: beerproto.SpecificVolumeType_GALOZ,
+					Unit:  beerproto.SpecificVolumeType_GALOZ,
 				},
 			},
 		},
@@ -877,7 +883,7 @@ func TestToJSONSpecificVolumeType(t *testing.T) {
 			args: args{
 				i: &beerproto.SpecificVolumeType{
 					Value: 30,
-					Unit: beerproto.SpecificVolumeType_LG,
+					Unit:  beerproto.SpecificVolumeType_LG,
 				},
 			},
 		},
@@ -886,7 +892,7 @@ func TestToJSONSpecificVolumeType(t *testing.T) {
 			args: args{
 				i: &beerproto.SpecificVolumeType{
 					Value: 30,
-					Unit: beerproto.SpecificVolumeType_LKG,
+					Unit:  beerproto.SpecificVolumeType_LKG,
 				},
 			},
 		},
@@ -895,7 +901,7 @@ func TestToJSONSpecificVolumeType(t *testing.T) {
 			args: args{
 				i: &beerproto.SpecificVolumeType{
 					Value: 30,
-					Unit: beerproto.SpecificVolumeType_FLOZOZ,
+					Unit:  beerproto.SpecificVolumeType_FLOZOZ,
 				},
 			},
 		},
@@ -904,7 +910,7 @@ func TestToJSONSpecificVolumeType(t *testing.T) {
 			args: args{
 				i: &beerproto.SpecificVolumeType{
 					Value: 30,
-					Unit: beerproto.SpecificVolumeType_M3KG,
+					Unit:  beerproto.SpecificVolumeType_M3KG,
 				},
 			},
 		},
@@ -913,7 +919,7 @@ func TestToJSONSpecificVolumeType(t *testing.T) {
 			args: args{
 				i: &beerproto.SpecificVolumeType{
 					Value: 30,
-					Unit: beerproto.SpecificVolumeType_FT3LB,
+					Unit:  beerproto.SpecificVolumeType_FT3LB,
 				},
 			},
 		},
@@ -925,7 +931,7 @@ func TestToJSONSpecificVolumeType(t *testing.T) {
 			},
 		},
 	}
-		for _, tt := range tests {
+	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
 			got := ToJSONSpecificVolumeType(tt.args.i)
@@ -966,6 +972,19 @@ func TestToJSONCultureInformation(t *testing.T) {
 					Pof:              true,
 					Zymocide:         &beerproto.Zymocide{},
 				},
+			},
+		},
+		{
+			name: "Nil",
+			args: args{
+				i: &beerproto.CultureInformation{
+				},
+			},
+		},
+		{
+			name: "Nil",
+			args: args{
+				i: nil,
 			},
 		},
 	}
@@ -1029,7 +1048,7 @@ func TestToJSONTemperatureType(t *testing.T) {
 			args: args{
 				i: &beerproto.TemperatureType{
 					Value: 5,
-					Unit: beerproto.TemperatureUnitType_C,
+					Unit:  beerproto.TemperatureUnitType_C,
 				},
 			},
 		},
@@ -1038,7 +1057,7 @@ func TestToJSONTemperatureType(t *testing.T) {
 			args: args{
 				i: &beerproto.TemperatureType{
 					Value: 5,
-					Unit: beerproto.TemperatureUnitType_F,
+					Unit:  beerproto.TemperatureUnitType_F,
 				},
 			},
 		},
@@ -1086,7 +1105,7 @@ func TestToJSONPercentRangeType(t *testing.T) {
 			},
 		},
 	}
-		for _, tt := range tests {
+	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
 			got := ToJSONPercentRangeType(tt.args.i)
@@ -1111,7 +1130,7 @@ func TestToJSONPercentType(t *testing.T) {
 			args: args{
 				i: &beerproto.PercentType{
 					Value: 75,
-					Unit: beerproto.PercentType_PERCENT_SIGN,
+					Unit:  beerproto.PercentType_PERCENT_SIGN,
 				},
 			},
 		},
@@ -1147,10 +1166,10 @@ func TestToJSONZymocide(t *testing.T) {
 			name: "Basic",
 			args: args{
 				i: &beerproto.Zymocide{
-					No1: true,
-					No2: true,
-					No28: true,
-					Klus: true,
+					No1:     true,
+					No2:     true,
+					No28:    true,
+					Klus:    true,
 					Neutral: true,
 				},
 			},
@@ -1160,6 +1179,12 @@ func TestToJSONZymocide(t *testing.T) {
 			args: args{
 				i: &beerproto.Zymocide{
 				},
+			},
+		},
+		{
+			name: "Nil",
+			args: args{
+				i: nil,
 			},
 		},
 	}
@@ -1187,10 +1212,10 @@ func TestToJSONCultureInventoryType(t *testing.T) {
 			name: "Basic",
 			args: args{
 				i: &beerproto.CultureInventoryType{
-						Liquid: &beerproto.VolumeType{},
-						Dry: &beerproto.MassType{},
-						Slant: &beerproto.VolumeType{},
-						Culture: &beerproto.VolumeType{},
+					Liquid:  &beerproto.VolumeType{},
+					Dry:     &beerproto.MassType{},
+					Slant:   &beerproto.VolumeType{},
+					Culture: &beerproto.VolumeType{},
 				},
 			},
 		},
@@ -1283,7 +1308,7 @@ func TestToJSONColorType(t *testing.T) {
 			args: args{
 				i: &beerproto.ColorType{
 					Value: 10,
-					Unit: beerproto.ColorUnitType_EBC,
+					Unit:  beerproto.ColorUnitType_EBC,
 				},
 			},
 		},
@@ -1292,7 +1317,7 @@ func TestToJSONColorType(t *testing.T) {
 			args: args{
 				i: &beerproto.ColorType{
 					Value: 10,
-					Unit: beerproto.ColorUnitType_LOVI,
+					Unit:  beerproto.ColorUnitType_LOVI,
 				},
 			},
 		},
@@ -1301,7 +1326,7 @@ func TestToJSONColorType(t *testing.T) {
 			args: args{
 				i: &beerproto.ColorType{
 					Value: 10,
-					Unit: beerproto.ColorUnitType_SRM,
+					Unit:  beerproto.ColorUnitType_SRM,
 				},
 			},
 		},
@@ -1338,7 +1363,7 @@ func TestToJSONAcidityType(t *testing.T) {
 			args: args{
 				i: &beerproto.AcidityType{
 					Value: 10,
-					Unit: beerproto.AcidityUnitType_PH,
+					Unit:  beerproto.AcidityUnitType_PH,
 				},
 			},
 		},
@@ -1374,7 +1399,7 @@ func TestToJSONViscosityType(t *testing.T) {
 			args: args{
 				i: &beerproto.ViscosityType{
 					Value: 10,
-					Unit: beerproto.ViscosityUnitType_MPAS,
+					Unit:  beerproto.ViscosityUnitType_MPAS,
 				},
 			},
 		},
@@ -1383,7 +1408,7 @@ func TestToJSONViscosityType(t *testing.T) {
 			args: args{
 				i: &beerproto.ViscosityType{
 					Value: 10,
-					Unit: beerproto.ViscosityUnitType_CP,
+					Unit:  beerproto.ViscosityUnitType_CP,
 				},
 			},
 		},
@@ -1407,3 +1432,22 @@ func TestToJSONViscosityType(t *testing.T) {
 	}
 }
 
+func TestToJSONStyleType(t *testing.T) {
+	type args struct {
+		i *beerproto.StyleType
+	}
+	tests := []struct {
+		name string
+		args args
+		want *beerjson.StyleType
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ToJSONStyleType(tt.args.i); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ToJSONStyleType() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
