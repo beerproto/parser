@@ -179,19 +179,24 @@ func ToJSONEquipmentType(i *beerproto.EquipmentType) *beerjson.EquipmentType {
 		return nil
 	}
 
-	equipmentItemType := []beerjson.EquipmentItemType{}
-	for _, item := range i.EquipmentItems {
-		equipmentItemType = append(equipmentItemType, ToJSONEquipmentItemType(item))
+	equipmentType := &beerjson.EquipmentType{
+		Name: i.Name,
 	}
 
-	return &beerjson.EquipmentType{
-		Name:           i.Name,
-		EquipmentItems: equipmentItemType,
+	if i.EquipmentItems != nil {
+		equipmentItemType := []beerjson.EquipmentItemType{}
+		for _, item := range i.EquipmentItems {
+			equipmentItemType = append(equipmentItemType, *ToJSONEquipmentItemType(item))
+		}
+
+		equipmentType.EquipmentItems = equipmentItemType
 	}
+
+	return equipmentType
 }
 
-func ToJSONEquipmentItemType(i *beerproto.EquipmentItemType) beerjson.EquipmentItemType {
-	return beerjson.EquipmentItemType{
+func ToJSONEquipmentItemType(i *beerproto.EquipmentItemType) *beerjson.EquipmentItemType {
+	return &beerjson.EquipmentItemType{
 		BoilRatePerHour:     ToJSONVolumeType(i.BoilRatePerHour),
 		KeyType:             &i.Type,
 		EquipmentBaseForm:   ToJSONEquipmentBaseForm(i.Form),
@@ -202,12 +207,18 @@ func ToJSONEquipmentItemType(i *beerproto.EquipmentItemType) beerjson.EquipmentI
 		MaximumVolume:       ToJSONVolumeType(i.MaximumVolume),
 		Weight:              ToJSONMassType(i.Weight),
 		Loss:                *ToJSONVolumeType(i.Loss),
+		Notes: &i.Notes,
 	}
 }
 
 func ToJSONSpecificHeatType(i *beerproto.SpecificHeatType) *beerjson.SpecificHeatType {
 	if i == nil {
 		return nil
+	}
+	
+	if i.Unit == beerproto.SpecificHeatUnitType_NULL_SPECIFICHEATUNITTYPE {
+		return &beerjson.SpecificHeatType{
+		}
 	}
 
 	return &beerjson.SpecificHeatType{
@@ -326,7 +337,12 @@ func ToJSONTemperatureRangeType(i *beerproto.TemperatureRangeType) *beerjson.Tem
 	if i == nil {
 		return nil
 	}
-	return &beerjson.TemperatureRangeType{
+
+	if i.Minimum == nil ||  i.Maximum == nil {
+		return nil
+	}
+
+	return  &beerjson.TemperatureRangeType{
 		Minimum: *ToJSONTemperatureType(i.Minimum),
 		Maximum: *ToJSONTemperatureType(i.Maximum),
 	}
@@ -740,34 +756,50 @@ func ToJSONIngredientsType(i *beerproto.IngredientsType) *beerjson.IngredientsTy
 		return nil
 	}
 
-	miscellaneousAdditions := make([]beerjson.MiscellaneousAdditionType, 0)
-	cultureAdditions := make([]beerjson.CultureAdditionType, 0)
-	waterAdditions := make([]beerjson.WaterAdditionType, 0)
-	fermentableAdditions := make([]beerjson.FermentableAdditionType, 0)
-	hopAdditions := make([]beerjson.HopAdditionType, 0)
+	ingredientsType := &beerjson.IngredientsType{}
 
-	for _, misc := range i.MiscellaneousAdditions {
-		miscellaneousAdditions = append(miscellaneousAdditions, *ToJSONMiscellaneousAdditionType(misc))
+	if i.MiscellaneousAdditions != nil {
+		miscellaneousAdditions := make([]beerjson.MiscellaneousAdditionType, 0)
+		for _, misc := range i.MiscellaneousAdditions {
+			miscellaneousAdditions = append(miscellaneousAdditions, *ToJSONMiscellaneousAdditionType(misc))
+		}
+		ingredientsType.MiscellaneousAdditions = miscellaneousAdditions
 	}
-	for _, culture := range i.CultureAdditions {
-		cultureAdditions = append(cultureAdditions, *ToJSONCultureAdditionType(culture))
+
+	if i.CultureAdditions != nil {
+		cultureAdditions := make([]beerjson.CultureAdditionType, 0)
+		for _, culture := range i.CultureAdditions {
+			cultureAdditions = append(cultureAdditions, *ToJSONCultureAdditionType(culture))
+		}
+		ingredientsType.CultureAdditions = cultureAdditions
 	}
-	for _, water := range i.WaterAdditions {
-		waterAdditions = append(waterAdditions, *ToJSONWaterAdditionType(water))
+
+	if i.WaterAdditions != nil {
+		waterAdditions := make([]beerjson.WaterAdditionType, 0)
+		for _, water := range i.WaterAdditions {
+			waterAdditions = append(waterAdditions, *ToJSONWaterAdditionType(water))
+		}
+		ingredientsType.WaterAdditions = waterAdditions
 	}
-	for _, fermentable := range i.FermentableAdditions {
-		fermentableAdditions = append(fermentableAdditions, *ToJSONFermentableAdditionType(fermentable))
+
+	if i.FermentableAdditions != nil {
+		fermentableAdditions := make([]beerjson.FermentableAdditionType, 0)
+		for _, fermentable := range i.FermentableAdditions {
+			fermentableAdditions = append(fermentableAdditions, *ToJSONFermentableAdditionType(fermentable))
+		}
+		ingredientsType.FermentableAdditions = fermentableAdditions
 	}
-	for _, hop := range i.HopAdditions {
-		hopAdditions = append(hopAdditions, *ToJSONHopAdditionType(hop))
+
+	if i.HopAdditions != nil {
+		hopAdditions := make([]beerjson.HopAdditionType, 0)
+		for _, hop := range i.HopAdditions {
+			hopAdditions = append(hopAdditions, *ToJSONHopAdditionType(hop))
+		}
+		ingredientsType.HopAdditions = hopAdditions
 	}
-	return &beerjson.IngredientsType{
-		MiscellaneousAdditions: miscellaneousAdditions,
-		CultureAdditions:       cultureAdditions,
-		WaterAdditions:         waterAdditions,
-		FermentableAdditions:   fermentableAdditions,
-		HopAdditions:           hopAdditions,
-	}
+
+
+	return ingredientsType
 }
 
 func ToJSONHopAdditionType(i *beerproto.HopAdditionType) *beerjson.HopAdditionType {
@@ -1030,6 +1062,11 @@ func ToJSONMassType(i *beerproto.MassType) *beerjson.MassType {
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == beerproto.MassUnitType_NULL_MASSUNITTYPE {
+		return &beerjson.MassType{}
+	}
+
 	return &beerjson.MassType{
 		Value: i.Value,
 		Unit:  *ToJSONMassUnitType(i.Unit),
@@ -1288,6 +1325,12 @@ func ToJSONVolumeType(i *beerproto.VolumeType) *beerjson.VolumeType {
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == beerproto.VolumeType_NULL {
+		return &beerjson.VolumeType{
+		}
+	}
+
 	return &beerjson.VolumeType{
 		Value: i.Value,
 		Unit:  ToJSONVolumeUnitType(i.Unit),
@@ -1305,6 +1348,10 @@ func ToJSONVolumeUnitType(i beerproto.VolumeType_VolumeUnitType) beerjson.Volume
 func ToJSONSpecificVolumeType(i *beerproto.SpecificVolumeType) *beerjson.SpecificVolumeType {
 	if i == nil {
 		return nil
+	}
+	if i.Unit == beerproto.SpecificVolumeType_NULL {
+		return &beerjson.SpecificVolumeType{
+		}
 	}
 	return &beerjson.SpecificVolumeType{
 		Value: i.Value,
@@ -1388,6 +1435,10 @@ func ToJSONTemperatureType(i *beerproto.TemperatureType) *beerjson.TemperatureTy
 	if i == nil {
 		return nil
 	}
+	if i.Unit == beerproto.TemperatureUnitType_NULL_TEMPERATUREUNITTYPE {
+		return &beerjson.TemperatureType{}
+	}
+
 	return &beerjson.TemperatureType{
 		Value: i.Value,
 		Unit:  *ToJSONTemperatureUnitType(i.Unit),

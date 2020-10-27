@@ -312,6 +312,7 @@ func ToProtoEquipmentItemType(i *beerjson.EquipmentItemType) *beerproto.Equipmen
 		MaximumVolume:       ToProtoVolumeType(i.MaximumVolume),
 		Weight:              ToProtoMassType(i.Weight),
 		Loss:                ToProtoVolumeType(&i.Loss),
+		Notes: UseString(i.Notes),
 	}
 }
 
@@ -416,20 +417,29 @@ func ToProtoEquipmentType(i *beerjson.EquipmentType) *beerproto.EquipmentType {
 		return nil
 	}
 
-	equipmentItemType := []*beerproto.EquipmentItemType{}
-	for _, item := range i.EquipmentItems {
-		equipmentItemType = append(equipmentItemType, ToProtoEquipmentItemType(&item))
+	equipmentType := &beerproto.EquipmentType{
+		Name:           i.Name,
 	}
 
-	return &beerproto.EquipmentType{
-		Name:           i.Name,
-		EquipmentItems: equipmentItemType,
+	if i.EquipmentItems != nil {
+		equipmentItemType := []*beerproto.EquipmentItemType{}
+		for _, item := range i.EquipmentItems {
+			equipmentItemType = append(equipmentItemType, ToProtoEquipmentItemType(&item))
+		}
+		equipmentType.EquipmentItems = equipmentItemType
 	}
+
+	return equipmentType
 }
 
 func ToProtoSpecificHeatType(i *beerjson.SpecificHeatType) *beerproto.SpecificHeatType {
 	if i == nil {
 		return nil
+	}
+
+	if i.Unit == "" {
+		return &beerproto.SpecificHeatType{
+		}
 	}
 
 	return &beerproto.SpecificHeatType{
@@ -541,10 +551,15 @@ func ToProtoTemperatureRangeType(i *beerjson.TemperatureRangeType) *beerproto.Te
 	if i == nil {
 		return nil
 	}
-	return &beerproto.TemperatureRangeType{
+
+
+	temperatureRangeType :=  &beerproto.TemperatureRangeType{
 		Minimum: ToProtoTemperatureType(&i.Minimum),
 		Maximum: ToProtoTemperatureType(&i.Maximum),
 	}
+
+
+	return temperatureRangeType
 }
 
 func ToProtoFermentableType(i *beerjson.FermentableType) *beerproto.FermentableType {
@@ -712,34 +727,49 @@ func ToProtoIngredientsType(i *beerjson.IngredientsType) *beerproto.IngredientsT
 		return nil
 	}
 
-	miscellaneousAdditions := make([]*beerproto.MiscellaneousAdditionType, 0)
-	cultureAdditions := make([]*beerproto.CultureAdditionType, 0)
-	waterAdditions := make([]*beerproto.WaterAdditionType, 0)
-	fermentableAdditions := make([]*beerproto.FermentableAdditionType, 0)
-	hopAdditions := make([]*beerproto.HopAdditionType, 0)
+	ingredientsType :=  &beerproto.IngredientsType{}
 
-	for _, misc := range i.MiscellaneousAdditions {
-		miscellaneousAdditions = append(miscellaneousAdditions, ToProtoMiscellaneousAdditionType(&misc))
+	if i.MiscellaneousAdditions != nil {
+		miscellaneousAdditions := make([]*beerproto.MiscellaneousAdditionType, 0)
+		for _, misc := range i.MiscellaneousAdditions {
+			miscellaneousAdditions = append(miscellaneousAdditions, ToProtoMiscellaneousAdditionType(&misc))
+		}
+		ingredientsType.MiscellaneousAdditions = miscellaneousAdditions
 	}
-	for _, culture := range i.CultureAdditions {
-		cultureAdditions = append(cultureAdditions, ToProtoCultureAdditionType(&culture))
+
+	if i.CultureAdditions != nil {
+		cultureAdditions := make([]*beerproto.CultureAdditionType, 0)
+		for _, culture := range i.CultureAdditions {
+			cultureAdditions = append(cultureAdditions, ToProtoCultureAdditionType(&culture))
+		}
+		ingredientsType.CultureAdditions = cultureAdditions
 	}
-	for _, water := range i.WaterAdditions {
-		waterAdditions = append(waterAdditions, ToProtoWaterAdditionType(&water))
+
+	if i.WaterAdditions != nil {
+		waterAdditions := make([]*beerproto.WaterAdditionType, 0)
+		for _, water := range i.WaterAdditions {
+			waterAdditions = append(waterAdditions, ToProtoWaterAdditionType(&water))
+		}
+		ingredientsType.WaterAdditions = waterAdditions
 	}
-	for _, fermentable := range i.FermentableAdditions {
-		fermentableAdditions = append(fermentableAdditions, ToProtoFermentableAdditionType(&fermentable))
+
+	if i.FermentableAdditions != nil {
+		fermentableAdditions := make([]*beerproto.FermentableAdditionType, 0)
+		for _, fermentable := range i.FermentableAdditions {
+			fermentableAdditions = append(fermentableAdditions, ToProtoFermentableAdditionType(&fermentable))
+		}
+		ingredientsType.FermentableAdditions = fermentableAdditions
 	}
-	for _, hop := range i.HopAdditions {
-		hopAdditions = append(hopAdditions, ToProtoHopAdditionType(&hop))
+
+	if i.HopAdditions != nil {
+		hopAdditions := make([]*beerproto.HopAdditionType, 0)
+		for _, hop := range i.HopAdditions {
+			hopAdditions = append(hopAdditions, ToProtoHopAdditionType(&hop))
+		}
+		ingredientsType.HopAdditions = hopAdditions
 	}
-	return &beerproto.IngredientsType{
-		MiscellaneousAdditions: miscellaneousAdditions,
-		CultureAdditions:       cultureAdditions,
-		WaterAdditions:         waterAdditions,
-		FermentableAdditions:   fermentableAdditions,
-		HopAdditions:           hopAdditions,
-	}
+
+	return ingredientsType
 }
 
 func ToProtoHopAdditionType(i *beerjson.HopAdditionType) *beerproto.HopAdditionType {
@@ -897,6 +927,10 @@ func ToProtoConcentrationType(i *beerjson.ConcentrationType) *beerproto.Concentr
 }
 
 func ToProtoConcentrationUnitType(i beerjson.ConcentrationUnitType) beerproto.ConcentrationUnitType {
+	if i == beerjson.ConcentrationUnitType_MgL {
+		return beerproto.ConcentrationUnitType_MGL
+	}
+
 	unit := beerproto.ConcentrationUnitType_value[strings.ToUpper(string(i))]
 	return beerproto.ConcentrationUnitType(unit)
 }
@@ -998,6 +1032,11 @@ func ToProtoMassType(i *beerjson.MassType) *beerproto.MassType {
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == "" {
+		return &beerproto.MassType{	}
+	}
+
 	return &beerproto.MassType{
 		Value: i.Value,
 		Unit:  ToProtoMassUnitType(i.Unit),
@@ -1221,6 +1260,10 @@ func ToProtoVolumeType(i *beerjson.VolumeType) *beerproto.VolumeType {
 	if i == nil {
 		return nil
 	}
+	if i.Unit == "" {
+		return &beerproto.VolumeType{}
+	}
+
 	return &beerproto.VolumeType{
 		Value: i.Value,
 		Unit:  ToProtoVolumeUnitType(i.Unit),
@@ -1236,6 +1279,11 @@ func ToProtoSpecificVolumeType(i *beerjson.SpecificVolumeType) *beerproto.Specif
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == "" {
+		return &beerproto.SpecificVolumeType{}
+	}
+
 	return &beerproto.SpecificVolumeType{
 		Value: i.Value,
 		Unit:  ToProtoSpecificVolumeUnitType(i.Unit),
@@ -1300,6 +1348,9 @@ func ToProtoTimeType(i *beerjson.TimeType) *beerproto.TimeType {
 func ToProtoTemperatureType(i *beerjson.TemperatureType) *beerproto.TemperatureType {
 	if i == nil {
 		return nil
+	}
+	if i.Unit == "" {
+		return &beerproto.TemperatureType{}
 	}
 	return &beerproto.TemperatureType{
 		Value: i.Value,
