@@ -3,12 +3,11 @@ package samples_test
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"reflect"
+	"strings"
 	"testing"
 
-	"github.com/beerproto/beerjson.go"
 	mapping "github.com/beerproto/parser/beerJSON"
+	"github.com/go-test/deep"
 )
 
 func TestSchemas_Generate(t *testing.T) {
@@ -98,26 +97,17 @@ func TestSchemas_Generate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			data, err := ioutil.ReadFile(tt.json)
+			doc, err := mapping.Load(tt.json)
 			if err != nil {
 				t.Error(err)
 			}
 
-			beer := &beerjson.Beerjson{}
-			str := &struct {
-				Beer *beerjson.Beerjson `json:"beerjson"`
-			}{
-				Beer: beer,
-			}
+			recipe := mapping.MapToProto(doc.Beer)
 
-			err = json.Unmarshal(data, &str)
+			j, err := mapping.MapToJSON(recipe)
 			if err != nil {
 				t.Error(err)
 			}
-
-			recipe := mapping.MapToProto(beer)
-
-			j, _ := mapping.MapToJSON(recipe)
 
 			bytes, err := json.Marshal(j)
 			if err != nil {
@@ -129,7 +119,7 @@ func TestSchemas_Generate(t *testing.T) {
 				t.Error(err)
 			}
 
-			innerData, err := json.Marshal(beer)
+			innerData, err := json.Marshal(doc.Beer)
 			if err != nil {
 				t.Error(err)
 			}
@@ -139,40 +129,35 @@ func TestSchemas_Generate(t *testing.T) {
 				t.Error(err)
 			}
 
-			err = ShouldEqualJSONObject(expectedJSON, trimedJSON)
+			diff, err := ShouldEqualJSONObject(expectedJSON, trimedJSON)
 			if err != nil {
+				if len(diff) > 0 {
+					s := strings.Join(diff, "\n")
+					t.Errorf("test \n test \n %s", s)
+				}
 				t.Error(err)
 			}
 		})
 	}
 }
 
-func ShouldEqualJSONObject(data1, data2 []byte) error {
+func ShouldEqualJSONObject(data1, data2 []byte) ([]string, error) {
 	x := make(map[string]interface{})
 	err := json.Unmarshal(data1, &x)
 	if err != nil {
-		return fmt.Errorf("unmarshal of data1 failed: %w", err)
+		return []string{}, fmt.Errorf("unmarshal of data1 failed: %w", err)
 	}
 	y := make(map[string]interface{})
 	err = json.Unmarshal(data2, &y)
 	if err != nil {
-		return fmt.Errorf("unmarshal of data2 failed: %w", err)
+		return []string{}, fmt.Errorf("unmarshal of data2 failed: %w", err)
 	}
 
-	if !reflect.DeepEqual(x, y) {
-		jx, err := json.Marshal(x)
-		if err != nil {
-			return fmt.Errorf("marshal of data1 failed: %w", err)
-		}
-
-		jy, err := json.Marshal(y)
-		if err != nil {
-			return fmt.Errorf("marshal of data2 failed: %w", err)
-		}
-		return fmt.Errorf("object not equal \nexpected \n%v \ngot \n%v", string(jx), string(jy))
+	if diff := deep.Equal(x, y); diff != nil {
+		return diff, fmt.Errorf("object not equal")
 	}
 
-	return nil
+	return nil, nil
 }
 
 func TrimJson(data []byte) ([]byte, error) {
