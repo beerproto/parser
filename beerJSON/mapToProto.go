@@ -8,6 +8,10 @@ import (
 )
 
 func MapToProto(i *beerjson.Beerjson) *beerproto.Recipe {
+	if i == nil {
+		return nil
+	}
+
 	output := &beerproto.Recipe{
 		Mashes:                   []*beerproto.MashProcedureType{},
 		Recipes:                  []*beerproto.RecipeType{},
@@ -110,15 +114,37 @@ func ToProtoMiscellaneousType(i *beerjson.MiscellaneousType) *beerproto.Miscella
 		return nil
 	}
 
-	return &beerproto.MiscellaneousType{
-		UseFor:    UseString(i.UseFor),
-		Notes:     UseString(i.Notes),
-		Name:      UseString(i.Name),
-		Producer:  UseString(i.Producer),
-		ProductId: UseString(i.ProductId),
-		Type:      ToProtoMiscellaneousBaseType(i.MiscellaneousBaseType),
-		Inventory: ToProtoMiscellaneousInventoryType(i.Inventory),
+	miscellaneousType := &beerproto.MiscellaneousType{}
+
+	if i.UseFor != nil {
+		miscellaneousType.UseFor = UseString(i.UseFor)
 	}
+
+	if i.Notes != nil {
+		miscellaneousType.Notes = UseString(i.Notes)
+	}
+
+	if i.Name != nil {
+		miscellaneousType.Name = UseString(i.Name)
+	}
+
+	if i.Producer != nil {
+		miscellaneousType.Producer = UseString(i.Producer)
+	}
+
+	if i.ProductId != nil {
+		miscellaneousType.ProductId = UseString(i.ProductId)
+	}
+
+	if i.MiscellaneousBaseType != nil {
+		miscellaneousType.Type = ToProtoMiscellaneousBaseType(i.MiscellaneousBaseType)
+	}
+
+	if i.Inventory != nil {
+		miscellaneousType.Inventory = ToProtoMiscellaneousInventoryType(i.Inventory)
+	}
+
+	return miscellaneousType
 }
 
 func ToProtoMiscellaneousInventoryType(i *beerjson.MiscellaneousInventoryType) *beerproto.MiscellaneousInventoryType {
@@ -199,20 +225,39 @@ func ToProtoBoilProcedureType(i *beerjson.BoilProcedureType) *beerproto.BoilProc
 	if i == nil {
 		return nil
 	}
-	boilSteps := make([]*beerproto.BoilStepType, 0)
 
-	for _, step := range i.BoilSteps {
-		boilSteps = append(boilSteps, ToProtoBoilStepType(&step))
+	boilProcedureType := &beerproto.BoilProcedureType{}
+
+	if i.BoilSteps != nil {
+		boilSteps := make([]*beerproto.BoilStepType, 0)
+
+		for _, step := range i.BoilSteps {
+			boilSteps = append(boilSteps, ToProtoBoilStepType(&step))
+		}
+		boilProcedureType.BoilSteps = boilSteps
 	}
 
-	return &beerproto.BoilProcedureType{
-		PreBoilSize: ToProtoVolumeType(i.PreBoilSize),
-		BoilTime:    ToProtoTimeType(&i.BoilTime),
-		Name:        UseString(i.Name),
-		Description: UseString(i.Description),
-		Notes:       UseString(i.Notes),
-		BoilSteps:   boilSteps,
+	if i.PreBoilSize != nil {
+		boilProcedureType.PreBoilSize = ToProtoVolumeType(i.PreBoilSize)
 	}
+
+	boilProcedureType.BoilTime = ToProtoTimeType(&i.BoilTime)
+
+
+	if i.Name != nil {
+		boilProcedureType.Name = UseString(i.Name)
+	}
+
+	if i.Description != nil {
+		boilProcedureType.Description =UseString(i.Description)
+	}
+
+	if i.Notes != nil {
+		boilProcedureType.Notes = UseString(i.Notes)
+	}
+
+
+	return boilProcedureType
 }
 
 func ToProtoBoilStepType(i *beerjson.BoilStepType) *beerproto.BoilStepType {
@@ -247,18 +292,37 @@ func ToProtoPackagingProcedureType(i *beerjson.PackagingProcedureType) *beerprot
 	if i == nil {
 		return nil
 	}
-	packagingVessels := make([]*beerproto.PackagingVesselType, 0)
 
-	for _, vessels := range i.PackagingVessels {
-		packagingVessels = append(packagingVessels, ToProtoPackagingVesselType(&vessels))
+	packagingProcedureType := &beerproto.PackagingProcedureType{}
+
+	if i.PackagingVessels != nil {
+		packagingVessels := make([]*beerproto.PackagingVesselType, 0)
+
+		for _, vessels := range i.PackagingVessels {
+			packagingVessels = append(packagingVessels, ToProtoPackagingVesselType(&vessels))
+		}
+		packagingProcedureType.PackagingVessels = packagingVessels
 	}
-	return &beerproto.PackagingProcedureType{
-		Name:             i.Name,
-		PackagedVolume:   ToProtoVolumeType(i.PackagedVolume),
-		Description:      UseString(i.Description),
-		Notes:            UseString(i.Notes),
-		PackagingVessels: packagingVessels,
+
+
+	if i.Name != "" {
+		packagingProcedureType.Name = i.Name
 	}
+
+	if i.Description != nil {
+		packagingProcedureType.Description = UseString(i.Description)
+	}
+
+	if i.Notes != nil {
+		packagingProcedureType.Notes = UseString(i.Notes)
+	}
+
+	if i.PackagedVolume != nil {
+		packagingProcedureType.PackagedVolume = ToProtoVolumeType(i.PackagedVolume)
+	}
+
+
+	return packagingProcedureType
 }
 
 func ToProtoPackagingVesselType(i *beerjson.PackagingVesselType) *beerproto.PackagingVesselType {
@@ -340,6 +404,9 @@ func ToProtoWaterBase(i *beerjson.WaterBase) *beerproto.WaterBase {
 }
 
 func ToProtoVarietyInformation(i *beerjson.VarietyInformation) *beerproto.VarietyInformation {
+	if i == nil {
+		return nil
+	}
 	return &beerproto.VarietyInformation{
 		Inventory:   ToProtoHopInventoryType(i.Inventory),
 		Type:        ToProtoVarietyInformationType(i.VarietyInformationType),
@@ -726,6 +793,11 @@ func ToProtoBitternessType(i *beerjson.BitternessType) *beerproto.BitternessType
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == "" {
+		return &beerproto.BitternessType{}
+	}
+
 	return &beerproto.BitternessType{
 		Value: i.Value,
 		Unit:  ToProtoBitternessUnitType(&i.Unit),
@@ -736,6 +808,11 @@ func ToProtoBitternessUnitType(i *beerjson.BitternessUnitType) beerproto.Bittern
 	if i == nil {
 		return beerproto.BitternessType_NULL
 	}
+
+	if *i == beerjson.BitternessUnitType_IBUs {
+		return beerproto.BitternessType_IBUs
+	}
+
 	unit := beerproto.BitternessType_BitternessUnitType_value[strings.ToUpper(string(*i))]
 	return beerproto.BitternessType_BitternessUnitType(unit)
 }
@@ -763,6 +840,12 @@ func ToProtoCarbonationType(i *beerjson.CarbonationType) *beerproto.CarbonationT
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == "" {
+		return &beerproto.CarbonationType{
+		}
+	}
+
 	return &beerproto.CarbonationType{
 		Value: i.Value,
 		Unit:  ToProtoCarbonationUnitType(&i.Unit),
@@ -1042,7 +1125,10 @@ func ToProtoMiscellaneousAdditionType(i *beerjson.MiscellaneousAdditionType) *be
 		Producer:  UseString(i.Producer),
 		Timing:    ToProtoTimingType(i.Timing),
 		ProductId: UseString(i.ProductId),
-		Type:      ToProtoMiscellaneousBaseType(i.MiscellaneousBaseType),
+	}
+
+	if i.MiscellaneousBaseType != nil {
+		miscellaneousAdditionType.Type =  ToProtoMiscellaneousBaseType(i.MiscellaneousBaseType)
 	}
 
 	if mass, ok := i.Amount.(*beerjson.MassType); ok {
@@ -1069,6 +1155,11 @@ func ToProtoUnitType(i *beerjson.UnitType) *beerproto.UnitType {
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == "" {
+		return &beerproto.UnitType{	}
+	}
+
 	return &beerproto.UnitType{
 		Value: i.Value,
 		Unit:  ToProtoUnitUnitType(i.Unit),
@@ -1168,6 +1259,11 @@ func ToProtoGravityType(i *beerjson.GravityType) *beerproto.GravityType {
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == "" {
+		return &beerproto.GravityType{}
+	}
+
 	return &beerproto.GravityType{
 		Value: i.Value,
 		Unit:  ToProtoGravityUnitType(i.Unit),
@@ -1401,6 +1497,11 @@ func ToProtoTimeType(i *beerjson.TimeType) *beerproto.TimeType {
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == "" {
+		return &beerproto.TimeType{	}
+	}
+
 	return &beerproto.TimeType{
 		Value: i.Value,
 		Unit:  ToProtoTimeUnitType(i.Unit),

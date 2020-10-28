@@ -9,6 +9,14 @@ import (
 )
 
 func MapToJSON(i *beerproto.Recipe) (*beerjson.Beerjson, error) {
+	if i == nil {
+		return nil, nil
+	}
+
+	if i.Version == 0 {
+		return nil, fmt.Errorf("version is required")
+	}
+
 	output := &beerjson.Beerjson{
 		Mashes:                   []beerjson.MashProcedureType{},
 		Recipes:                  []beerjson.RecipeType{},
@@ -27,63 +35,133 @@ func MapToJSON(i *beerproto.Recipe) (*beerjson.Beerjson, error) {
 	}
 
 	for _, mash := range i.Mashes {
-		output.Mashes = append(output.Mashes, *ToJSONMashProcedureType(mash))
+		if mash, err := ToJSONMashProcedureType(mash); err == nil {
+			output.Mashes = append(output.Mashes, *mash)
+		} else {
+			return nil, err
+		}
 	}
 
 	for _, recipe := range i.Recipes {
-		if r, err := ToJSONRecipeType(recipe); err != nil {
-			return nil, err
-		} else {
+		if r, err := ToJSONRecipeType(recipe); err == nil {
 			output.Recipes = append(output.Recipes, *r)
+		} else {
+			return nil, err
 		}
 	}
 
 	for _, ingredients := range i.MiscellaneousIngredients {
-		output.MiscellaneousIngredients = append(output.MiscellaneousIngredients, *ToJSONMiscellaneousType(ingredients))
+		if mice, err := ToJSONMiscellaneousType(ingredients); err == nil {
+			output.MiscellaneousIngredients = append(output.MiscellaneousIngredients, *mice)
+		}
 	}
 
 	for _, style := range i.Styles {
-		output.Styles = append(output.Styles, *ToJSONStyleType(style))
+		if style, err := ToJSONStyleType(style); err == nil {
+			output.Styles = append(output.Styles, *style)
+		} else {
+			return nil, err
+		}
 	}
 
 	for _, fermentation := range i.Fermentations {
-		output.Fermentations = append(output.Fermentations, *ToJSONFermentationProcedureType(fermentation))
+		if fermentationProcedureType, err := ToJSONFermentationProcedureType(fermentation); err == nil {
+			output.Fermentations = append(output.Fermentations, *fermentationProcedureType)
+		} else {
+			return nil, err
+		}
 	}
 
 	for _, boil := range i.Boil {
-		output.Boil = append(output.Boil, *ToJSONBoilProcedureType(boil))
+		if boil, err := ToJSONBoilProcedureType(boil); err == nil {
+			output.Boil = append(output.Boil, *boil)
+		} else {
+			return nil, err
+		}
 	}
 
 	for _, fermentable := range i.Fermentables {
-		output.Fermentables = append(output.Fermentables, *ToJSONFermentableType(fermentable))
+		if fermentableType, err := ToJSONFermentableType(fermentable); err == nil {
+			output.Fermentables = append(output.Fermentables, *fermentableType)
+		} else {
+			return nil, err
+		}
 	}
 
 	for _, culture := range i.Cultures {
-		output.Cultures = append(output.Cultures, *ToJSONCultureInformation(culture))
+		if culture, err := ToJSONCultureInformation(culture); err == nil {
+			output.Cultures = append(output.Cultures, *culture)
+		} else {
+			return nil, err
+		}
 	}
 
 	for _, equipment := range i.Equipments {
-		output.Equipments = append(output.Equipments, *ToJSONEquipmentType(equipment))
+		if equipmentType, err := ToJSONEquipmentType(equipment); err == nil{
+			output.Equipments = append(output.Equipments, *equipmentType)
+		} else {
+			return nil, err
+		}
 	}
 
 	for _, packaging := range i.Packaging {
-		output.Packaging = append(output.Packaging, *ToJSONPackagingProcedureType(packaging))
+		if packagingProcedure, err := ToJSONPackagingProcedureType(packaging); err == nil {
+			output.Packaging = append(output.Packaging, *packagingProcedure)
+		} else {
+			return nil, err
+		}
 	}
 
 	for _, hopVariety := range i.HopVarieties {
-		output.HopVarieties = append(output.HopVarieties, *ToJSONVarietyInformation(hopVariety))
+		if hop, err := ToJSONVarietyInformation(hopVariety); err == nil {
+			output.HopVarieties = append(output.HopVarieties, *hop)
+		} else {
+			return nil, err
+		}
 	}
 
 	for _, profile := range i.Profiles {
-		output.Profiles = append(output.Profiles, *ToJSONWaterBase(profile))
+		if water, err := ToJSONWaterBase(profile); err == nil {
+			output.Profiles = append(output.Profiles, *water)
+		} else {
+			return nil, err
+		}
 	}
 
 	return output, nil
 }
 
-func ToJSONWaterBase(i *beerproto.WaterBase) *beerjson.WaterBase {
+func ToJSONWaterBase(i *beerproto.WaterBase) (*beerjson.WaterBase, error) {
 	if i == nil {
-		return nil
+		return nil, nil
+	}
+
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
+	}
+
+	if i.Calcium == nil {
+		return nil, fmt.Errorf("calcium is required")
+	}
+
+	if i.Bicarbonate == nil {
+		return nil, fmt.Errorf("bicarbonate is required")
+	}
+
+	if i.Sulfate == nil {
+		return nil, fmt.Errorf("sulfate is required")
+	}
+
+	if i.Chloride == nil {
+		return nil, fmt.Errorf("chloride is required")
+	}
+
+	if i.Sodium == nil {
+		return nil, fmt.Errorf("sodium is required")
+	}
+
+	if i.Magnesium == nil {
+		return nil, fmt.Errorf("magnesium is required")
 	}
 
 	return &beerjson.WaterBase{
@@ -101,10 +179,22 @@ func ToJSONWaterBase(i *beerproto.WaterBase) *beerjson.WaterBase {
 		Bicarbonate: *ToJSONConcentrationType(i.Bicarbonate),
 		Nitrate:     ToJSONConcentrationType(i.Nitrate),
 		Sodium:      *ToJSONConcentrationType(i.Sodium),
-	}
+	}, nil
 }
 
-func ToJSONVarietyInformation(i *beerproto.VarietyInformation) *beerjson.VarietyInformation {
+func ToJSONVarietyInformation(i *beerproto.VarietyInformation) (*beerjson.VarietyInformation, error) {
+	if i == nil {
+		return nil, nil
+	}
+
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
+	}
+
+	if i.AlphaAcid == nil {
+		return nil, fmt.Errorf("alphaAcid is required")
+	}
+
 	return &beerjson.VarietyInformation{
 		Inventory:              ToJSONHopInventoryType(i.Inventory),
 		VarietyInformationType: ToJSONVarietyInformationType(i.Type),
@@ -120,7 +210,7 @@ func ToJSONVarietyInformation(i *beerproto.VarietyInformation) *beerjson.Variety
 		HopVarietyBaseForm:     ToJSONHopVarietyBaseForm(i.Form),
 		Producer:               &i.Producer,
 		Notes:                  &i.Notes,
-	}
+	}, nil
 }
 
 func ToJSONOilContentType(i *beerproto.OilContentType) *beerjson.OilContentType {
@@ -174,28 +264,62 @@ func ToJSONHopInventoryType(i *beerproto.HopInventoryType) *beerjson.HopInventor
 	return hopInventoryType
 }
 
-func ToJSONEquipmentType(i *beerproto.EquipmentType) *beerjson.EquipmentType {
+func ToJSONEquipmentType(i *beerproto.EquipmentType) (*beerjson.EquipmentType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
+	}
+
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
+	}
+
+	if i.EquipmentItems == nil {
+		return nil, fmt.Errorf("equipmentItems is required")
 	}
 
 	equipmentType := &beerjson.EquipmentType{
 		Name: i.Name,
 	}
 
-	if i.EquipmentItems != nil {
-		equipmentItemType := []beerjson.EquipmentItemType{}
-		for _, item := range i.EquipmentItems {
-			equipmentItemType = append(equipmentItemType, *ToJSONEquipmentItemType(item))
+	equipmentItemType := []beerjson.EquipmentItemType{}
+	for _, item := range i.EquipmentItems {
+		if equipmentType, err := ToJSONEquipmentItemType(item); err == nil {
+			equipmentItemType = append(equipmentItemType, *equipmentType)
+		} else {
+			return nil, err
 		}
-
-		equipmentType.EquipmentItems = equipmentItemType
 	}
 
-	return equipmentType
+	equipmentType.EquipmentItems = equipmentItemType
+
+
+	return equipmentType, nil
 }
 
-func ToJSONEquipmentItemType(i *beerproto.EquipmentItemType) *beerjson.EquipmentItemType {
+func ToJSONEquipmentItemType(i *beerproto.EquipmentItemType) (*beerjson.EquipmentItemType, error) {
+	if i == nil {
+		return nil, nil
+	}
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
+	}
+
+	if i.Form == beerproto.EquipmentItemType_NULL {
+		return nil, fmt.Errorf("form is required")
+	}
+
+	if i.Type == "" {
+		return nil, fmt.Errorf("type is required")
+	}
+
+	if i.MaximumVolume == nil  {
+		return nil, fmt.Errorf("maximumVolume is required")
+	}
+
+	if i.Loss == nil  {
+		return nil, fmt.Errorf("loss is required")
+	}
+
 	return &beerjson.EquipmentItemType{
 		BoilRatePerHour:     ToJSONVolumeType(i.BoilRatePerHour),
 		KeyType:             &i.Type,
@@ -208,7 +332,7 @@ func ToJSONEquipmentItemType(i *beerproto.EquipmentItemType) *beerjson.Equipment
 		Weight:              ToJSONMassType(i.Weight),
 		Loss:                *ToJSONVolumeType(i.Loss),
 		Notes: &i.Notes,
-	}
+	}, nil
 }
 
 func ToJSONSpecificHeatType(i *beerproto.SpecificHeatType) *beerjson.SpecificHeatType {
@@ -263,15 +387,38 @@ func ToJSONEquipmentBaseForm(i beerproto.EquipmentItemType_EquipmentBaseForm) *b
 	return &t
 }
 
-func ToJSONCultureInformation(i *beerproto.CultureInformation) *beerjson.CultureInformation {
+func ToJSONCultureInformation(i *beerproto.CultureInformation) (*beerjson.CultureInformation, error) {
 	if i == nil {
-		return nil
+		return nil, nil
+	}
+
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
+	}
+
+	if i.Type == beerproto.CultureBaseType_NULL_CULTUREBASETYPE {
+		return nil, fmt.Errorf("type is required")
+	}
+
+
+	if i.Form == beerproto.CultureBaseForm_NULL_CULTUREBASEFORM {
+		return nil, fmt.Errorf("form is required")
+	}
+
+	temperatureRange, err := ToJSONTemperatureRangeType(i.TemperatureRange)
+	if err != nil {
+		return nil, err
+	}
+
+	attenuationRange, err := ToJSONPercentRangeType(i.AttenuationRange)
+	if err != nil {
+		return nil, err
 	}
 
 	return &beerjson.CultureInformation{
 		CultureBaseForm:  ToJSONCultureBaseForm(i.Form),
 		Producer:         &i.Producer,
-		TemperatureRange: ToJSONTemperatureRangeType(i.TemperatureRange),
+		TemperatureRange: temperatureRange,
 		Notes:            &i.Notes,
 		BestFor:          &i.BestFor,
 		Inventory:        ToJSONCultureInventoryType(i.Inventory),
@@ -281,11 +428,11 @@ func ToJSONCultureInformation(i *beerproto.CultureInformation) *beerjson.Culture
 		Glucoamylase:     &i.Glucoamylase,
 		CultureBaseType:  ToJSONCultureBaseType(i.Type),
 		Flocculation:     ToJSONQualitativeRangeType(i.Flocculation),
-		AttenuationRange: ToJSONPercentRangeType(i.AttenuationRange),
+		AttenuationRange: attenuationRange,
 		MaxReuse:         &i.MaxReuse,
 		Pof:              &i.Pof,
 		Zymocide:         ToJSONZymocide(i.Zymocide),
-	}
+	}, nil
 }
 
 func ToJSONZymocide(i *beerproto.Zymocide) *beerjson.Zymocide {
@@ -333,25 +480,46 @@ func ToJSONCultureInventoryType(i *beerproto.CultureInventoryType) *beerjson.Cul
 	}
 }
 
-func ToJSONTemperatureRangeType(i *beerproto.TemperatureRangeType) *beerjson.TemperatureRangeType {
+func ToJSONTemperatureRangeType(i *beerproto.TemperatureRangeType) (*beerjson.TemperatureRangeType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
 	}
 
-	if i.Minimum == nil ||  i.Maximum == nil {
-		return nil
+	if i.Minimum == nil {
+		return nil, fmt.Errorf("minimum is required")
+	}
+
+	if i.Maximum == nil {
+		return nil, fmt.Errorf("maximum is required")
 	}
 
 	return  &beerjson.TemperatureRangeType{
 		Minimum: *ToJSONTemperatureType(i.Minimum),
 		Maximum: *ToJSONTemperatureType(i.Maximum),
-	}
+	}, nil
 }
 
-func ToJSONFermentableType(i *beerproto.FermentableType) *beerjson.FermentableType {
+func ToJSONFermentableType(i *beerproto.FermentableType) (*beerjson.FermentableType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
 	}
+
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
+	}
+
+	if i.Type == beerproto.FermentableBaseType_NULL_FERMENTABLEBASETYPE {
+		return nil, fmt.Errorf("type is required")
+	}
+
+	if i.Yield == nil {
+		return nil, fmt.Errorf("yield is required")
+	}
+
+	if i.Color == nil {
+		return nil, fmt.Errorf("color is required")
+	}
+
 	return &beerjson.FermentableType{
 		MaxInBatch:                ToJSONPercentType(i.MaxInBatch),
 		RecommendMash:             &i.RecommendMash,
@@ -382,7 +550,7 @@ func ToJSONFermentableType(i *beerproto.FermentableType) *beerjson.FermentableTy
 		FAN: ToJSONConcentrationType(i.Fan),
 		Fermentability: ToJSONPercentType(i.Fermentability),
 		BetaGlucan: ToJSONConcentrationType(i.BetaGlucan),
-	}
+	}, nil
 }
 
 func ToJSONViscosityType(i *beerproto.ViscosityType) *beerjson.ViscosityType {
@@ -468,9 +636,55 @@ func ToJSONDiastaticPowerUnitType(i beerproto.DiastaticPowerUnitType) beerjson.D
 	return beerjson.DiastaticPowerUnitType(strings.Title(strings.ToLower(unit)))
 }
 
-func ToJSONStyleType(i *beerproto.StyleType) *beerjson.StyleType {
+func ToJSONStyleType(i *beerproto.StyleType) (*beerjson.StyleType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
+	}
+
+
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
+	}
+
+	if i.Category == "" {
+		return nil, fmt.Errorf("category is required")
+	}
+
+	if i.StyleGuide == "" {
+		return nil, fmt.Errorf("styleGuide is required")
+	}
+
+	if i.Type == beerproto.StyleType_NULL_STYLECATEGORIES {
+		return nil, fmt.Errorf("type is required")
+	}
+
+	alcoholByVolume, err := ToJSONPercentRangeType(i.AlcoholByVolume)
+	if err != nil {
+		return nil, err
+	}
+	finalGravity, err := ToJSONGravityRangeType(i.FinalGravity)
+	if err != nil {
+		return nil, err
+	}
+
+	originalGravity, err := ToJSONGravityRangeType(i.OriginalGravity)
+	if err != nil {
+		return nil, err
+	}
+
+	color, err := ToJSONColorRangeType(i.Color)
+	if err != nil {
+		return nil, err
+	}
+
+	carbonation, err := ToJSONCarbonationRangeType(i.Carbonation)
+	if err != nil {
+		return nil, err
+	}
+
+	internationalBitternessUnits, err := ToJSONBitternessRangeType(i.InternationalBitternessUnits)
+	if err != nil {
+		return nil, err
 	}
 
 	return &beerjson.StyleType{
@@ -480,21 +694,21 @@ func ToJSONStyleType(i *beerproto.StyleType) *beerjson.StyleType {
 		Notes:                        &i.Notes,
 		Flavor:                       &i.Flavor,
 		Mouthfeel:                    &i.Mouthfeel,
-		FinalGravity:                 ToJSONGravityRangeType(i.FinalGravity),
+		FinalGravity:                 finalGravity,
 		StyleGuide:                   &i.StyleGuide,
-		Color:                        ToJSONColorRangeType(i.Color),
-		OriginalGravity:              ToJSONGravityRangeType(i.OriginalGravity),
+		Color:                       color,
+		OriginalGravity:             originalGravity,
 		Examples:                     &i.Examples,
 		Name:                         &i.Name,
-		Carbonation:                  ToJSONCarbonationRangeType(i.Carbonation),
-		AlcoholByVolume:              ToJSONPercentRangeType(i.AlcoholByVolume),
-		InternationalBitternessUnits: ToJSONBitternessRangeType(i.InternationalBitternessUnits),
+		Carbonation:                  carbonation,
+		AlcoholByVolume:              alcoholByVolume,
+		InternationalBitternessUnits: internationalBitternessUnits,
 		Appearance:                   &i.Appearance,
 		Category:                     &i.Category,
 		StyleLetter:                  &i.StyleLetter,
 		KeyType:                      ToJSONStyleType_StyleCategories(i.Type),
 		OverallImpression:            &i.OverallImpression,
-	}
+	}, nil
 }
 
 func ToJSONStyleType_StyleCategories(i beerproto.StyleType_StyleCategories) *beerjson.StyleCategories {
@@ -507,20 +721,34 @@ func ToJSONStyleType_StyleCategories(i beerproto.StyleType_StyleCategories) *bee
 	return &t
 }
 
-func ToJSONBitternessRangeType(i *beerproto.BitternessRangeType) *beerjson.BitternessRangeType {
+func ToJSONBitternessRangeType(i *beerproto.BitternessRangeType) (*beerjson.BitternessRangeType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
 	}
+
+	if i.Minimum == nil {
+		return nil, fmt.Errorf("minimum is required")
+	}
+
+	if i.Maximum == nil {
+		return nil, fmt.Errorf("maximum is required")
+	}
+
 	return &beerjson.BitternessRangeType{
 		Minimum: *ToJSONBitternessType(i.Minimum),
 		Maximum: *ToJSONBitternessType(i.Maximum),
-	}
+	}, nil
 }
 
 func ToJSONBitternessType(i *beerproto.BitternessType) *beerjson.BitternessType {
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == beerproto.BitternessType_NULL {
+		return &beerjson.BitternessType{}
+	}
+
 	return &beerjson.BitternessType{
 		Value: i.Value,
 		Unit:  ToJSONBitternessUnitType(i.Unit),
@@ -540,29 +768,54 @@ func ToJSONBitternessUnitType(i beerproto.BitternessType_BitternessUnitType) bee
 	return beerjson.BitternessUnitType_IBUs
 }
 
-func ToJSONPercentRangeType(i *beerproto.PercentRangeType) *beerjson.PercentRangeType {
+func ToJSONPercentRangeType(i *beerproto.PercentRangeType) (*beerjson.PercentRangeType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
 	}
+
+	if i.Minimum == nil {
+		return nil, fmt.Errorf("minimum is required")
+	}
+
+	if i.Maximum == nil {
+		return nil, fmt.Errorf("maximum is required")
+	}
+
 	return &beerjson.PercentRangeType{
 		Minimum: *ToJSONPercentType(i.Minimum),
 		Maximum: *ToJSONPercentType(i.Maximum),
-	}
+	}, nil
 }
 
-func ToJSONCarbonationRangeType(i *beerproto.CarbonationRangeType) *beerjson.CarbonationRangeType {
+func ToJSONCarbonationRangeType(i *beerproto.CarbonationRangeType) (*beerjson.CarbonationRangeType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
 	}
+
+	if i.Minimum == nil {
+		return nil, fmt.Errorf("minimum is required")
+	}
+
+	if i.Maximum == nil {
+		return nil, fmt.Errorf("maximum is required")
+	}
+
+
 	return &beerjson.CarbonationRangeType{
 		Minimum: *ToJSONCarbonationType(i.Minimum),
 		Maximum: *ToJSONCarbonationType(i.Maximum),
-	}
+	}, nil
 }
 func ToJSONCarbonationType(i *beerproto.CarbonationType) *beerjson.CarbonationType {
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == beerproto.CarbonationUnitType_NULL_CARBONATIONUNITTYPE {
+		return &beerjson.CarbonationType{
+		}
+	}
+
 	return &beerjson.CarbonationType{
 		Value: i.Value,
 		Unit:  *ToJSONCarbonationUnitType(i.Unit),
@@ -579,46 +832,104 @@ func ToJSONCarbonationUnitType(i beerproto.CarbonationUnitType) *beerjson.Carbon
 	return &t
 }
 
-func ToJSONColorRangeType(i *beerproto.ColorRangeType) *beerjson.ColorRangeType {
+func ToJSONColorRangeType(i *beerproto.ColorRangeType) (*beerjson.ColorRangeType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
 	}
+
+	if i.Minimum == nil {
+		return nil, fmt.Errorf("minimum is required")
+	}
+
+	if i.Maximum == nil {
+		return nil, fmt.Errorf("maximum is required")
+	}
+
+
 	return &beerjson.ColorRangeType{
 		Minimum: *ToJSONColorType(i.Minimum),
 		Maximum: *ToJSONColorType(i.Maximum),
-	}
+	}, nil
 }
 
-func ToJSONGravityRangeType(i *beerproto.GravityRangeType) *beerjson.GravityRangeType {
+func ToJSONGravityRangeType(i *beerproto.GravityRangeType) (*beerjson.GravityRangeType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
+	}
+
+	if i.Minimum == nil {
+		return nil, fmt.Errorf("minimum is required")
+	}
+
+	if i.Maximum == nil {
+		return nil, fmt.Errorf("maximum is required")
 	}
 
 	return &beerjson.GravityRangeType{
 		Minimum: *ToJSONGravityType(i.Minimum),
 		Maximum: *ToJSONGravityType(i.Maximum),
-	}
+	}, nil
 }
 
-func ToJSONMiscellaneousType(i *beerproto.MiscellaneousType) *beerjson.MiscellaneousType {
+func ToJSONMiscellaneousType(i *beerproto.MiscellaneousType) (*beerjson.MiscellaneousType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
 	}
 
-	return &beerjson.MiscellaneousType{
-		UseFor:                &i.UseFor,
-		Notes:                 &i.Notes,
-		Name:                  &i.Name,
-		Producer:              &i.Producer,
-		ProductId:             &i.ProductId,
-		MiscellaneousBaseType: ToJSONMiscellaneousBaseType(i.Type),
-		Inventory:             ToJSONMiscellaneousInventoryType(i.Inventory),
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
 	}
+
+	if i.Type == beerproto.MiscellaneousBaseType_NULL{
+		return nil, fmt.Errorf("type is required")
+	}
+
+	miscellaneousType :=  &beerjson.MiscellaneousType{}
+
+	if i.UseFor != "" {
+		miscellaneousType.UseFor = &i.UseFor
+	}
+
+	if i.Notes != "" {
+		miscellaneousType.Notes = &i.Notes
+	}
+
+
+	if i.Name != "" {
+		miscellaneousType.Name = &i.Name
+	}
+
+
+	if i.Producer != "" {
+		miscellaneousType.Producer = &i.Producer
+	}
+
+	if i.ProductId != "" {
+		miscellaneousType.ProductId = &i.ProductId
+	}
+
+	if i.Type != beerproto.MiscellaneousBaseType_NULL {
+		miscellaneousType.MiscellaneousBaseType = ToJSONMiscellaneousBaseType(i.Type)
+	}
+
+	if i.Inventory != nil{
+		inventory, err := ToJSONMiscellaneousInventoryType(i.Inventory)
+		if err != nil {
+			return nil, err
+		}
+		miscellaneousType.Inventory = inventory
+	}
+
+	return miscellaneousType, nil
 }
 
-func ToJSONMiscellaneousInventoryType(i *beerproto.MiscellaneousInventoryType) *beerjson.MiscellaneousInventoryType {
+func ToJSONMiscellaneousInventoryType(i *beerproto.MiscellaneousInventoryType) (*beerjson.MiscellaneousInventoryType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
+	}
+
+	if i.Amount == nil {
+		return nil, fmt.Errorf("amount is required")
 	}
 
 	miscellaneousInventoryType := &beerjson.MiscellaneousInventoryType{}
@@ -634,7 +945,7 @@ func ToJSONMiscellaneousInventoryType(i *beerproto.MiscellaneousInventoryType) *
 		miscellaneousInventoryType.Amount = ToJSONVolumeType(volume.Volume)
 	}
 
-	return miscellaneousInventoryType
+	return miscellaneousInventoryType, nil
 }
 
 func ToJSONRecipeType(i *beerproto.RecipeType) (*beerjson.RecipeType, error) {
@@ -642,29 +953,78 @@ func ToJSONRecipeType(i *beerproto.RecipeType) (*beerjson.RecipeType, error) {
 		return nil, nil
 	}
 
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
+	}
+
+	if i.Type != beerproto.RecipeType_NULL_RECIPETYPETYPE {
+		return nil, fmt.Errorf("type is required")
+	}
+
+	if i.Author == "" {
+		return nil, fmt.Errorf("author is required")
+	}
+
+	if i.BatchSize == nil {
+		return nil, fmt.Errorf("batchSize is required")
+	}
+
+	if i.Efficiency == nil {
+		return nil, fmt.Errorf("efficiency is required")
+	}
+
+	if i.Ingredients == nil {
+		return nil, fmt.Errorf("ingredients is required")
+	}
+
 	var created beerjson.DateType
 	if i.Created != "" {
 		created = beerjson.DateType(i.Created)
 	}
-	efficiency := ToJSONEfficiencyType(i.Efficiency)
-
-	if efficiency == nil {
-		return nil, fmt.Errorf("efficiency is required")
+	efficiency, err := ToJSONEfficiencyType(i.Efficiency)
+	if err != nil {
+		return nil, err
 	}
 
-	ingredients := ToJSONIngredientsType(i.Ingredients)
-	if ingredients == nil {
-		return nil, fmt.Errorf("ingredients is required")
+	ingredients, err := ToJSONIngredientsType(i.Ingredients)
+	if err != nil {
+		return nil, err
 	}
 
 	batchSize := ToJSONVolumeType(i.BatchSize)
-	if batchSize == nil {
-		return nil, fmt.Errorf("batchSize is required")
+
+	boil, err := ToJSONBoilProcedureType(i.Boil)
+	if err != nil {
+		return nil, err
 	}
 
+	fermentationProcedureType, err := ToJSONFermentationProcedureType(i.Fermentation)
+	if err != nil {
+		return nil, err
+	}
+
+	mash, err := ToJSONMashProcedureType(i.Mash)
+	if err != nil {
+		return nil, err
+	}
+
+	taste, err := ToJSONTasteType(i.Taste)
+	if err != nil {
+		return nil, err
+	}
+
+	packaging, err := ToJSONPackagingProcedureType(i.Packaging)
+	if err != nil {
+		return nil, err
+	}
+
+	style, err := ToJSONRecipeStyleType(i.Style)
+	if err != nil {
+		return nil, err
+	}
 	return &beerjson.RecipeType{
 		Efficiency:         *efficiency,
-		Style:               ToJSONRecipeStyleType(i.Style),
+		Style:               style,
 		IbuEstimate:         ToJSONIBUEstimateType(i.IbuEstimate),
 		ColorEstimate:       ToJSONColorType(i.ColorEstimate),
 		BeerPH:              ToJSONAcidityType(i.BeerPh),
@@ -674,13 +1034,13 @@ func ToJSONRecipeType(i *beerproto.RecipeType) (*beerjson.RecipeType, error) {
 		OriginalGravity:     ToJSONGravityType(i.OriginalGravity),
 		FinalGravity:        ToJSONGravityType(i.FinalGravity),
 		Carbonation:         &i.Carbonation,
-		Fermentation:        ToJSONFermentationProcedureType(i.Fermentation),
+		Fermentation:        fermentationProcedureType,
 		Author:              i.Author,
 		Ingredients:         *ingredients,
-		Mash:                ToJSONMashProcedureType(i.Mash),
-		Packaging:           ToJSONPackagingProcedureType(i.Packaging),
-		Boil:                ToJSONBoilProcedureType(i.Boil),
-		Taste:               ToJSONTasteType(i.Taste),
+		Mash:               mash,
+		Packaging:           packaging,
+		Boil:                boil,
+		Taste:               taste,
 		CaloriesPerPint:     &i.CaloriesPerPint,
 		Created:             &created,
 		BatchSize:           *batchSize,
@@ -690,39 +1050,73 @@ func ToJSONRecipeType(i *beerproto.RecipeType) (*beerjson.RecipeType, error) {
 	}, nil
 }
 
-func ToJSONTasteType(i *beerproto.TasteType) *beerjson.TasteType {
+func ToJSONTasteType(i *beerproto.TasteType) (*beerjson.TasteType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
 	}
+
+	if i.Notes == "" {
+		return nil, fmt.Errorf("notes is required")
+	}
+
 	return &beerjson.TasteType{
 		Notes:  i.Notes,
 		Rating: i.Rating,
-	}
+	}, nil
 }
 
-func ToJSONBoilProcedureType(i *beerproto.BoilProcedureType) *beerjson.BoilProcedureType {
+func ToJSONBoilProcedureType(i *beerproto.BoilProcedureType) (*beerjson.BoilProcedureType, error) {
 	if i == nil {
-		return nil
-	}
-	boilSteps := make([]beerjson.BoilStepType, 0)
-
-	for _, step := range i.BoilSteps {
-		boilSteps = append(boilSteps, *ToJSONBoilStepType(step))
+		return nil, nil
 	}
 
-	return &beerjson.BoilProcedureType{
-		PreBoilSize: ToJSONVolumeType(i.PreBoilSize),
-		BoilTime:    *ToJSONTimeType(i.BoilTime),
-		Name:        &i.Name,
-		Description: &i.Description,
-		Notes:       &i.Notes,
-		BoilSteps:   boilSteps,
+	boilProcedureType :=  &beerjson.BoilProcedureType{}
+
+	if i.BoilTime == nil {
+		return nil, fmt.Errorf("boilTime is required")
 	}
+
+	boilProcedureType.BoilTime = *ToJSONTimeType(i.BoilTime)
+
+	if i.BoilSteps != nil {
+		boilSteps := make([]beerjson.BoilStepType, 0)
+
+		for _, step := range i.BoilSteps {
+			if boilStep, err := ToJSONBoilStepType(step); err == nil {
+				boilSteps = append(boilSteps, *boilStep)
+			} else {
+				return nil, err
+			}
+		}
+		boilProcedureType.BoilSteps = boilSteps
+	}
+
+	if i.PreBoilSize != nil {
+		boilProcedureType.PreBoilSize = ToJSONVolumeType(i.PreBoilSize)
+	}
+
+	if i.Name != "" {
+		boilProcedureType.Name = &i.Name
+	}
+
+	if i.Description != "" {
+		boilProcedureType.Description = &i.Description
+	}
+
+	if i.Notes != "" {
+		boilProcedureType.Notes = &i.Notes
+	}
+
+	return boilProcedureType, nil
 }
 
-func ToJSONBoilStepType(i *beerproto.BoilStepType) *beerjson.BoilStepType {
+func ToJSONBoilStepType(i *beerproto.BoilStepType) (*beerjson.BoilStepType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
+	}
+
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
 	}
 
 	return &beerjson.BoilStepType{
@@ -737,7 +1131,7 @@ func ToJSONBoilStepType(i *beerproto.BoilStepType) *beerjson.BoilStepType {
 		EndPh:                    ToJSONAcidityType(i.EndPh),
 		Name:                     i.Name,
 		StartTemperature:         ToJSONTemperatureType(i.StartTemperature),
-	}
+	}, nil
 }
 
 func ToJSONChillingType(i beerproto.BoilStepTypeChillingType) *beerjson.BoilStepTypeChillingType {
@@ -750,27 +1144,57 @@ func ToJSONChillingType(i beerproto.BoilStepTypeChillingType) *beerjson.BoilStep
 	return &t
 }
 
-func ToJSONPackagingProcedureType(i *beerproto.PackagingProcedureType) *beerjson.PackagingProcedureType {
+func ToJSONPackagingProcedureType(i *beerproto.PackagingProcedureType) (*beerjson.PackagingProcedureType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
 	}
-	packagingVessels := make([]beerjson.PackagingVesselType, 0)
 
-	for _, vessels := range i.PackagingVessels {
-		packagingVessels = append(packagingVessels, *ToJSONPackagingVesselType(vessels))
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
 	}
-	return &beerjson.PackagingProcedureType{
-		Name:             i.Name,
-		PackagedVolume:   ToJSONVolumeType(i.PackagedVolume),
-		Description:      &i.Description,
-		Notes:            &i.Notes,
-		PackagingVessels: packagingVessels,
+
+	packagingProcedureType := &beerjson.PackagingProcedureType{}
+
+	if i.PackagingVessels != nil {
+		packagingVessels := make([]beerjson.PackagingVesselType, 0)
+
+		for _, vessels := range i.PackagingVessels {
+			if packagingVesselType, err := ToJSONPackagingVesselType(vessels); err == nil {
+				packagingVessels = append(packagingVessels, *packagingVesselType)
+			} else {
+				return nil, err
+			}
+		}
+
+		packagingProcedureType.PackagingVessels = packagingVessels
 	}
+
+	if i.Name != "" {
+		packagingProcedureType.Name = i.Name
+	}
+
+	if i.Description != "" {
+		packagingProcedureType.Description = &i.Description
+	}
+
+	if i.Notes != "" {
+		packagingProcedureType.Notes = &i.Notes
+	}
+
+	if i.PackagedVolume != nil {
+		packagingProcedureType.PackagedVolume = ToJSONVolumeType(i.PackagedVolume)
+	}
+
+	return packagingProcedureType, nil
 }
 
-func ToJSONPackagingVesselType(i *beerproto.PackagingVesselType) *beerjson.PackagingVesselType {
+func ToJSONPackagingVesselType(i *beerproto.PackagingVesselType) (*beerjson.PackagingVesselType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
+	}
+
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
 	}
 
 	var packageDate beerjson.DateType
@@ -792,7 +1216,7 @@ func ToJSONPackagingVesselType(i *beerproto.PackagingVesselType) *beerjson.Packa
 		StartTemperature:        ToJSONTemperatureType(i.StartTemperature),
 		EndPh:                   ToJSONAcidityType(i.EndPh),
 		EndTemperature:          ToJSONTemperatureType(i.EndTemperature),
-	}
+	}, nil
 }
 
 func ToJSONPackagingVesselTypeType(i beerproto.PackagingVesselType_PackagingVesselTypeType) *beerjson.PackagingVesselTypeType {
@@ -805,17 +1229,35 @@ func ToJSONPackagingVesselTypeType(i beerproto.PackagingVesselType_PackagingVess
 	return &t
 }
 
-func ToJSONIngredientsType(i *beerproto.IngredientsType) *beerjson.IngredientsType {
+func ToJSONIngredientsType(i *beerproto.IngredientsType) (*beerjson.IngredientsType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
 	}
 
 	ingredientsType := &beerjson.IngredientsType{}
 
+	if i.FermentableAdditions == nil {
+		return nil, fmt.Errorf("fermentableAdditions is required")
+	}
+
+	fermentableAdditions := make([]beerjson.FermentableAdditionType, 0)
+	for _, fermentable := range i.FermentableAdditions {
+		if addition, err := ToJSONFermentableAdditionType(fermentable); err == nil {
+			fermentableAdditions = append(fermentableAdditions, *addition)
+		} else {
+			return nil, err
+		}
+	}
+	ingredientsType.FermentableAdditions = fermentableAdditions
+
 	if i.MiscellaneousAdditions != nil {
 		miscellaneousAdditions := make([]beerjson.MiscellaneousAdditionType, 0)
 		for _, misc := range i.MiscellaneousAdditions {
-			miscellaneousAdditions = append(miscellaneousAdditions, *ToJSONMiscellaneousAdditionType(misc))
+			if misc, err := ToJSONMiscellaneousAdditionType(misc); err == nil {
+				miscellaneousAdditions = append(miscellaneousAdditions, *misc)
+			} else {
+				return nil, err
+			}
 		}
 		ingredientsType.MiscellaneousAdditions = miscellaneousAdditions
 	}
@@ -823,7 +1265,11 @@ func ToJSONIngredientsType(i *beerproto.IngredientsType) *beerjson.IngredientsTy
 	if i.CultureAdditions != nil {
 		cultureAdditions := make([]beerjson.CultureAdditionType, 0)
 		for _, culture := range i.CultureAdditions {
-			cultureAdditions = append(cultureAdditions, *ToJSONCultureAdditionType(culture))
+			if cultureAdditionType, err := ToJSONCultureAdditionType(culture); err == nil {
+				cultureAdditions = append(cultureAdditions, *cultureAdditionType)
+			} else {
+				return nil, err
+			}
 		}
 		ingredientsType.CultureAdditions = cultureAdditions
 	}
@@ -831,34 +1277,42 @@ func ToJSONIngredientsType(i *beerproto.IngredientsType) *beerjson.IngredientsTy
 	if i.WaterAdditions != nil {
 		waterAdditions := make([]beerjson.WaterAdditionType, 0)
 		for _, water := range i.WaterAdditions {
-			waterAdditions = append(waterAdditions, *ToJSONWaterAdditionType(water))
+			if waterAdditionType, err := ToJSONWaterAdditionType(water); err == nil {
+				waterAdditions = append(waterAdditions, *waterAdditionType)
+			} else {
+				return nil, err
+			}
 		}
 		ingredientsType.WaterAdditions = waterAdditions
-	}
-
-	if i.FermentableAdditions != nil {
-		fermentableAdditions := make([]beerjson.FermentableAdditionType, 0)
-		for _, fermentable := range i.FermentableAdditions {
-			fermentableAdditions = append(fermentableAdditions, *ToJSONFermentableAdditionType(fermentable))
-		}
-		ingredientsType.FermentableAdditions = fermentableAdditions
 	}
 
 	if i.HopAdditions != nil {
 		hopAdditions := make([]beerjson.HopAdditionType, 0)
 		for _, hop := range i.HopAdditions {
-			hopAdditions = append(hopAdditions, *ToJSONHopAdditionType(hop))
+			if hop, err := ToJSONHopAdditionType(hop); err == nil {
+				hopAdditions = append(hopAdditions, *hop)
+			} else {
+				return nil, err
+			}
 		}
 		ingredientsType.HopAdditions = hopAdditions
 	}
 
 
-	return ingredientsType
+	return ingredientsType, nil
 }
 
-func ToJSONHopAdditionType(i *beerproto.HopAdditionType) *beerjson.HopAdditionType {
+func ToJSONHopAdditionType(i *beerproto.HopAdditionType) (*beerjson.HopAdditionType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
+	}
+
+	if i.Timing == nil {
+		return nil, fmt.Errorf("timing is required")
+	}
+
+	if i.Amount == nil {
+		return nil, fmt.Errorf("amount is required")
 	}
 
 	hopAdditionType := &beerjson.HopAdditionType{
@@ -881,7 +1335,7 @@ func ToJSONHopAdditionType(i *beerproto.HopAdditionType) *beerjson.HopAdditionTy
 		hopAdditionType.Amount = ToJSONVolumeType(volume.Volume)
 	}
 
-	return hopAdditionType
+	return hopAdditionType, nil
 }
 
 func ToJSONHopVarietyBaseForm(i beerproto.HopVarietyBaseForm) *beerjson.HopVarietyBaseForm {
@@ -909,9 +1363,33 @@ func ToJSONHopVarietyBaseForm(i beerproto.HopVarietyBaseForm) *beerjson.HopVarie
 	return &t
 }
 
-func ToJSONFermentableAdditionType(i *beerproto.FermentableAdditionType) *beerjson.FermentableAdditionType {
+func ToJSONFermentableAdditionType(i *beerproto.FermentableAdditionType) (*beerjson.FermentableAdditionType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
+	}
+
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
+	}
+
+	if i.Type == beerproto.FermentableBaseType_NULL_FERMENTABLEBASETYPE {
+		return nil, fmt.Errorf("type is required")
+	}
+
+	if i.Yield == nil {
+		return nil, fmt.Errorf("yield is required")
+	}
+
+	if i.Color == nil {
+		return nil, fmt.Errorf("color is required")
+	}
+
+	if i.Timing == nil {
+		return nil, fmt.Errorf("timing is required")
+	}
+
+	if i.Amount == nil {
+		return nil, fmt.Errorf("amount is required")
 	}
 
 	fermentableAdditionType := &beerjson.FermentableAdditionType{
@@ -934,7 +1412,7 @@ func ToJSONFermentableAdditionType(i *beerproto.FermentableAdditionType) *beerjs
 		fermentableAdditionType.Amount = ToJSONVolumeType(volume.Volume)
 	}
 
-	return fermentableAdditionType
+	return fermentableAdditionType, nil
 }
 
 func ToJSONYieldType(i *beerproto.YieldType) *beerjson.YieldType {
@@ -970,9 +1448,37 @@ func ToJSONFermentableBaseType(i beerproto.FermentableBaseType) *beerjson.Fermen
 	return &t
 }
 
-func ToJSONWaterAdditionType(i *beerproto.WaterAdditionType) *beerjson.WaterAdditionType {
+func ToJSONWaterAdditionType(i *beerproto.WaterAdditionType) (*beerjson.WaterAdditionType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
+	}
+
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
+	}
+
+	if i.Calcium == nil {
+		return nil, fmt.Errorf("calcium is required")
+	}
+
+	if i.Bicarbonate == nil {
+		return nil, fmt.Errorf("bicarbonate is required")
+	}
+
+	if i.Sulfate == nil {
+		return nil, fmt.Errorf("sulfate is required")
+	}
+
+	if i.Chloride == nil {
+		return nil, fmt.Errorf("chloride is required")
+	}
+
+	if i.Sodium == nil {
+		return nil, fmt.Errorf("sodium is required")
+	}
+
+	if i.Magnesium == nil {
+		return nil, fmt.Errorf("magnesium is required")
 	}
 
 	return &beerjson.WaterAdditionType{
@@ -991,7 +1497,7 @@ func ToJSONWaterAdditionType(i *beerproto.WaterAdditionType) *beerjson.WaterAddi
 		Calcium:     ToJSONConcentrationType(i.Calcium),
 		Carbonate:   ToJSONConcentrationType(i.Carbonate),
 		Sodium:      ToJSONConcentrationType(i.Sodium),
-	}
+	}, nil
 }
 
 
@@ -1029,9 +1535,20 @@ func ToJSONConcentrationUnitType(i beerproto.ConcentrationUnitType) *beerjson.Co
 	return nil
 }
 
-func ToJSONCultureAdditionType(i *beerproto.CultureAdditionType) *beerjson.CultureAdditionType {
+func ToJSONCultureAdditionType(i *beerproto.CultureAdditionType) (*beerjson.CultureAdditionType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
+	}
+
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
+	}
+	if i.Type == beerproto.CultureBaseType_NULL_CULTUREBASETYPE {
+		return nil, fmt.Errorf("type is required")
+	}
+
+	if i.Form == beerproto.CultureBaseForm_NULL_CULTUREBASEFORM {
+		return nil, fmt.Errorf("form is required")
 	}
 
 	cultureAdditionType := &beerjson.CultureAdditionType{
@@ -1057,7 +1574,7 @@ func ToJSONCultureAdditionType(i *beerproto.CultureAdditionType) *beerjson.Cultu
 		cultureAdditionType.Amount = ToJSONVolumeType(volume.Volume)
 	}
 
-	return cultureAdditionType
+	return cultureAdditionType, nil
 }
 
 func ToJSONCultureBaseForm(i beerproto.CultureBaseForm) *beerjson.CultureBaseForm {
@@ -1070,9 +1587,25 @@ func ToJSONCultureBaseForm(i beerproto.CultureBaseForm) *beerjson.CultureBaseFor
 	return &t
 }
 
-func ToJSONMiscellaneousAdditionType(i *beerproto.MiscellaneousAdditionType) *beerjson.MiscellaneousAdditionType {
+func ToJSONMiscellaneousAdditionType(i *beerproto.MiscellaneousAdditionType) (*beerjson.MiscellaneousAdditionType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
+	}
+
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
+	}
+
+	if i.Type == beerproto.MiscellaneousBaseType_NULL {
+		return nil, fmt.Errorf("type is required")
+	}
+
+	if i.Timing == nil {
+		return nil, fmt.Errorf("timing is required")
+	}
+
+	if i.Amount == nil {
+		return nil, fmt.Errorf("amount is required")
 	}
 
 	miscellaneousAdditionType := &beerjson.MiscellaneousAdditionType{
@@ -1094,13 +1627,18 @@ func ToJSONMiscellaneousAdditionType(i *beerproto.MiscellaneousAdditionType) *be
 		miscellaneousAdditionType.Amount = ToJSONVolumeType(volume.Volume)
 	}
 
-	return miscellaneousAdditionType
+	return miscellaneousAdditionType, nil
 }
 
 func ToJSONUnitType(i *beerproto.UnitType) *beerjson.UnitType {
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == beerproto.UnitUnitType_NULL_UNITUNITTYPE {
+		return &beerjson.UnitType{	}
+	}
+
 	return &beerjson.UnitType{
 		Value: i.Value,
 		Unit:  *ToJSONUnitUnitType(i.Unit),
@@ -1177,25 +1715,52 @@ func ToJSONUseType(i beerproto.UseType) *beerjson.UseType {
 	return &t
 }
 
-func ToJSONFermentationProcedureType(i *beerproto.FermentationProcedureType) *beerjson.FermentationProcedureType {
+func ToJSONFermentationProcedureType(i *beerproto.FermentationProcedureType) (*beerjson.FermentationProcedureType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
 	}
-	steps := make([]beerjson.FermentationStepType, 0)
-	for _, step := range i.FermentationSteps {
-		steps = append(steps, *ToJSONFermentationStepType(step))
+
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
 	}
-	return &beerjson.FermentationProcedureType{
-		Description:       &i.Description,
-		Notes:             &i.Notes,
-		Name:              i.Name,
-		FermentationSteps: steps,
+
+	if i.FermentationSteps == nil {
+		return nil, fmt.Errorf("fermentationSteps is required")
 	}
+
+	fermentationProcedureType := &beerjson.FermentationProcedureType{}
+
+	fermentationProcedureType.Name = i.Name
+	if i.FermentationSteps != nil {
+		steps := make([]beerjson.FermentationStepType, 0)
+		for _, step := range i.FermentationSteps {
+			if fermentationStepType, err := ToJSONFermentationStepType(step); err == nil {
+				steps = append(steps, *fermentationStepType)
+			} else {
+				return nil, err
+			}
+		}
+		fermentationProcedureType.FermentationSteps = steps
+	}
+
+	if i.Description != "" {
+		fermentationProcedureType.Description = &i.Description
+	}
+
+	if i.Notes != "" {
+		fermentationProcedureType.Notes = &i.Notes
+	}
+
+	return fermentationProcedureType, nil
 }
 
-func ToJSONFermentationStepType(i *beerproto.FermentationStepType) *beerjson.FermentationStepType {
+func ToJSONFermentationStepType(i *beerproto.FermentationStepType) (*beerjson.FermentationStepType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
+	}
+
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
 	}
 
 	return &beerjson.FermentationStepType{
@@ -1210,13 +1775,18 @@ func ToJSONFermentationStepType(i *beerproto.FermentationStepType) *beerjson.Fer
 		StartTemperature: ToJSONTemperatureType(i.StartTemperature),
 		EndPh:            ToJSONAcidityType(i.EndPh),
 		Vessel:           &i.Vessel,
-	}
+	}, nil
 }
 
 func ToJSONGravityType(i *beerproto.GravityType) *beerjson.GravityType {
 	if i == nil {
 		return nil
 	}
+
+	if i.Unit == beerproto.GravityUnitType_NULL_GRAVITYUNITTYPE {
+		return &beerjson.GravityType{}
+	}
+
 	return &beerjson.GravityType{
 		Value: i.Value,
 		Unit:  *ToJSONGravityUnitType(i.Unit),
@@ -1290,10 +1860,27 @@ func ToJSONIBUMethodType(i beerproto.IBUEstimateType_IBUMethodType) *beerjson.IB
 	return &t
 }
 
-func ToJSONRecipeStyleType(i *beerproto.RecipeStyleType) *beerjson.RecipeStyleType {
+func ToJSONRecipeStyleType(i *beerproto.RecipeStyleType) (*beerjson.RecipeStyleType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
 	}
+
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
+	}
+
+	if i.Category == "" {
+		return nil, fmt.Errorf("category is required")
+	}
+
+	if i.StyleGuide == "" {
+		return nil, fmt.Errorf("styleGuide is required")
+	}
+
+	if i.Type == beerproto.RecipeStyleType_NULL_STYLECATEGORIES {
+		return nil, fmt.Errorf("type is required")
+	}
+
 	return &beerjson.RecipeStyleType{
 		KeyType:        ToJSONRecipeStyleType_StyleCategories(i.Type),
 		Name:           &i.Name,
@@ -1301,7 +1888,7 @@ func ToJSONRecipeStyleType(i *beerproto.RecipeStyleType) *beerjson.RecipeStyleTy
 		CategoryNumber: &i.CategoryNumber,
 		StyleGuide:     &i.StyleGuide,
 		StyleLetter:    &i.StyleLetter,
-	}
+	}, nil
 }
 
 func ToJSONRecipeStyleType_StyleCategories(i beerproto.RecipeStyleType_StyleCategories) *beerjson.StyleCategories {
@@ -1314,9 +1901,13 @@ func ToJSONRecipeStyleType_StyleCategories(i beerproto.RecipeStyleType_StyleCate
 	return &t
 }
 
-func ToJSONEfficiencyType(i *beerproto.EfficiencyType) *beerjson.EfficiencyType {
+func ToJSONEfficiencyType(i *beerproto.EfficiencyType) (*beerjson.EfficiencyType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
+	}
+
+	if i.Brewhouse == nil {
+		return nil, fmt.Errorf("brewhouse is required")
 	}
 
 	return &beerjson.EfficiencyType{
@@ -1324,7 +1915,7 @@ func ToJSONEfficiencyType(i *beerproto.EfficiencyType) *beerjson.EfficiencyType 
 		Lauter:     ToJSONPercentType(i.Lauter),
 		Mash:       ToJSONPercentType(i.Mash),
 		Brewhouse:  *ToJSONPercentType(i.Brewhouse),
-	}
+	}, nil
 }
 
 func ToJSONPercentType(i *beerproto.PercentType) *beerjson.PercentType {
@@ -1346,34 +1937,71 @@ func ToJSONPercentUnitType(i beerproto.PercentType_PercentUnitType) beerjson.Per
 	return beerjson.PercentUnitType(strings.ToLower(i.String()))
 }
 
-func ToJSONMashProcedureType(i *beerproto.MashProcedureType) *beerjson.MashProcedureType {
+func ToJSONMashProcedureType(i *beerproto.MashProcedureType) (*beerjson.MashProcedureType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
 	}
 
-	mashSteps := []beerjson.MashStepType{}
-	for _, step := range i.MashSteps {
-		mashSteps = append(mashSteps, *ToJSONMashStepType(step))
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
 	}
 
-	return &beerjson.MashProcedureType{
-		Name:             i.Name,
-		Notes:            &i.Notes,
-		GrainTemperature: *ToJSONTemperatureType(i.GrainTemperature),
-		MashSteps:        mashSteps,
+	if i.MashSteps == nil {
+		return nil, fmt.Errorf("mashSteps is required")
 	}
+
+	if i.GrainTemperature == nil {
+		return nil, fmt.Errorf("grainTemperature is required")
+	}
+	mashProcedureType := &beerjson.MashProcedureType{}
+	if i.MashSteps != nil {
+		mashSteps := []beerjson.MashStepType{}
+		for _, step := range i.MashSteps {
+			if step, err := ToJSONMashStepType(step); err == nil {
+				mashSteps = append(mashSteps, *step)
+			} else {
+				return nil, err
+			}
+		}
+		mashProcedureType.MashSteps = mashSteps
+	}
+
+	mashProcedureType.GrainTemperature = *ToJSONTemperatureType(i.GrainTemperature)
+
+	mashProcedureType.Name = i.Name
+
+
+	if i.Notes != "" {
+		mashProcedureType.Notes = &i.Notes
+	}
+	return mashProcedureType, nil
 }
 
-func ToJSONMashStepType(i *beerproto.MashStepType) *beerjson.MashStepType {
+func ToJSONMashStepType(i *beerproto.MashStepType) (*beerjson.MashStepType, error) {
 	if i == nil {
-		return nil
+		return nil, nil
 	}
 
-	return &beerjson.MashStepType{
+	if i.Name == "" {
+		return nil, fmt.Errorf("name is required")
+	}
+
+	if i.StepTemperature == nil {
+		return nil, fmt.Errorf("stepTemperature is required")
+	}
+
+	if i.StepTime == nil {
+		return nil, fmt.Errorf("stepTime is required")
+	}
+
+	if i.Type == beerproto.MashStepType_NULL {
+		return nil, fmt.Errorf("type is required")
+	}
+
+	mashStepType :=  &beerjson.MashStepType{
 		StepTime:          *ToJSONTimeType(i.StepTime),
 		RampTime:          ToJSONTimeType(i.RampTime),
 		EndTemperature:    ToJSONTemperatureType(i.EndTemperature),
-		Description:       &i.Description,
 		InfuseTemperature: ToJSONTemperatureType(i.InfuseTemperature),
 		StartPH:           ToJSONAcidityType(i.StartPh),
 		EndPH:             ToJSONAcidityType(i.EndPh),
@@ -1383,6 +2011,12 @@ func ToJSONMashStepType(i *beerproto.MashStepType) *beerjson.MashStepType {
 		StepTemperature:   *ToJSONTemperatureType(i.StepTemperature),
 		WaterGrainRatio:   ToJSONSpecificVolumeType(i.WaterGrainRatio),
 	}
+
+	if i.Description != "" {
+		mashStepType.Description = &i.Description
+	}
+
+	return mashStepType, nil
 }
 
 func ToJSONVolumeType(i *beerproto.VolumeType) *beerjson.VolumeType {
@@ -1491,7 +2125,7 @@ func ToJSONTimeType(i *beerproto.TimeType) *beerjson.TimeType {
 	}
 
 	if i.Unit == beerproto.TimeType_NULL {
-		return nil
+		return &beerjson.TimeType{	}
 	}
 
 	return &beerjson.TimeType{
