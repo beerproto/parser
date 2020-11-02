@@ -1,6 +1,7 @@
 package beerJSON
 
 import (
+	"context"
 	"github.com/beerproto/beerjson.go"
 	beerproto "github.com/beerproto/beerproto_go"
 	"github.com/go-test/deep"
@@ -45,7 +46,8 @@ func TestToJSONRecipeType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONRecipeType(tt.args.i)
+
+			got, err := ToJSONRecipeType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONRecipeType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -108,7 +110,7 @@ func TestToJSONIngredientsType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONIngredientsType(tt.args.i)
+			got, err := ToJSONIngredientsType(context.Background(),tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONIngredientsType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -181,7 +183,7 @@ func TestToJSONIBUEstimateType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ToJSONIBUEstimateType(tt.args.i)
+			got := ToJSONIBUEstimateType(context.Background(),tt.args.i)
 			have := ToProtoIBUEstimateType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONIBUEstimateType() %v", diff)
@@ -227,8 +229,7 @@ func TestToJSONDiastaticPowerType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got := ToJSONDiastaticPowerType(tt.args.i)
+			got := ToJSONDiastaticPowerType(context.Background(), tt.args.i)
 			have := ToProtoDiastaticPowerType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONDiastaticPowerType() %v", diff)
@@ -309,7 +310,7 @@ func TestToJSONWaterBase(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "Required",
+			name: "Nil",
 			args: args{
 				i: nil,
 			},
@@ -318,7 +319,7 @@ func TestToJSONWaterBase(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONWaterBase(tt.args.i)
+			got, err := ToJSONWaterBase(context.Background(),tt.args.i)
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONWaterBase() error = %v, wantErr %v", err, tt.wantErr)
@@ -382,7 +383,7 @@ func TestToJSONConcentrationType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ToJSONConcentrationType(tt.args.i)
+			got := ToJSONConcentrationType(context.Background(),tt.args.i)
 			have := ToProtoConcentrationType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONConcentrationType() %v", diff)
@@ -440,7 +441,7 @@ func TestMapToJSON(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := MapToJSON(tt.args.i)
+			got, err := MapToJSON(context.Background(),tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("MapToJSON() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -517,9 +518,9 @@ func TestToJSONVarietyInformation(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONVarietyInformation(tt.args.i)
+			got, err := ToJSONVarietyInformation(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ToJSONRecipeType() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ToJSONVarietyInformation() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 
@@ -580,7 +581,7 @@ func TestToJSONOilContentType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ToJSONOilContentType(tt.args.i)
+			got := ToJSONOilContentType(context.Background(), tt.args.i)
 			have := ToProtoOilContentType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONOilContentType() %v", diff)
@@ -623,8 +624,7 @@ func TestToJSONHopInventoryType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got := ToJSONHopInventoryType(tt.args.i)
+			got := ToJSONHopInventoryType(context.Background(), tt.args.i)
 			have := ToProtoHopInventoryType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONHopInventoryType() %v", diff)
@@ -670,8 +670,7 @@ func TestToJSONEquipmentType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONEquipmentType(tt.args.i)
-
+			got, err := ToJSONEquipmentType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONEquipmentType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -748,7 +747,7 @@ func TestToJSONEquipmentItemType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONEquipmentItemType(tt.args.i)
+			got, err := ToJSONEquipmentItemType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONEquipmentItemType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -811,8 +810,7 @@ func TestToJSONSpecificHeatType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got := ToJSONSpecificHeatType(tt.args.i)
+			got := ToJSONSpecificHeatType(context.Background(), tt.args.i)
 			have := ToProtoSpecificHeatType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONSpecificHeatType() %v", diff)
@@ -884,8 +882,7 @@ func TestToJSONMassType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got := ToJSONMassType(tt.args.i)
+			got := ToJSONMassType(context.Background(), tt.args.i)
 			have := ToProtoMassType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONMassType() %v", diff)
@@ -1047,8 +1044,7 @@ func TestToJSONVolumeType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got := ToJSONVolumeType(tt.args.i)
+			got := ToJSONVolumeType(context.Background(), tt.args.i)
 			have := ToProtoVolumeType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONVolumeType() %v", diff)
@@ -1147,8 +1143,7 @@ func TestToJSONSpecificVolumeType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got := ToJSONSpecificVolumeType(tt.args.i)
+			got := ToJSONSpecificVolumeType(context.Background(), tt.args.i)
 			have := ToProtoSpecificVolumeType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONSpecificVolumeType() %v", diff)
@@ -1219,7 +1214,7 @@ func TestToJSONCultureInformation(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONCultureInformation(tt.args.i)
+			got, err := ToJSONCultureInformation(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONCultureInformation() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -1285,7 +1280,7 @@ func TestToJSONTemperatureRangeType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONTemperatureRangeType(tt.args.i)
+			got, err := ToJSONTemperatureRangeType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONTemperatureRangeType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -1339,8 +1334,7 @@ func TestToJSONTemperatureType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got := ToJSONTemperatureType(tt.args.i)
+			got := ToJSONTemperatureType(context.Background(), tt.args.i)
 			have := ToProtoTemperatureType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONTemperatureType() %v", diff)
@@ -1396,7 +1390,7 @@ func TestToJSONPercentRangeType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONPercentRangeType(tt.args.i)
+			got, err := ToJSONPercentRangeType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONPercentRangeType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -1441,8 +1435,7 @@ func TestToJSONPercentType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got := ToJSONPercentType(tt.args.i)
+			got := ToJSONPercentType(context.Background(), tt.args.i)
 			have := ToProtoPercentType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONPercentType() %v", diff)
@@ -1487,8 +1480,7 @@ func TestToJSONZymocide(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got := ToJSONZymocide(tt.args.i)
+			got := ToJSONZymocide(context.Background(), tt.args.i)
 			have := ToProtoZymocide(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONZymocide() %v", diff)
@@ -1526,8 +1518,7 @@ func TestToJSONCultureInventoryType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got := ToJSONCultureInventoryType(tt.args.i)
+			got := ToJSONCultureInventoryType(context.Background(), tt.args.i)
 			have := ToProtoCultureInventoryType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONCultureInventoryType() %v", diff)
@@ -1612,7 +1603,7 @@ func TestToJSONFermentableType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONFermentableType(tt.args.i)
+			got, err := ToJSONFermentableType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONFermentableType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -1675,8 +1666,7 @@ func TestToJSONColorType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got := ToJSONColorType(tt.args.i)
+			got := ToJSONColorType(context.Background(), tt.args.i)
 			have := ToProtoColorType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONColorType() %v", diff)
@@ -1712,7 +1702,7 @@ func TestToJSONAcidityType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ToJSONAcidityType(tt.args.i)
+			got := ToJSONAcidityType(context.Background(), tt.args.i)
 			have := ToProtoAcidityType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONAcidityType() %v", diff)
@@ -1757,8 +1747,7 @@ func TestToJSONViscosityType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got := ToJSONViscosityType(tt.args.i)
+			got := ToJSONViscosityType(context.Background(), tt.args.i)
 			have := ToProtoViscosityType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONViscosityType() %v", diff)
@@ -1852,7 +1841,7 @@ func TestToJSONStyleType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONStyleType(tt.args.i)
+			got, err := ToJSONStyleType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONStyleType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -1917,7 +1906,7 @@ func TestToJSONGravityRangeType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONGravityRangeType(tt.args.i)
+			got, err := ToJSONGravityRangeType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONGravityRangeType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -1986,8 +1975,7 @@ func TestToJSONGravityType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got := ToJSONGravityType(tt.args.i)
+			got := ToJSONGravityType(context.Background(), tt.args.i)
 			have := ToProtoGravityType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONGravityType() %v", diff)
@@ -2043,7 +2031,7 @@ func TestToJSONColorRangeType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONColorRangeType(tt.args.i)
+			got, err := ToJSONColorRangeType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONColorRangeType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -2108,8 +2096,7 @@ func TestToJSONCarbonationRangeType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got, err := ToJSONCarbonationRangeType(tt.args.i)
+			got, err := ToJSONCarbonationRangeType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONGravityRangeType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -2160,7 +2147,7 @@ func TestToJSONCarbonationType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ToJSONCarbonationType(tt.args.i)
+			got := ToJSONCarbonationType(context.Background(), tt.args.i)
 			have := ToProtoCarbonationType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONCarbonationType() %v", diff)
@@ -2216,7 +2203,7 @@ func TestToJSONBitternessRangeType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONBitternessRangeType(tt.args.i)
+			got, err := ToJSONBitternessRangeType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONBitternessRangeType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -2267,7 +2254,7 @@ func TestToJSONBitternessType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ToJSONBitternessType(tt.args.i)
+			got := ToJSONBitternessType(context.Background(), tt.args.i)
 			have := ToProtoBitternessType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONBitternessType() %v", diff)
@@ -2330,7 +2317,7 @@ func TestToJSONMiscellaneousType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONMiscellaneousType(tt.args.i)
+			got, err := ToJSONMiscellaneousType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONMiscellaneousType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -2402,7 +2389,7 @@ func TestToJSONMiscellaneousInventoryType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONMiscellaneousInventoryType(tt.args.i)
+			got, err := ToJSONMiscellaneousInventoryType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONGravityRangeType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -2440,23 +2427,6 @@ func TestToJSONTasteType(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "Required",
-			args: args{
-				i: &beerproto.TasteType{
-					Notes:  "",
-				},
-			},
-			wantErr: true,
-		},
-		{
-			name: "Nil",
-			args: args{
-				i: &beerproto.TasteType{
-				},
-			},
-			wantErr: true,
-		},
-		{
 			name: "Nil",
 			args: args{
 				i: nil,
@@ -2467,7 +2437,7 @@ func TestToJSONTasteType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONTasteType(tt.args.i)
+			got, err := ToJSONTasteType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONTasteType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -2535,8 +2505,7 @@ func TestToJSONBoilProcedureType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got, err := ToJSONBoilProcedureType(tt.args.i)
+			got, err := ToJSONBoilProcedureType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONBoilProcedureType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -2612,14 +2581,6 @@ func TestToJSONBoilStepType(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.BoilStepType{
-				},
-			},
-			wantErr: true,
-		},
-		{
-			name: "Nil",
-			args: args{
 				i: nil,
 			},
 			wantErr: false,
@@ -2627,7 +2588,7 @@ func TestToJSONBoilStepType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONBoilStepType(tt.args.i)
+			got, err := ToJSONBoilStepType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONGravityRangeType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -2713,7 +2674,7 @@ func TestToJSONTimeType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ToJSONTimeType(tt.args.i)
+			got := ToJSONTimeType(context.Background(), tt.args.i)
 			have := ToProtoTimeType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONTimeType() %v", diff)
@@ -2757,13 +2718,6 @@ func TestToJSONPackagingProcedureType(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.PackagingProcedureType{},
-			},
-			wantErr: true,
-		},
-		{
-			name: "Nil",
-			args: args{
 				i: nil,
 			},
 			wantErr: false,
@@ -2771,7 +2725,7 @@ func TestToJSONPackagingProcedureType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONPackagingProcedureType(tt.args.i)
+			got, err := ToJSONPackagingProcedureType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONPackagingProcedureType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -2832,14 +2786,6 @@ func TestToJSONPackagingVesselType(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.PackagingVesselType{
-				},
-			},
-			wantErr: true,
-		},
-		{
-			name: "Nil",
-			args: args{
 				i: nil,
 			},
 			wantErr: false,
@@ -2847,7 +2793,7 @@ func TestToJSONPackagingVesselType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONPackagingVesselType(tt.args.i)
+			got, err := ToJSONPackagingVesselType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONPackagingVesselType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -2928,7 +2874,7 @@ func TestToJSONHopAdditionType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONHopAdditionType(tt.args.i)
+			got, err := ToJSONHopAdditionType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONHopAdditionType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -3022,7 +2968,7 @@ func TestToJSONFermentableAdditionType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONFermentableAdditionType(tt.args.i)
+			got, err := ToJSONFermentableAdditionType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONFermentableAdditionType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -3074,7 +3020,7 @@ func TestToJSONYieldType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ToJSONYieldType(tt.args.i)
+			got := ToJSONYieldType(context.Background(), tt.args.i)
 			have := ToProtoYieldType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONYieldType() %v", diff)
@@ -3149,7 +3095,7 @@ func TestToJSONWaterAdditionType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONWaterAdditionType(tt.args.i)
+			got, err := ToJSONWaterAdditionType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONWaterAdditionType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -3259,7 +3205,7 @@ func TestToJSONCultureAdditionType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONCultureAdditionType(tt.args.i)
+			got, err := ToJSONCultureAdditionType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONCultureAdditionType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -3358,7 +3304,7 @@ func TestToJSONMiscellaneousAdditionType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONMiscellaneousAdditionType(tt.args.i)
+			got, err := ToJSONMiscellaneousAdditionType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONMiscellaneousAdditionType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -3444,8 +3390,7 @@ func TestToJSONUnitType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got := ToJSONUnitType(tt.args.i)
+			got := ToJSONUnitType(context.Background(), tt.args.i)
 			have := ToProtoUnitType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONUnitType() %v", diff)
@@ -3492,8 +3437,7 @@ func TestToJSONTimingType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got := ToJSONTimingType(tt.args.i)
+			got := ToJSONTimingType(context.Background(), tt.args.i)
 			have := ToProtoTimingType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONTimingType() %v", diff)
@@ -3551,7 +3495,7 @@ func TestToJSONFermentationProcedureType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONFermentationProcedureType(tt.args.i)
+			got, err := ToJSONFermentationProcedureType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONFermentationProcedureType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -3610,14 +3554,6 @@ func TestToJSONFermentationStepType(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.FermentationStepType{
-				},
-			},
-			wantErr: true,
-		},
-		{
-			name: "Nil",
-			args: args{
 				i: nil,
 			},
 			wantErr: false,
@@ -3625,7 +3561,7 @@ func TestToJSONFermentationStepType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONFermentationStepType(tt.args.i)
+			got, err := ToJSONFermentationStepType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONFermentationStepType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -3696,7 +3632,7 @@ func TestToJSONRecipeStyleType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONRecipeStyleType(tt.args.i)
+			got, err := ToJSONRecipeStyleType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONRecipeStyleType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -3762,10 +3698,10 @@ func TestToJSONEfficiencyType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONEfficiencyType(tt.args.i)
+			got, err := ToJSONEfficiencyType(context.Background(), tt.args.i)
 
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ToJSONRecipeType() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ToJSONEfficiencyType() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 
@@ -3831,8 +3767,7 @@ func TestToJSONMashProcedureType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			got, err := ToJSONMashProcedureType(tt.args.i)
+			got, err := ToJSONMashProcedureType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONMashProcedureType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -3894,14 +3829,6 @@ func TestToJSONMashStepType(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.MashStepType{
-				},
-			},
-			wantErr: true,
-		},
-		{
-			name: "Nil",
-			args: args{
 				i: nil,
 			},
 			wantErr: false,
@@ -3909,7 +3836,7 @@ func TestToJSONMashStepType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONMashStepType(tt.args.i)
+			got, err := ToJSONMashStepType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONMashProcedureType() error = %v, wantErr %v", err, tt.wantErr)
 				return
