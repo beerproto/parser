@@ -38,11 +38,10 @@ func MapToProto(i *beerXML.Recipe) *beerproto.Recipe {
 		output.Styles = append(output.Styles, ToProtoStyleType(i.Style))
 	}
 
-	if i.Yeasts != nil {
-		for _, culture := range i.Yeasts.Yeast {
-			output.Cultures = append(output.Cultures, ToProtoCultureInformation(culture))
-		}
+	for _, culture := range i.Yeasts.Yeast {
+		output.Cultures = append(output.Cultures, ToProtoCultureInformation(culture))
 	}
+
 
 	if i.Equipment != nil {
 		output.Equipments = append(output.Equipments, ToProtoEquipmentType(i.Equipment))
@@ -242,7 +241,17 @@ func ToProtoEquipmentType(i *beerXML.Equipment) *beerproto.EquipmentType {
 	equipmentItemType := []*beerproto.EquipmentItemType{}
 
 	equipmentItemType = append(equipmentItemType, &beerproto.EquipmentItemType{
-		SpecificHeat: ToProtoSpecificHeatTypeFromFloat(i.Tunspecificheat),
+		Notes:               i.Notes,
+		BoilRatePerHour:     nil,
+		Type:                "",
+		Form:                0,
+		DrainRatePerMinute:  nil,
+		GrainAbsorptionRate: nil,
+		Name:                i.Name,
+		MaximumVolume:       ToProtoVolumeType(&i.Boilsize, beerproto.VolumeType_L),
+		Weight:              ToProtoMassType(&i.Tunweight, beerproto.MassUnitType_KG),
+		Loss:                nil,
+		SpecificHeat: ToProtoSpecificHeatTypeFromFloat(&i.Tunspecificheat),
 	})
 
 	// for _, item := range i.EquipmentItems {
@@ -255,11 +264,13 @@ func ToProtoEquipmentType(i *beerXML.Equipment) *beerproto.EquipmentType {
 	}
 }
 
-func ToProtoSpecificHeatTypeFromFloat(i float32) *beerproto.SpecificHeatType {
-
+func ToProtoSpecificHeatTypeFromFloat(i *float64) *beerproto.SpecificHeatType {
+	if i == nil {
+		return nil
+	}
 
 	return &beerproto.SpecificHeatType{
-		Value: float64(i),
+		Value: *i,
 		Unit: beerproto.SpecificHeatUnitType_CALGC,
 	}
 }
@@ -899,13 +910,13 @@ func ToProtoUnitUnitType(i beerjson.UnitUnitType) beerproto.UnitUnitType {
 	return beerproto.UnitUnitType(unit)
 }
 
-func ToProtoMassType(i *beerjson.MassType) *beerproto.MassType {
+func ToProtoMassType(i *float64, unit beerproto.MassUnitType) *beerproto.MassType {
 	if i == nil {
 		return nil
 	}
 	return &beerproto.MassType{
-		Value: i.Value,
-		Unit:  ToProtoMassUnitType(i.Unit),
+		Value: *i,
+		Unit:  unit,
 	}
 }
 
@@ -1194,20 +1205,17 @@ func ToProtoMashStepType(i beerXML.MashStep) *beerproto.MashStepType {
 	return mashStep
 }
 
-func ToProtoVolumeType(i *beerjson.VolumeType) *beerproto.VolumeType {
+func ToProtoVolumeType(i *float64, unit beerproto.VolumeType_VolumeUnitType ) *beerproto.VolumeType {
 	if i == nil {
 		return nil
 	}
 	return &beerproto.VolumeType{
-		Value: i.Value,
-		Unit:  ToProtoVolumeUnitType(i.Unit),
+		Value: *i,
+		Unit: unit,
 	}
 }
 
-func ToProtoVolumeUnitType(i beerjson.VolumeUnitType) beerproto.VolumeType_VolumeUnitType {
-	unit := beerproto.VolumeType_VolumeUnitType_value[strings.ToUpper(string(i))]
-	return beerproto.VolumeType_VolumeUnitType(unit)
-}
+
 
 func ToProtoSpecificVolumeTypeFromFloat(i float32) *beerproto.SpecificVolumeType {
 	return &beerproto.SpecificVolumeType{

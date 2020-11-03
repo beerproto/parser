@@ -8,6 +8,10 @@ github.com/beerproto/beerproto_go v1.53.1-0.20201027155919-12446a1fd817 h1:5xcv6
 github.com/beerproto/beerproto_go v1.53.1-0.20201027155919-12446a1fd817/go.mod h1:5RPAlJEi0Sp/EGcPYHBw9P1+NqSLwoNcBnllvYSKzv4=
 github.com/beerproto/beerxml.go v0.0.0-20200430134713-aefa6554daf8 h1:r4Kph0iJtHfdp21qlNBQoYTnrglQ03c779YSN3zgH+w=
 github.com/beerproto/beerxml.go v0.0.0-20200430134713-aefa6554daf8/go.mod h1:vgQlBEPkvK7MHpPfYNQ1ivoXupihcpGGnbk6McHH2yI=
+github.com/beerproto/beerxml.go v0.0.0-20201102135933-d52fdacb6425 h1:ynk2ITAtT3NFivjOXI7xujQZhqeBNes4lXbY0Ao34is=
+github.com/beerproto/beerxml.go v0.0.0-20201102135933-d52fdacb6425/go.mod h1:gi0t7Babv5/OEA8s1hoPIYboazLRlU4OoEvwEnxToZ0=
+github.com/beerproto/beerxml.go v0.0.0-20201103151210-43eff73023d9 h1:q7s8jU6GwTYa7NgQR72r7LFt/lrCS1mvXSBSBItCN8o=
+github.com/beerproto/beerxml.go v0.0.0-20201103151210-43eff73023d9/go.mod h1:gi0t7Babv5/OEA8s1hoPIYboazLRlU4OoEvwEnxToZ0=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
@@ -68,6 +72,8 @@ golang.org/x/sync v0.0.0-20190423024810-112230192c58/go.mod h1:RxMgew5VJxzue5/jJ
 golang.org/x/sys v0.0.0-20180830151530-49385e6e1522/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
 golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
+golang.org/x/text v0.3.4/go.mod h1:5Zoc/QRtKVWzQhOtBMvqHzDpF6irO9z98xDceosuGiQ=
+golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
 golang.org/x/tools v0.0.0-20190114222345-bf090417da8b/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
 golang.org/x/tools v0.0.0-20190226205152-f727befe758c/go.mod h1:9Yl7xja0Znq3iFh3HoIrodX9oNMXvdceNzlUR8zjMvY=
 golang.org/x/tools v0.0.0-20190311212946-11955173bddd/go.mod h1:LCzVGOaR6xXOjkQ3onu1FJEFr0SW1gC7cKk1uF8kGRs=
