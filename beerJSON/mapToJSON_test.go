@@ -2,15 +2,16 @@ package beerJSON
 
 import (
 	"context"
-	"github.com/beerproto/beerjson.go"
-	beerproto "github.com/beerproto/beerproto_go"
-	"github.com/go-test/deep"
 	"testing"
+
+	"github.com/beerproto/beerjson.go"
+	beerprotov1 "github.com/beerproto/beerproto_go"
+	"github.com/go-test/deep"
 )
 
 func TestToJSONRecipeType(t *testing.T) {
 	type args struct {
-		i *beerproto.RecipeType
+		i *beerprotov1.RecipeType
 	}
 	tests := []struct {
 		name    string
@@ -20,21 +21,21 @@ func TestToJSONRecipeType(t *testing.T) {
 		{
 			name: "Required fields",
 			args: args{
-				i: &beerproto.RecipeType{
-					IbuEstimate: &beerproto.IBUEstimateType{
-						Method: beerproto.IBUEstimateType_TINSETH,
+				i: &beerprotov1.RecipeType{
+					IbuEstimate: &beerprotov1.IBUEstimateType{
+						Method: beerprotov1.IBUMethodUnit_IBU_METHOD_UNIT_RAGER,
 					},
-					Efficiency: &beerproto.EfficiencyType{
-						Brewhouse: &beerproto.PercentType{
+					Efficiency: &beerprotov1.EfficiencyType{
+						Brewhouse: &beerprotov1.PercentType{
 							Value: 80,
-							Unit:  beerproto.PercentType_PERCENT_SIGN,
+							Unit:  beerprotov1.PercentUnit_PERCENT_UNIT_PERCENT_SIGN,
 						},
 					},
-					Ingredients: &beerproto.IngredientsType{
-						FermentableAdditions: []*beerproto.FermentableAdditionType{},
+					Ingredients: &beerprotov1.IngredientsType{
+						FermentableAdditions: []*beerprotov1.FermentableAdditionType{},
 					},
-					BatchSize: &beerproto.VolumeType{
-						Unit:  beerproto.VolumeType_L,
+					BatchSize: &beerprotov1.VolumeType{
+						Unit:  beerprotov1.VolumeUnit_VOLUME_UNIT_L,
 						Value: float64(30),
 					},
 					Name:   "Name",
@@ -63,7 +64,7 @@ func TestToJSONRecipeType(t *testing.T) {
 
 func TestToJSONIngredientsType(t *testing.T) {
 	type args struct {
-		i *beerproto.IngredientsType
+		i *beerprotov1.IngredientsType
 	}
 	tests := []struct {
 		name    string
@@ -73,12 +74,12 @@ func TestToJSONIngredientsType(t *testing.T) {
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.IngredientsType{
-					FermentableAdditions: []*beerproto.FermentableAdditionType{},
-					HopAdditions: []*beerproto.HopAdditionType{},
-					MiscellaneousAdditions: []*beerproto.MiscellaneousAdditionType{},
-					CultureAdditions: []*beerproto.CultureAdditionType{},
-					WaterAdditions: []*beerproto.WaterAdditionType{},
+				i: &beerprotov1.IngredientsType{
+					FermentableAdditions:   []*beerprotov1.FermentableAdditionType{},
+					HopAdditions:           []*beerprotov1.HopAdditionType{},
+					MiscellaneousAdditions: []*beerprotov1.MiscellaneousAdditionType{},
+					CultureAdditions:       []*beerprotov1.CultureAdditionType{},
+					WaterAdditions:         []*beerprotov1.WaterAdditionType{},
 				},
 			},
 			wantErr: false,
@@ -86,8 +87,8 @@ func TestToJSONIngredientsType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.IngredientsType{
-					FermentableAdditions: []*beerproto.FermentableAdditionType{},
+				i: &beerprotov1.IngredientsType{
+					FermentableAdditions: []*beerprotov1.FermentableAdditionType{},
 				},
 			},
 			wantErr: false,
@@ -95,8 +96,7 @@ func TestToJSONIngredientsType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.IngredientsType{
-				},
+				i: &beerprotov1.IngredientsType{},
 			},
 			wantErr: true,
 		},
@@ -110,7 +110,7 @@ func TestToJSONIngredientsType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONIngredientsType(context.Background(),tt.args.i)
+			got, err := ToJSONIngredientsType(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONIngredientsType() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -129,7 +129,7 @@ func TestToJSONIngredientsType(t *testing.T) {
 
 func TestToJSONIBUEstimateType(t *testing.T) {
 	type args struct {
-		i *beerproto.IBUEstimateType
+		i *beerprotov1.IBUEstimateType
 	}
 	tests := []struct {
 		name string
@@ -138,40 +138,39 @@ func TestToJSONIBUEstimateType(t *testing.T) {
 		{
 			name: "Rager",
 			args: args{
-				i: &beerproto.IBUEstimateType{
-					Method: beerproto.IBUEstimateType_RAGER,
+				i: &beerprotov1.IBUEstimateType{
+					Method: beerprotov1.IBUMethodUnit_IBU_METHOD_UNIT_RAGER,
 				},
 			},
 		},
 		{
 			name: "Garetz",
 			args: args{
-				i: &beerproto.IBUEstimateType{
-					Method: beerproto.IBUEstimateType_GARETZ,
+				i: &beerprotov1.IBUEstimateType{
+					Method: beerprotov1.IBUMethodUnit_IBU_METHOD_UNIT_GARETZ,
 				},
 			},
 		},
 		{
 			name: "Tinseth",
 			args: args{
-				i: &beerproto.IBUEstimateType{
-					Method: beerproto.IBUEstimateType_TINSETH,
+				i: &beerprotov1.IBUEstimateType{
+					Method: beerprotov1.IBUMethodUnit_IBU_METHOD_UNIT_TINSETH,
 				},
 			},
 		},
 		{
 			name: "Other",
 			args: args{
-				i: &beerproto.IBUEstimateType{
-					Method: beerproto.IBUEstimateType_OTHER,
+				i: &beerprotov1.IBUEstimateType{
+					Method: beerprotov1.IBUMethodUnit_IBU_METHOD_UNIT_OTHER,
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.IBUEstimateType{
-				},
+				i: &beerprotov1.IBUEstimateType{},
 			},
 		},
 		{
@@ -183,7 +182,7 @@ func TestToJSONIBUEstimateType(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ToJSONIBUEstimateType(context.Background(),tt.args.i)
+			got := ToJSONIBUEstimateType(context.Background(), tt.args.i)
 			have := ToProtoIBUEstimateType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONIBUEstimateType() %v", diff)
@@ -194,7 +193,7 @@ func TestToJSONIBUEstimateType(t *testing.T) {
 
 func TestToJSONDiastaticPowerType(t *testing.T) {
 	type args struct {
-		i *beerproto.DiastaticPowerType
+		i *beerprotov1.DiastaticPowerType
 	}
 	tests := []struct {
 		name string
@@ -204,26 +203,25 @@ func TestToJSONDiastaticPowerType(t *testing.T) {
 		{
 			name: "Lintner",
 			args: args{
-				i: &beerproto.DiastaticPowerType{
+				i: &beerprotov1.DiastaticPowerType{
 					Value: float64(10),
-					Unit:  beerproto.DiastaticPowerUnitType_LINTNER,
+					Unit:  beerprotov1.DiastaticPowerUnit_DIASTATIC_POWER_UNIT_LINTNER,
 				},
 			},
 		},
 		{
 			name: "WK",
 			args: args{
-				i: &beerproto.DiastaticPowerType{
+				i: &beerprotov1.DiastaticPowerType{
 					Value: float64(10),
-					Unit:  beerproto.DiastaticPowerUnitType_WK,
+					Unit:  beerprotov1.DiastaticPowerUnit_DIASTATIC_POWER_UNIT_WK,
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.DiastaticPowerType{
-				},
+				i: &beerprotov1.DiastaticPowerType{},
 			},
 		},
 	}
@@ -240,31 +238,31 @@ func TestToJSONDiastaticPowerType(t *testing.T) {
 
 func TestToJSONWaterBase(t *testing.T) {
 	type args struct {
-		i *beerproto.WaterBase
+		i *beerprotov1.WaterBase
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.WaterBase{
-					Calcium:     &beerproto.ConcentrationType{},
-					Nitrite:     &beerproto.ConcentrationType{},
-					Chloride:    &beerproto.ConcentrationType{},
+				i: &beerprotov1.WaterBase{
+					Calcium:     &beerprotov1.ConcentrationType{},
+					Nitrite:     &beerprotov1.ConcentrationType{},
+					Chloride:    &beerprotov1.ConcentrationType{},
 					Name:        "Name",
-					Potassium:   &beerproto.ConcentrationType{},
-					Carbonate:   &beerproto.ConcentrationType{},
-					Iron:        &beerproto.ConcentrationType{},
-					Flouride:    &beerproto.ConcentrationType{},
-					Sulfate:     &beerproto.ConcentrationType{},
-					Magnesium:   &beerproto.ConcentrationType{},
+					Potassium:   &beerprotov1.ConcentrationType{},
+					Carbonate:   &beerprotov1.ConcentrationType{},
+					Iron:        &beerprotov1.ConcentrationType{},
+					Flouride:    &beerprotov1.ConcentrationType{},
+					Sulfate:     &beerprotov1.ConcentrationType{},
+					Magnesium:   &beerprotov1.ConcentrationType{},
 					Producer:    "Producer",
-					Bicarbonate: &beerproto.ConcentrationType{},
-					Nitrate:     &beerproto.ConcentrationType{},
-					Sodium:      &beerproto.ConcentrationType{},
+					Bicarbonate: &beerprotov1.ConcentrationType{},
+					Nitrate:     &beerprotov1.ConcentrationType{},
+					Sodium:      &beerprotov1.ConcentrationType{},
 				},
 			},
 			wantErr: false,
@@ -272,31 +270,31 @@ func TestToJSONWaterBase(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.WaterBase{
+				i: &beerprotov1.WaterBase{
 					Name: "Balanced Profile",
-					Calcium: &beerproto.ConcentrationType{
+					Calcium: &beerprotov1.ConcentrationType{
 						Value: 80,
-						Unit:  beerproto.ConcentrationUnitType_MGL,
+						Unit:  beerprotov1.ConcentrationUnit_CONCENTRATION_UNIT_MGL,
 					},
-					Bicarbonate: &beerproto.ConcentrationType{
+					Bicarbonate: &beerprotov1.ConcentrationType{
 						Value: 100,
-						Unit:  beerproto.ConcentrationUnitType_MGL,
+						Unit:  beerprotov1.ConcentrationUnit_CONCENTRATION_UNIT_MGL,
 					},
-					Sulfate: &beerproto.ConcentrationType{
+					Sulfate: &beerprotov1.ConcentrationType{
 						Value: 80,
-						Unit:  beerproto.ConcentrationUnitType_MGL,
+						Unit:  beerprotov1.ConcentrationUnit_CONCENTRATION_UNIT_MGL,
 					},
-					Chloride: &beerproto.ConcentrationType{
+					Chloride: &beerprotov1.ConcentrationType{
 						Value: 75,
-						Unit:  beerproto.ConcentrationUnitType_MGL,
+						Unit:  beerprotov1.ConcentrationUnit_CONCENTRATION_UNIT_MGL,
 					},
-					Sodium: &beerproto.ConcentrationType{
+					Sodium: &beerprotov1.ConcentrationType{
 						Value: 25,
-						Unit:  beerproto.ConcentrationUnitType_MGL,
+						Unit:  beerprotov1.ConcentrationUnit_CONCENTRATION_UNIT_MGL,
 					},
-					Magnesium: &beerproto.ConcentrationType{
+					Magnesium: &beerprotov1.ConcentrationType{
 						Value: 5,
-						Unit:  beerproto.ConcentrationUnitType_MGL,
+						Unit:  beerprotov1.ConcentrationUnit_CONCENTRATION_UNIT_MGL,
 					},
 				},
 			},
@@ -305,7 +303,7 @@ func TestToJSONWaterBase(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.WaterBase{},
+				i: &beerprotov1.WaterBase{},
 			},
 			wantErr: true,
 		},
@@ -319,7 +317,7 @@ func TestToJSONWaterBase(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ToJSONWaterBase(context.Background(),tt.args.i)
+			got, err := ToJSONWaterBase(context.Background(), tt.args.i)
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ToJSONWaterBase() error = %v, wantErr %v", err, tt.wantErr)
@@ -340,7 +338,7 @@ func TestToJSONWaterBase(t *testing.T) {
 
 func TestToJSONConcentrationType(t *testing.T) {
 	type args struct {
-		i *beerproto.ConcentrationType
+		i *beerprotov1.ConcentrationType
 	}
 	tests := []struct {
 		name string
@@ -349,41 +347,40 @@ func TestToJSONConcentrationType(t *testing.T) {
 		{
 			name: "MGL",
 			args: args{
-				i: &beerproto.ConcentrationType{
+				i: &beerprotov1.ConcentrationType{
 					Value: 80,
-					Unit:  beerproto.ConcentrationUnitType_MGL,
+					Unit:  beerprotov1.ConcentrationUnit_CONCENTRATION_UNIT_MGL,
 				},
 			},
 		},
 		{
 			name: "PPB",
 			args: args{
-				i: &beerproto.ConcentrationType{
+				i: &beerprotov1.ConcentrationType{
 					Value: 80,
-					Unit:  beerproto.ConcentrationUnitType_PPB,
+					Unit:  beerprotov1.ConcentrationUnit_CONCENTRATION_UNIT_PPB,
 				},
 			},
 		},
 		{
 			name: "PPM",
 			args: args{
-				i: &beerproto.ConcentrationType{
+				i: &beerprotov1.ConcentrationType{
 					Value: 80,
-					Unit:  beerproto.ConcentrationUnitType_PPM,
+					Unit:  beerprotov1.ConcentrationUnit_CONCENTRATION_UNIT_PPM,
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.ConcentrationType{
-				},
+				i: &beerprotov1.ConcentrationType{},
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ToJSONConcentrationType(context.Background(),tt.args.i)
+			got := ToJSONConcentrationType(context.Background(), tt.args.i)
 			have := ToProtoConcentrationType(got)
 			if diff := deep.Equal(have, tt.args.i); diff != nil {
 				t.Errorf("ToJSONConcentrationType() %v", diff)
@@ -394,7 +391,7 @@ func TestToJSONConcentrationType(t *testing.T) {
 
 func TestMapToJSON(t *testing.T) {
 	type args struct {
-		i *beerproto.Recipe
+		i *beerprotov1.Recipe
 	}
 	tests := []struct {
 		name    string
@@ -404,21 +401,20 @@ func TestMapToJSON(t *testing.T) {
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.Recipe{
-					Version: 1,
-					Mashes:                   []*beerproto.MashProcedureType{},
-					Recipes:                  []*beerproto.RecipeType{},
-					MiscellaneousIngredients: []*beerproto.MiscellaneousType{},
-					Styles:                   []*beerproto.StyleType{},
-					Fermentations:            []*beerproto.FermentationProcedureType{},
-					Boil:                     []*beerproto.BoilProcedureType{},
-					Fermentables:             []*beerproto.FermentableType{},
-					TimingObject:             &beerproto.TimingType{},
-					Cultures:                 []*beerproto.CultureInformation{},
-					Equipments:               []*beerproto.EquipmentType{},
-					Packaging:                []*beerproto.PackagingProcedureType{},
-					HopVarieties:             []*beerproto.VarietyInformation{},
-					Profiles:                 []*beerproto.WaterBase{},
+				i: &beerprotov1.Recipe{
+					Version:                  1,
+					Mashes:                   []*beerprotov1.MashProcedureType{},
+					Recipes:                  []*beerprotov1.RecipeType{},
+					MiscellaneousIngredients: []*beerprotov1.MiscellaneousType{},
+					Styles:                   []*beerprotov1.StyleType{},
+					Fermentations:            []*beerprotov1.FermentationProcedureType{},
+					Boil:                     []*beerprotov1.BoilProcedureType{},
+					Fermentables:             []*beerprotov1.FermentableType{},
+					Cultures:                 []*beerprotov1.CultureInformation{},
+					Equipments:               []*beerprotov1.EquipmentType{},
+					Packaging:                []*beerprotov1.PackagingProcedureType{},
+					HopVarieties:             []*beerprotov1.VarietyInformation{},
+					Profiles:                 []*beerprotov1.WaterBase{},
 				},
 			},
 			wantErr: false,
@@ -426,8 +422,7 @@ func TestMapToJSON(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.Recipe{
-				},
+				i: &beerprotov1.Recipe{},
 			},
 			wantErr: true,
 		},
@@ -441,7 +436,7 @@ func TestMapToJSON(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := MapToJSON(context.Background(),tt.args.i)
+			got, err := MapToJSON(context.Background(), tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("MapToJSON() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -461,29 +456,29 @@ func TestMapToJSON(t *testing.T) {
 
 func TestToJSONVarietyInformation(t *testing.T) {
 	type args struct {
-		i *beerproto.VarietyInformation
+		i *beerprotov1.VarietyInformation
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.VarietyInformation{
-					Inventory:   &beerproto.HopInventoryType{},
-					Type:        beerproto.VarietyInformation_BITTERING,
-					OilContent:  &beerproto.OilContentType{},
-					PercentLost: &beerproto.PercentType{},
+				i: &beerprotov1.VarietyInformation{
+					Inventory:   &beerprotov1.HopInventoryType{},
+					Type:        beerprotov1.VarietyInformationType_VARIETY_INFORMATION_TYPE_BITTERING,
+					OilContent:  &beerprotov1.OilContentType{},
+					PercentLost: &beerprotov1.PercentType{},
 					ProductId:   "ProductId",
-					AlphaAcid:   &beerproto.PercentType{},
-					BetaAcid:    &beerproto.PercentType{},
+					AlphaAcid:   &beerprotov1.PercentType{},
+					BetaAcid:    &beerprotov1.PercentType{},
 					Name:        "Name",
 					Origin:      "Origin",
 					Substitutes: "Substitutes",
 					Year:        "Year",
-					Form:        beerproto.HopVarietyBaseForm_PELLET,
+					Form:        beerprotov1.HopVarietyBaseForm_HOP_VARIETY_BASE_FORM_PELLET,
 					Producer:    "Producer",
 					Notes:       "Notes",
 				},
@@ -493,9 +488,9 @@ func TestToJSONVarietyInformation(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.VarietyInformation{
-					AlphaAcid:   &beerproto.PercentType{},
-					Name:        "Name",
+				i: &beerprotov1.VarietyInformation{
+					AlphaAcid: &beerprotov1.PercentType{},
+					Name:      "Name",
 				},
 			},
 			wantErr: false,
@@ -503,8 +498,7 @@ func TestToJSONVarietyInformation(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.VarietyInformation{
-				},
+				i: &beerprotov1.VarietyInformation{},
 			},
 			wantErr: true,
 		},
@@ -538,7 +532,7 @@ func TestToJSONVarietyInformation(t *testing.T) {
 
 func TestToJSONOilContentType(t *testing.T) {
 	type args struct {
-		i *beerproto.OilContentType
+		i *beerprotov1.OilContentType
 	}
 	tests := []struct {
 		name string
@@ -547,35 +541,34 @@ func TestToJSONOilContentType(t *testing.T) {
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.OilContentType{
-					Polyphenols:        &beerproto.PercentType{},
+				i: &beerprotov1.OilContentType{
+					Polyphenols:        &beerprotov1.PercentType{},
 					TotalOilMlPer_100G: 100,
-					Farnesene:          &beerproto.PercentType{},
-					Limonene:           &beerproto.PercentType{},
-					Nerol:              &beerproto.PercentType{},
-					Geraniol:           &beerproto.PercentType{},
-					BPinene:            &beerproto.PercentType{},
-					Linalool:           &beerproto.PercentType{},
-					Caryophyllene:      &beerproto.PercentType{},
-					Cohumulone:         &beerproto.PercentType{},
-					Xanthohumol:        &beerproto.PercentType{},
-					Humulene:           &beerproto.PercentType{},
-					Myrcene:            &beerproto.PercentType{},
-					Pinene:             &beerproto.PercentType{},
+					Farnesene:          &beerprotov1.PercentType{},
+					Limonene:           &beerprotov1.PercentType{},
+					Nerol:              &beerprotov1.PercentType{},
+					Geraniol:           &beerprotov1.PercentType{},
+					BPinene:            &beerprotov1.PercentType{},
+					Linalool:           &beerprotov1.PercentType{},
+					Caryophyllene:      &beerprotov1.PercentType{},
+					Cohumulone:         &beerprotov1.PercentType{},
+					Xanthohumol:        &beerprotov1.PercentType{},
+					Humulene:           &beerprotov1.PercentType{},
+					Myrcene:            &beerprotov1.PercentType{},
+					Pinene:             &beerprotov1.PercentType{},
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.OilContentType{
-				},
+				i: &beerprotov1.OilContentType{},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i:nil,
+				i: nil,
 			},
 		},
 	}
@@ -592,7 +585,7 @@ func TestToJSONOilContentType(t *testing.T) {
 
 func TestToJSONHopInventoryType(t *testing.T) {
 	type args struct {
-		i *beerproto.HopInventoryType
+		i *beerprotov1.HopInventoryType
 	}
 	tests := []struct {
 		name string
@@ -601,24 +594,23 @@ func TestToJSONHopInventoryType(t *testing.T) {
 		{
 			name: "Volume",
 			args: args{
-				i: &beerproto.HopInventoryType{
-					Amount: &beerproto.HopInventoryType_Volume{},
+				i: &beerprotov1.HopInventoryType{
+					Amount: &beerprotov1.HopInventoryType_Volume{},
 				},
 			},
 		},
 		{
 			name: "Mass",
 			args: args{
-				i: &beerproto.HopInventoryType{
-					Amount: &beerproto.HopInventoryType_Mass{},
+				i: &beerprotov1.HopInventoryType{
+					Amount: &beerprotov1.HopInventoryType_Mass{},
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.HopInventoryType{
-				},
+				i: &beerprotov1.HopInventoryType{},
 			},
 		},
 	}
@@ -635,19 +627,19 @@ func TestToJSONHopInventoryType(t *testing.T) {
 
 func TestToJSONEquipmentType(t *testing.T) {
 	type args struct {
-		i *beerproto.EquipmentType
+		i *beerprotov1.EquipmentType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.EquipmentType{
+				i: &beerprotov1.EquipmentType{
 					Name:           "Name",
-					EquipmentItems: []*beerproto.EquipmentItemType{},
+					EquipmentItems: []*beerprotov1.EquipmentItemType{},
 				},
 			},
 			wantErr: false,
@@ -655,8 +647,7 @@ func TestToJSONEquipmentType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.EquipmentType{
-				},
+				i: &beerprotov1.EquipmentType{},
 			},
 			wantErr: true,
 		},
@@ -690,28 +681,28 @@ func TestToJSONEquipmentType(t *testing.T) {
 
 func TestToJSONEquipmentItemType(t *testing.T) {
 	type args struct {
-		i *beerproto.EquipmentItemType
+		i *beerprotov1.EquipmentItemType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.EquipmentItemType{
+				i: &beerprotov1.EquipmentItemType{
 					Name:                "Name",
 					Notes:               "Notes",
-					BoilRatePerHour:     &beerproto.VolumeType{},
+					BoilRatePerHour:     &beerprotov1.VolumeType{},
 					Type:                "Type",
-					Form:                beerproto.EquipmentItemType_MASH_TUN,
-					DrainRatePerMinute:  &beerproto.VolumeType{},
-					SpecificHeat:        &beerproto.SpecificHeatType{},
-					GrainAbsorptionRate: &beerproto.SpecificVolumeType{},
-					MaximumVolume:       &beerproto.VolumeType{},
-					Weight:              &beerproto.MassType{},
-					Loss:                &beerproto.VolumeType{},
+					Form:                beerprotov1.EquipmentItemType_EQUIPMENT_BASE_FORM_MASH_TUN,
+					DrainRatePerMinute:  &beerprotov1.VolumeType{},
+					SpecificHeat:        &beerprotov1.SpecificHeatType{},
+					GrainAbsorptionRate: &beerprotov1.SpecificVolumeType{},
+					MaximumVolume:       &beerprotov1.VolumeType{},
+					Weight:              &beerprotov1.MassType{},
+					Loss:                &beerprotov1.VolumeType{},
 				},
 			},
 			wantErr: false,
@@ -719,12 +710,12 @@ func TestToJSONEquipmentItemType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.EquipmentItemType{
-					Name:                "Name",
-					Type:                "Type",
-					Form:                beerproto.EquipmentItemType_MASH_TUN,
-					MaximumVolume:       &beerproto.VolumeType{},
-					Loss:                &beerproto.VolumeType{},
+				i: &beerprotov1.EquipmentItemType{
+					Name:          "Name",
+					Type:          "Type",
+					Form:          beerprotov1.EquipmentItemType_EQUIPMENT_BASE_FORM_MASH_TUN,
+					MaximumVolume: &beerprotov1.VolumeType{},
+					Loss:          &beerprotov1.VolumeType{},
 				},
 			},
 			wantErr: false,
@@ -732,8 +723,7 @@ func TestToJSONEquipmentItemType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.EquipmentItemType{
-				},
+				i: &beerprotov1.EquipmentItemType{},
 			},
 			wantErr: true,
 		},
@@ -767,7 +757,7 @@ func TestToJSONEquipmentItemType(t *testing.T) {
 
 func TestToJSONSpecificHeatType(t *testing.T) {
 	type args struct {
-		i *beerproto.SpecificHeatType
+		i *beerprotov1.SpecificHeatType
 	}
 	tests := []struct {
 		name string
@@ -776,35 +766,34 @@ func TestToJSONSpecificHeatType(t *testing.T) {
 		{
 			name: "Calgc",
 			args: args{
-				i: &beerproto.SpecificHeatType{
+				i: &beerprotov1.SpecificHeatType{
 					Value: 80,
-					Unit:  beerproto.SpecificHeatUnitType_CALGC,
+					Unit:  beerprotov1.SpecificHeatUnit_SPECIFIC_HEAT_UNIT_CALGC,
 				},
 			},
 		},
 		{
 			name: "JKGK",
 			args: args{
-				i: &beerproto.SpecificHeatType{
+				i: &beerprotov1.SpecificHeatType{
 					Value: 80,
-					Unit:  beerproto.SpecificHeatUnitType_JKGK,
+					Unit:  beerprotov1.SpecificHeatUnit_SPECIFIC_HEAT_UNIT_JKGK,
 				},
 			},
 		},
 		{
 			name: "BTULBF",
 			args: args{
-				i: &beerproto.SpecificHeatType{
+				i: &beerprotov1.SpecificHeatType{
 					Value: 80,
-					Unit:  beerproto.SpecificHeatUnitType_BTULBF,
+					Unit:  beerprotov1.SpecificHeatUnit_SPECIFIC_HEAT_UNIT_BTULBF,
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.SpecificHeatType{
-				},
+				i: &beerprotov1.SpecificHeatType{},
 			},
 		},
 	}
@@ -821,7 +810,7 @@ func TestToJSONSpecificHeatType(t *testing.T) {
 
 func TestToJSONMassType(t *testing.T) {
 	type args struct {
-		i *beerproto.MassType
+		i *beerprotov1.MassType
 	}
 	tests := []struct {
 		name string
@@ -830,53 +819,52 @@ func TestToJSONMassType(t *testing.T) {
 		{
 			name: "G",
 			args: args{
-				i: &beerproto.MassType{
+				i: &beerprotov1.MassType{
 					Value: 90,
-					Unit:  beerproto.MassUnitType_G,
+					Unit:  beerprotov1.MassUnit_MASS_UNIT_G,
 				},
 			},
 		},
 		{
 			name: "KG",
 			args: args{
-				i: &beerproto.MassType{
+				i: &beerprotov1.MassType{
 					Value: 90,
-					Unit:  beerproto.MassUnitType_KG,
+					Unit:  beerprotov1.MassUnit_MASS_UNIT_KG,
 				},
 			},
 		},
 		{
 			name: "LB",
 			args: args{
-				i: &beerproto.MassType{
+				i: &beerprotov1.MassType{
 					Value: 90,
-					Unit:  beerproto.MassUnitType_LB,
+					Unit:  beerprotov1.MassUnit_MASS_UNIT_LB,
 				},
 			},
 		},
 		{
 			name: "MG",
 			args: args{
-				i: &beerproto.MassType{
+				i: &beerprotov1.MassType{
 					Value: 90,
-					Unit:  beerproto.MassUnitType_MG,
+					Unit:  beerprotov1.MassUnit_MASS_UNIT_MG,
 				},
 			},
 		},
 		{
 			name: "OZ",
 			args: args{
-				i: &beerproto.MassType{
+				i: &beerprotov1.MassType{
 					Value: 90,
-					Unit:  beerproto.MassUnitType_OZ,
+					Unit:  beerprotov1.MassUnit_MASS_UNIT_OZ,
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.MassType{
-				},
+				i: &beerprotov1.MassType{},
 			},
 		},
 	}
@@ -893,7 +881,7 @@ func TestToJSONMassType(t *testing.T) {
 
 func TestToJSONVolumeType(t *testing.T) {
 	type args struct {
-		i *beerproto.VolumeType
+		i *beerprotov1.VolumeType
 	}
 	tests := []struct {
 		name string
@@ -902,143 +890,142 @@ func TestToJSONVolumeType(t *testing.T) {
 		{
 			name: "ML",
 			args: args{
-				i: &beerproto.VolumeType{
+				i: &beerprotov1.VolumeType{
 					Value: 50,
-					Unit:  beerproto.VolumeType_ML,
+					Unit:  beerprotov1.VolumeUnit_VOLUME_UNIT_ML,
 				},
 			},
 		},
 		{
 			name: "L",
 			args: args{
-				i: &beerproto.VolumeType{
+				i: &beerprotov1.VolumeType{
 					Value: 50,
-					Unit:  beerproto.VolumeType_L,
+					Unit:  beerprotov1.VolumeUnit_VOLUME_UNIT_L,
 				},
 			},
 		},
 		{
 			name: "TSP",
 			args: args{
-				i: &beerproto.VolumeType{
+				i: &beerprotov1.VolumeType{
 					Value: 50,
-					Unit:  beerproto.VolumeType_TSP,
+					Unit:  beerprotov1.VolumeUnit_VOLUME_UNIT_TSP,
 				},
 			},
 		},
 		{
 			name: "TBSP",
 			args: args{
-				i: &beerproto.VolumeType{
+				i: &beerprotov1.VolumeType{
 					Value: 50,
-					Unit:  beerproto.VolumeType_TBSP,
+					Unit:  beerprotov1.VolumeUnit_VOLUME_UNIT_TBSP,
 				},
 			},
 		},
 		{
 			name: "FLOZ",
 			args: args{
-				i: &beerproto.VolumeType{
+				i: &beerprotov1.VolumeType{
 					Value: 50,
-					Unit:  beerproto.VolumeType_FLOZ,
+					Unit:  beerprotov1.VolumeUnit_VOLUME_UNIT_FLOZ,
 				},
 			},
 		},
 		{
 			name: "CUP",
 			args: args{
-				i: &beerproto.VolumeType{
+				i: &beerprotov1.VolumeType{
 					Value: 50,
-					Unit:  beerproto.VolumeType_CUP,
+					Unit:  beerprotov1.VolumeUnit_VOLUME_UNIT_CUP,
 				},
 			},
 		},
 		{
 			name: "PT",
 			args: args{
-				i: &beerproto.VolumeType{
+				i: &beerprotov1.VolumeType{
 					Value: 50,
-					Unit:  beerproto.VolumeType_PT,
+					Unit:  beerprotov1.VolumeUnit_VOLUME_UNIT_PT,
 				},
 			},
 		},
 		{
 			name: "QT",
 			args: args{
-				i: &beerproto.VolumeType{
+				i: &beerprotov1.VolumeType{
 					Value: 50,
-					Unit:  beerproto.VolumeType_QT,
+					Unit:  beerprotov1.VolumeUnit_VOLUME_UNIT_QT,
 				},
 			},
 		},
 		{
 			name: "GAL",
 			args: args{
-				i: &beerproto.VolumeType{
+				i: &beerprotov1.VolumeType{
 					Value: 50,
-					Unit:  beerproto.VolumeType_GAL,
+					Unit:  beerprotov1.VolumeUnit_VOLUME_UNIT_GAL,
 				},
 			},
 		},
 		{
 			name: "BBL",
 			args: args{
-				i: &beerproto.VolumeType{
+				i: &beerprotov1.VolumeType{
 					Value: 50,
-					Unit:  beerproto.VolumeType_BBL,
+					Unit:  beerprotov1.VolumeUnit_VOLUME_UNIT_BBL,
 				},
 			},
 		},
 		{
 			name: "IFOZ",
 			args: args{
-				i: &beerproto.VolumeType{
+				i: &beerprotov1.VolumeType{
 					Value: 50,
-					Unit:  beerproto.VolumeType_IFOZ,
+					Unit:  beerprotov1.VolumeUnit_VOLUME_UNIT_IFOZ,
 				},
 			},
 		},
 		{
 			name: "IPT",
 			args: args{
-				i: &beerproto.VolumeType{
+				i: &beerprotov1.VolumeType{
 					Value: 50,
-					Unit:  beerproto.VolumeType_IPT,
+					Unit:  beerprotov1.VolumeUnit_VOLUME_UNIT_IPT,
 				},
 			},
 		},
 		{
 			name: "IQT",
 			args: args{
-				i: &beerproto.VolumeType{
+				i: &beerprotov1.VolumeType{
 					Value: 50,
-					Unit:  beerproto.VolumeType_IQT,
+					Unit:  beerprotov1.VolumeUnit_VOLUME_UNIT_IQT,
 				},
 			},
 		},
 		{
 			name: "IGAL",
 			args: args{
-				i: &beerproto.VolumeType{
+				i: &beerprotov1.VolumeType{
 					Value: 50,
-					Unit:  beerproto.VolumeType_IGAL,
+					Unit:  beerprotov1.VolumeUnit_VOLUME_UNIT_IGAL,
 				},
 			},
 		},
 		{
 			name: "IBBL",
 			args: args{
-				i: &beerproto.VolumeType{
+				i: &beerprotov1.VolumeType{
 					Value: 50,
-					Unit:  beerproto.VolumeType_IBBL,
+					Unit:  beerprotov1.VolumeUnit_VOLUME_UNIT_IBBL,
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.VolumeType{
-				},
+				i: &beerprotov1.VolumeType{},
 			},
 		},
 	}
@@ -1055,7 +1042,7 @@ func TestToJSONVolumeType(t *testing.T) {
 
 func TestToJSONSpecificVolumeType(t *testing.T) {
 	type args struct {
-		i *beerproto.SpecificVolumeType
+		i *beerprotov1.SpecificVolumeType
 	}
 	tests := []struct {
 		name string
@@ -1064,80 +1051,79 @@ func TestToJSONSpecificVolumeType(t *testing.T) {
 		{
 			name: "qt/lb",
 			args: args{
-				i: &beerproto.SpecificVolumeType{
+				i: &beerprotov1.SpecificVolumeType{
 					Value: 30,
-					Unit:  beerproto.SpecificVolumeType_QTLB,
+					Unit:  beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_QTLB,
 				},
 			},
 		},
 		{
 			name: "gal/lb",
 			args: args{
-				i: &beerproto.SpecificVolumeType{
+				i: &beerprotov1.SpecificVolumeType{
 					Value: 30,
-					Unit:  beerproto.SpecificVolumeType_GALLB,
+					Unit:  beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_GALLB,
 				},
 			},
 		},
 		{
 			name: "gal/oz",
 			args: args{
-				i: &beerproto.SpecificVolumeType{
+				i: &beerprotov1.SpecificVolumeType{
 					Value: 30,
-					Unit:  beerproto.SpecificVolumeType_GALOZ,
+					Unit:  beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_GALOZ,
 				},
 			},
 		},
 		{
 			name: "l/g",
 			args: args{
-				i: &beerproto.SpecificVolumeType{
+				i: &beerprotov1.SpecificVolumeType{
 					Value: 30,
-					Unit:  beerproto.SpecificVolumeType_LG,
+					Unit:  beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_LG,
 				},
 			},
 		},
 		{
 			name: "l/kg",
 			args: args{
-				i: &beerproto.SpecificVolumeType{
+				i: &beerprotov1.SpecificVolumeType{
 					Value: 30,
-					Unit:  beerproto.SpecificVolumeType_LKG,
+					Unit:  beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_LKG,
 				},
 			},
 		},
 		{
 			name: "floz/oz",
 			args: args{
-				i: &beerproto.SpecificVolumeType{
+				i: &beerprotov1.SpecificVolumeType{
 					Value: 30,
-					Unit:  beerproto.SpecificVolumeType_FLOZOZ,
+					Unit:  beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_FLOZOZ,
 				},
 			},
 		},
 		{
 			name: "m^3/kg",
 			args: args{
-				i: &beerproto.SpecificVolumeType{
+				i: &beerprotov1.SpecificVolumeType{
 					Value: 30,
-					Unit:  beerproto.SpecificVolumeType_M3KG,
+					Unit:  beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_M3KG,
 				},
 			},
 		},
 		{
 			name: "ft^3/lb",
 			args: args{
-				i: &beerproto.SpecificVolumeType{
+				i: &beerprotov1.SpecificVolumeType{
 					Value: 30,
-					Unit:  beerproto.SpecificVolumeType_FT3LB,
+					Unit:  beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_FT3LB,
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.SpecificVolumeType{
-				},
+				i: &beerprotov1.SpecificVolumeType{},
 			},
 		},
 	}
@@ -1154,33 +1140,33 @@ func TestToJSONSpecificVolumeType(t *testing.T) {
 
 func TestToJSONCultureInformation(t *testing.T) {
 	type args struct {
-		i *beerproto.CultureInformation
+		i *beerprotov1.CultureInformation
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.CultureInformation{
-					Form:             beerproto.CultureBaseForm_DRY,
+				i: &beerprotov1.CultureInformation{
+					Form:             beerprotov1.CultureBaseForm_CULTURE_BASE_FORM_DRY,
 					Producer:         "Producer",
 					TemperatureRange: nil,
 					Notes:            "Notes",
 					BestFor:          "BestFor",
-					Inventory:        &beerproto.CultureInventoryType{},
+					Inventory:        &beerprotov1.CultureInventoryType{},
 					ProductId:        "ProductId",
 					Name:             "Name",
-					AlcoholTolerance: &beerproto.PercentType{},
+					AlcoholTolerance: &beerprotov1.PercentType{},
 					Glucoamylase:     true,
-					Type:             beerproto.CultureBaseType_ALE,
-					Flocculation:     beerproto.QualitativeRangeType_HIGH,
+					Type:             beerprotov1.CultureBaseType_CULTURE_BASE_TYPE_ALE,
+					Flocculation:     beerprotov1.QualitativeRangeUnit_QUALITATIVE_RANGE_UNIT_HIGH,
 					AttenuationRange: nil,
 					MaxReuse:         2,
 					Pof:              true,
-					Zymocide:         &beerproto.Zymocide{},
+					Zymocide:         &beerprotov1.Zymocide{},
 				},
 			},
 			wantErr: false,
@@ -1188,10 +1174,10 @@ func TestToJSONCultureInformation(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.CultureInformation{
-					Form:             beerproto.CultureBaseForm_DRY,
-					Name:             "Name",
-					Type:             beerproto.CultureBaseType_ALE,
+				i: &beerprotov1.CultureInformation{
+					Form: beerprotov1.CultureBaseForm_CULTURE_BASE_FORM_DRY,
+					Name: "Name",
+					Type: beerprotov1.CultureBaseType_CULTURE_BASE_TYPE_ALE,
 				},
 			},
 			wantErr: false,
@@ -1199,8 +1185,7 @@ func TestToJSONCultureInformation(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.CultureInformation{
-				},
+				i: &beerprotov1.CultureInformation{},
 			},
 			wantErr: true,
 		},
@@ -1234,20 +1219,19 @@ func TestToJSONCultureInformation(t *testing.T) {
 
 func TestToJSONTemperatureRangeType(t *testing.T) {
 	type args struct {
-		i *beerproto.TemperatureRangeType
+		i *beerprotov1.TemperatureRangeType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
-
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.TemperatureRangeType{
-					Maximum: &beerproto.TemperatureType{},
-					Minimum: &beerproto.TemperatureType{},
+				i: &beerprotov1.TemperatureRangeType{
+					Maximum: &beerprotov1.TemperatureType{},
+					Minimum: &beerprotov1.TemperatureType{},
 				},
 			},
 			wantErr: false,
@@ -1255,8 +1239,8 @@ func TestToJSONTemperatureRangeType(t *testing.T) {
 		{
 			name: "Maximum",
 			args: args{
-				i: &beerproto.TemperatureRangeType{
-					Minimum: &beerproto.TemperatureType{},
+				i: &beerprotov1.TemperatureRangeType{
+					Minimum: &beerprotov1.TemperatureType{},
 				},
 			},
 			wantErr: true,
@@ -1264,8 +1248,8 @@ func TestToJSONTemperatureRangeType(t *testing.T) {
 		{
 			name: "Minimum",
 			args: args{
-				i: &beerproto.TemperatureRangeType{
-					Maximum: &beerproto.TemperatureType{},
+				i: &beerprotov1.TemperatureRangeType{
+					Maximum: &beerprotov1.TemperatureType{},
 				},
 			},
 			wantErr: true,
@@ -1300,7 +1284,7 @@ func TestToJSONTemperatureRangeType(t *testing.T) {
 
 func TestToJSONTemperatureType(t *testing.T) {
 	type args struct {
-		i *beerproto.TemperatureType
+		i *beerprotov1.TemperatureType
 	}
 	tests := []struct {
 		name string
@@ -1309,26 +1293,25 @@ func TestToJSONTemperatureType(t *testing.T) {
 		{
 			name: "C",
 			args: args{
-				i: &beerproto.TemperatureType{
+				i: &beerprotov1.TemperatureType{
 					Value: 5,
-					Unit:  beerproto.TemperatureUnitType_C,
+					Unit:  beerprotov1.TemperatureUnit_TEMPERATURE_UNIT_C,
 				},
 			},
 		},
 		{
 			name: "F",
 			args: args{
-				i: &beerproto.TemperatureType{
+				i: &beerprotov1.TemperatureType{
 					Value: 5,
-					Unit:  beerproto.TemperatureUnitType_F,
+					Unit:  beerprotov1.TemperatureUnit_TEMPERATURE_UNIT_F,
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.TemperatureType{
-				},
+				i: &beerprotov1.TemperatureType{},
 			},
 		},
 	}
@@ -1345,19 +1328,19 @@ func TestToJSONTemperatureType(t *testing.T) {
 
 func TestToJSONPercentRangeType(t *testing.T) {
 	type args struct {
-		i *beerproto.PercentRangeType
+		i *beerprotov1.PercentRangeType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.PercentRangeType{
-					Maximum: &beerproto.PercentType{},
-					Minimum: &beerproto.PercentType{},
+				i: &beerprotov1.PercentRangeType{
+					Maximum: &beerprotov1.PercentType{},
+					Minimum: &beerprotov1.PercentType{},
 				},
 			},
 			wantErr: false,
@@ -1365,8 +1348,8 @@ func TestToJSONPercentRangeType(t *testing.T) {
 		{
 			name: "Maximum",
 			args: args{
-				i: &beerproto.PercentRangeType{
-					Minimum: &beerproto.PercentType{},
+				i: &beerprotov1.PercentRangeType{
+					Minimum: &beerprotov1.PercentType{},
 				},
 			},
 			wantErr: true,
@@ -1374,8 +1357,8 @@ func TestToJSONPercentRangeType(t *testing.T) {
 		{
 			name: "Minimum",
 			args: args{
-				i: &beerproto.PercentRangeType{
-					Maximum: &beerproto.PercentType{},
+				i: &beerprotov1.PercentRangeType{
+					Maximum: &beerprotov1.PercentType{},
 				},
 			},
 			wantErr: true,
@@ -1410,7 +1393,7 @@ func TestToJSONPercentRangeType(t *testing.T) {
 
 func TestToJSONPercentType(t *testing.T) {
 	type args struct {
-		i *beerproto.PercentType
+		i *beerprotov1.PercentType
 	}
 	tests := []struct {
 		name string
@@ -1419,17 +1402,16 @@ func TestToJSONPercentType(t *testing.T) {
 		{
 			name: "Percent",
 			args: args{
-				i: &beerproto.PercentType{
+				i: &beerprotov1.PercentType{
 					Value: 75,
-					Unit:  beerproto.PercentType_PERCENT_SIGN,
+					Unit:  beerprotov1.PercentUnit_PERCENT_UNIT_PERCENT_SIGN,
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.PercentType{
-				},
+				i: &beerprotov1.PercentType{},
 			},
 		},
 	}
@@ -1446,7 +1428,7 @@ func TestToJSONPercentType(t *testing.T) {
 
 func TestToJSONZymocide(t *testing.T) {
 	type args struct {
-		i *beerproto.Zymocide
+		i *beerprotov1.Zymocide
 	}
 	tests := []struct {
 		name string
@@ -1455,7 +1437,7 @@ func TestToJSONZymocide(t *testing.T) {
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.Zymocide{
+				i: &beerprotov1.Zymocide{
 					No1:     true,
 					No2:     true,
 					No28:    true,
@@ -1467,8 +1449,7 @@ func TestToJSONZymocide(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.Zymocide{
-				},
+				i: &beerprotov1.Zymocide{},
 			},
 		},
 		{
@@ -1491,7 +1472,7 @@ func TestToJSONZymocide(t *testing.T) {
 
 func TestToJSONCultureInventoryType(t *testing.T) {
 	type args struct {
-		i *beerproto.CultureInventoryType
+		i *beerprotov1.CultureInventoryType
 	}
 	tests := []struct {
 		name string
@@ -1500,19 +1481,18 @@ func TestToJSONCultureInventoryType(t *testing.T) {
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.CultureInventoryType{
-					Liquid:  &beerproto.VolumeType{},
-					Dry:     &beerproto.MassType{},
-					Slant:   &beerproto.VolumeType{},
-					Culture: &beerproto.VolumeType{},
+				i: &beerprotov1.CultureInventoryType{
+					Liquid:  &beerprotov1.VolumeType{},
+					Dry:     &beerprotov1.MassType{},
+					Slant:   &beerprotov1.VolumeType{},
+					Culture: &beerprotov1.VolumeType{},
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.CultureInventoryType{
-				},
+				i: &beerprotov1.CultureInventoryType{},
 			},
 		},
 	}
@@ -1529,45 +1509,45 @@ func TestToJSONCultureInventoryType(t *testing.T) {
 
 func TestToJSONFermentableType(t *testing.T) {
 	type args struct {
-		i *beerproto.FermentableType
+		i *beerprotov1.FermentableType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.FermentableType{
-					MaxInBatch:     &beerproto.PercentType{},
+				i: &beerprotov1.FermentableType{
+					MaxInBatch:     &beerprotov1.PercentType{},
 					RecommendMash:  true,
-					Protein:        &beerproto.PercentType{},
+					Protein:        &beerprotov1.PercentType{},
 					ProductId:      "ProductId",
-					GrainGroup:     beerproto.GrainGroup_BASE,
-					Yield:          &beerproto.YieldType{},
-					Type:           beerproto.FermentableBaseType_GRAIN,
+					GrainGroup:     beerprotov1.GrainGroup_GRAIN_GROUP_BASE,
+					Yield:          &beerprotov1.YieldType{},
+					Type:           beerprotov1.FermentableBaseType_FERMENTABLE_BASE_TYPE_GRAIN,
 					Producer:       "Producer",
 					AlphaAmylase:   80,
-					Color:          &beerproto.ColorType{},
+					Color:          &beerprotov1.ColorType{},
 					Name:           "Name",
-					DiastaticPower: &beerproto.DiastaticPowerType{},
-					Moisture:       &beerproto.PercentType{},
+					DiastaticPower: &beerprotov1.DiastaticPowerType{},
+					Moisture:       &beerprotov1.PercentType{},
 					Origin:         "Origin",
-					Inventory:      &beerproto.FermentableInventoryType{},
-					KolbachIndex:   80,
-					Glassy:         &beerproto.PercentType{},
-					Plump:          &beerproto.PercentType{},
-					Half:           &beerproto.PercentType{},
-					Mealy:          &beerproto.PercentType{},
-					Thru:           &beerproto.PercentType{},
-					Friability:     &beerproto.PercentType{},
-					DiPh:           &beerproto.AcidityType{},
-					Viscosity:      &beerproto.ViscosityType{},
-					DmsP:           &beerproto.ConcentrationType{},
-					Fan:            &beerproto.ConcentrationType{},
-					Fermentability: &beerproto.PercentType{},
-					BetaGlucan:     &beerproto.ConcentrationType{},
+					Inventory:      &beerprotov1.FermentableInventoryType{},
+					KolbachIndex:   &beerprotov1.PercentType{Value: 80},
+					Glassy:         &beerprotov1.PercentType{},
+					Plump:          &beerprotov1.PercentType{},
+					Half:           &beerprotov1.PercentType{},
+					Mealy:          &beerprotov1.PercentType{},
+					Thru:           &beerprotov1.PercentType{},
+					Friability:     &beerprotov1.PercentType{},
+					DiPh:           &beerprotov1.AcidityType{},
+					Viscosity:      &beerprotov1.ViscosityType{},
+					DmsP:           &beerprotov1.ConcentrationType{},
+					Fan:            &beerprotov1.ConcentrationType{},
+					Fermentability: &beerprotov1.PercentType{},
+					BetaGlucan:     &beerprotov1.ConcentrationType{},
 					Notes:          "Notes",
 				},
 			},
@@ -1576,11 +1556,11 @@ func TestToJSONFermentableType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.FermentableType{
-					Yield:          &beerproto.YieldType{},
-					Type:           beerproto.FermentableBaseType_GRAIN,
-					Color:          &beerproto.ColorType{},
-					Name:           "Name",
+				i: &beerprotov1.FermentableType{
+					Yield: &beerprotov1.YieldType{},
+					Type:  beerprotov1.FermentableBaseType_FERMENTABLE_BASE_TYPE_GRAIN,
+					Color: &beerprotov1.ColorType{},
+					Name:  "Name",
 				},
 			},
 			wantErr: false,
@@ -1588,8 +1568,7 @@ func TestToJSONFermentableType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.FermentableType{
-				},
+				i: &beerprotov1.FermentableType{},
 			},
 			wantErr: true,
 		},
@@ -1623,7 +1602,7 @@ func TestToJSONFermentableType(t *testing.T) {
 
 func TestToJSONColorType(t *testing.T) {
 	type args struct {
-		i *beerproto.ColorType
+		i *beerprotov1.ColorType
 	}
 	tests := []struct {
 		name string
@@ -1632,35 +1611,34 @@ func TestToJSONColorType(t *testing.T) {
 		{
 			name: "EBC",
 			args: args{
-				i: &beerproto.ColorType{
+				i: &beerprotov1.ColorType{
 					Value: 10,
-					Unit:  beerproto.ColorUnitType_EBC,
+					Unit:  beerprotov1.ColorUnit_COLOR_UNIT_EBC,
 				},
 			},
 		},
 		{
 			name: "Lovi",
 			args: args{
-				i: &beerproto.ColorType{
+				i: &beerprotov1.ColorType{
 					Value: 10,
-					Unit:  beerproto.ColorUnitType_LOVI,
+					Unit:  beerprotov1.ColorUnit_COLOR_UNIT_LOVI,
 				},
 			},
 		},
 		{
 			name: "SRM",
 			args: args{
-				i: &beerproto.ColorType{
+				i: &beerprotov1.ColorType{
 					Value: 10,
-					Unit:  beerproto.ColorUnitType_SRM,
+					Unit:  beerprotov1.ColorUnit_COLOR_UNIT_SRM,
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.ColorType{
-				},
+				i: &beerprotov1.ColorType{},
 			},
 		},
 	}
@@ -1677,7 +1655,7 @@ func TestToJSONColorType(t *testing.T) {
 
 func TestToJSONAcidityType(t *testing.T) {
 	type args struct {
-		i *beerproto.AcidityType
+		i *beerprotov1.AcidityType
 	}
 	tests := []struct {
 		name string
@@ -1686,17 +1664,16 @@ func TestToJSONAcidityType(t *testing.T) {
 		{
 			name: "pH",
 			args: args{
-				i: &beerproto.AcidityType{
+				i: &beerprotov1.AcidityType{
 					Value: 10,
-					Unit:  beerproto.AcidityUnitType_PH,
+					Unit:  beerprotov1.AcidityUnit_ACIDITY_UNIT_PH,
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.AcidityType{
-				},
+				i: &beerprotov1.AcidityType{},
 			},
 		},
 	}
@@ -1713,7 +1690,7 @@ func TestToJSONAcidityType(t *testing.T) {
 
 func TestToJSONViscosityType(t *testing.T) {
 	type args struct {
-		i *beerproto.ViscosityType
+		i *beerprotov1.ViscosityType
 	}
 	tests := []struct {
 		name string
@@ -1722,26 +1699,25 @@ func TestToJSONViscosityType(t *testing.T) {
 		{
 			name: "mPa-s",
 			args: args{
-				i: &beerproto.ViscosityType{
+				i: &beerprotov1.ViscosityType{
 					Value: 10,
-					Unit:  beerproto.ViscosityUnitType_MPAS,
+					Unit:  beerprotov1.ViscosityUnit_VISCOSITY_UNIT_MPAS,
 				},
 			},
 		},
 		{
 			name: "cP",
 			args: args{
-				i: &beerproto.ViscosityType{
+				i: &beerprotov1.ViscosityType{
 					Value: 10,
-					Unit:  beerproto.ViscosityUnitType_CP,
+					Unit:  beerprotov1.ViscosityUnit_VISCOSITY_UNIT_CP,
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.ViscosityType{
-				},
+				i: &beerprotov1.ViscosityType{},
 			},
 		},
 	}
@@ -1758,54 +1734,54 @@ func TestToJSONViscosityType(t *testing.T) {
 
 func TestToJSONStyleType(t *testing.T) {
 	type args struct {
-		i *beerproto.StyleType
+		i *beerprotov1.StyleType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.StyleType{
+				i: &beerprotov1.StyleType{
 					Aroma:          "Aroma",
 					Ingredients:    "Ingredients",
 					CategoryNumber: 10,
 					Notes:          "Notes",
 					Flavor:         "Flavor",
 					Mouthfeel:      "Mouthfeel",
-					FinalGravity: &beerproto.GravityRangeType{
-						Maximum: &beerproto.GravityType{},
-						Minimum: &beerproto.GravityType{},
+					FinalGravity: &beerprotov1.GravityRangeType{
+						Maximum: &beerprotov1.GravityType{},
+						Minimum: &beerprotov1.GravityType{},
 					},
 					StyleGuide: "Style",
-					Color: &beerproto.ColorRangeType{
-						Minimum: &beerproto.ColorType{},
-						Maximum: &beerproto.ColorType{},
+					Color: &beerprotov1.ColorRangeType{
+						Minimum: &beerprotov1.ColorType{},
+						Maximum: &beerprotov1.ColorType{},
 					},
-					OriginalGravity: &beerproto.GravityRangeType{
-						Maximum: &beerproto.GravityType{},
-						Minimum: &beerproto.GravityType{},
+					OriginalGravity: &beerprotov1.GravityRangeType{
+						Maximum: &beerprotov1.GravityType{},
+						Minimum: &beerprotov1.GravityType{},
 					},
 					Examples: "Example",
 					Name:     "Name",
-					Carbonation: &beerproto.CarbonationRangeType{
-						Maximum: &beerproto.CarbonationType{},
-						Minimum: &beerproto.CarbonationType{},
+					Carbonation: &beerprotov1.CarbonationRangeType{
+						Maximum: &beerprotov1.CarbonationType{},
+						Minimum: &beerprotov1.CarbonationType{},
 					},
-					AlcoholByVolume: &beerproto.PercentRangeType{
-						Minimum: &beerproto.PercentType{},
-						Maximum: &beerproto.PercentType{},
+					AlcoholByVolume: &beerprotov1.PercentRangeType{
+						Minimum: &beerprotov1.PercentType{},
+						Maximum: &beerprotov1.PercentType{},
 					},
-					InternationalBitternessUnits: &beerproto.BitternessRangeType{
-						Minimum: &beerproto.BitternessType{},
-						Maximum: &beerproto.BitternessType{},
+					InternationalBitternessUnits: &beerprotov1.BitternessRangeType{
+						Minimum: &beerprotov1.BitternessType{},
+						Maximum: &beerprotov1.BitternessType{},
 					},
 					Appearance:        "Appearance",
 					Category:          "Category",
 					StyleLetter:       "StyleLetter",
-					Type:              beerproto.StyleType_BEER,
+					Type:              beerprotov1.StyleType_STYLE_CATEGORIES_BEER,
 					OverallImpression: "Overall Impression",
 				},
 			},
@@ -1814,11 +1790,11 @@ func TestToJSONStyleType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.StyleType{
-					Name: "Name",
+				i: &beerprotov1.StyleType{
+					Name:       "Name",
 					StyleGuide: "StyleGuide",
-					Category: "Category",
-					Type: beerproto.StyleType_CIDER,
+					Category:   "Category",
+					Type:       beerprotov1.StyleType_STYLE_CATEGORIES_CIDER,
 				},
 			},
 			wantErr: false,
@@ -1826,8 +1802,7 @@ func TestToJSONStyleType(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.StyleType{
-				},
+				i: &beerprotov1.StyleType{},
 			},
 			wantErr: true,
 		},
@@ -1861,19 +1836,19 @@ func TestToJSONStyleType(t *testing.T) {
 
 func TestToJSONGravityRangeType(t *testing.T) {
 	type args struct {
-		i *beerproto.GravityRangeType
+		i *beerprotov1.GravityRangeType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.GravityRangeType{
-					Minimum: &beerproto.GravityType{},
-					Maximum: &beerproto.GravityType{},
+				i: &beerprotov1.GravityRangeType{
+					Minimum: &beerprotov1.GravityType{},
+					Maximum: &beerprotov1.GravityType{},
 				},
 			},
 			wantErr: false,
@@ -1881,8 +1856,8 @@ func TestToJSONGravityRangeType(t *testing.T) {
 		{
 			name: "Maximum",
 			args: args{
-				i: &beerproto.GravityRangeType{
-					Minimum: &beerproto.GravityType{},
+				i: &beerprotov1.GravityRangeType{
+					Minimum: &beerprotov1.GravityType{},
 				},
 			},
 			wantErr: true,
@@ -1890,8 +1865,8 @@ func TestToJSONGravityRangeType(t *testing.T) {
 		{
 			name: "Minimum",
 			args: args{
-				i: &beerproto.GravityRangeType{
-					Maximum: &beerproto.GravityType{},
+				i: &beerprotov1.GravityRangeType{
+					Maximum: &beerprotov1.GravityType{},
 				},
 			},
 			wantErr: true,
@@ -1926,7 +1901,7 @@ func TestToJSONGravityRangeType(t *testing.T) {
 
 func TestToJSONGravityType(t *testing.T) {
 	type args struct {
-		i *beerproto.GravityType
+		i *beerprotov1.GravityType
 	}
 	tests := []struct {
 		name string
@@ -1935,35 +1910,34 @@ func TestToJSONGravityType(t *testing.T) {
 		{
 			name: "SG",
 			args: args{
-				i: &beerproto.GravityType{
+				i: &beerprotov1.GravityType{
 					Value: 45,
-					Unit:  beerproto.GravityUnitType_SG,
+					Unit:  beerprotov1.GravityUnit_GRAVITY_UNIT_SG,
 				},
 			},
 		},
 		{
 			name: "BRIX",
 			args: args{
-				i: &beerproto.GravityType{
+				i: &beerprotov1.GravityType{
 					Value: 45,
-					Unit:  beerproto.GravityUnitType_BRIX,
+					Unit:  beerprotov1.GravityUnit_GRAVITY_UNIT_BRIX,
 				},
 			},
 		},
 		{
 			name: "Plato",
 			args: args{
-				i: &beerproto.GravityType{
+				i: &beerprotov1.GravityType{
 					Value: 45,
-					Unit:  beerproto.GravityUnitType_PLATO,
+					Unit:  beerprotov1.GravityUnit_GRAVITY_UNIT_PLATO,
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.GravityType{
-				},
+				i: &beerprotov1.GravityType{},
 			},
 		},
 		{
@@ -1986,19 +1960,19 @@ func TestToJSONGravityType(t *testing.T) {
 
 func TestToJSONColorRangeType(t *testing.T) {
 	type args struct {
-		i *beerproto.ColorRangeType
+		i *beerprotov1.ColorRangeType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.ColorRangeType{
-					Minimum: &beerproto.ColorType{},
-					Maximum: &beerproto.ColorType{},
+				i: &beerprotov1.ColorRangeType{
+					Minimum: &beerprotov1.ColorType{},
+					Maximum: &beerprotov1.ColorType{},
 				},
 			},
 			wantErr: false,
@@ -2006,8 +1980,8 @@ func TestToJSONColorRangeType(t *testing.T) {
 		{
 			name: "Maximum",
 			args: args{
-				i: &beerproto.ColorRangeType{
-					Minimum: &beerproto.ColorType{},
+				i: &beerprotov1.ColorRangeType{
+					Minimum: &beerprotov1.ColorType{},
 				},
 			},
 			wantErr: true,
@@ -2015,8 +1989,8 @@ func TestToJSONColorRangeType(t *testing.T) {
 		{
 			name: "Minimum",
 			args: args{
-				i: &beerproto.ColorRangeType{
-					Maximum: &beerproto.ColorType{},
+				i: &beerprotov1.ColorRangeType{
+					Maximum: &beerprotov1.ColorType{},
 				},
 			},
 			wantErr: true,
@@ -2051,19 +2025,19 @@ func TestToJSONColorRangeType(t *testing.T) {
 
 func TestToJSONCarbonationRangeType(t *testing.T) {
 	type args struct {
-		i *beerproto.CarbonationRangeType
+		i *beerprotov1.CarbonationRangeType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.CarbonationRangeType{
-					Minimum: &beerproto.CarbonationType{},
-					Maximum: &beerproto.CarbonationType{},
+				i: &beerprotov1.CarbonationRangeType{
+					Minimum: &beerprotov1.CarbonationType{},
+					Maximum: &beerprotov1.CarbonationType{},
 				},
 			},
 			wantErr: false,
@@ -2071,8 +2045,8 @@ func TestToJSONCarbonationRangeType(t *testing.T) {
 		{
 			name: "Maximum",
 			args: args{
-				i: &beerproto.CarbonationRangeType{
-					Minimum: &beerproto.CarbonationType{},
+				i: &beerprotov1.CarbonationRangeType{
+					Minimum: &beerprotov1.CarbonationType{},
 				},
 			},
 			wantErr: true,
@@ -2080,8 +2054,8 @@ func TestToJSONCarbonationRangeType(t *testing.T) {
 		{
 			name: "Minimum",
 			args: args{
-				i: &beerproto.CarbonationRangeType{
-					Maximum: &beerproto.CarbonationType{},
+				i: &beerprotov1.CarbonationRangeType{
+					Maximum: &beerprotov1.CarbonationType{},
 				},
 			},
 			wantErr: true,
@@ -2116,7 +2090,7 @@ func TestToJSONCarbonationRangeType(t *testing.T) {
 
 func TestToJSONCarbonationType(t *testing.T) {
 	type args struct {
-		i *beerproto.CarbonationType
+		i *beerprotov1.CarbonationType
 	}
 	tests := []struct {
 		name string
@@ -2125,17 +2099,16 @@ func TestToJSONCarbonationType(t *testing.T) {
 		{
 			name: "Vols",
 			args: args{
-				i: &beerproto.CarbonationType{
+				i: &beerprotov1.CarbonationType{
 					Value: 45,
-					Unit:  beerproto.CarbonationUnitType_VOLS,
+					Unit:  beerprotov1.CarbonationUnit_CARBONATION_UNIT_VOLS,
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.CarbonationType{
-				},
+				i: &beerprotov1.CarbonationType{},
 			},
 		},
 		{
@@ -2158,19 +2131,19 @@ func TestToJSONCarbonationType(t *testing.T) {
 
 func TestToJSONBitternessRangeType(t *testing.T) {
 	type args struct {
-		i *beerproto.BitternessRangeType
+		i *beerprotov1.BitternessRangeType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.BitternessRangeType{
-					Minimum: &beerproto.BitternessType{},
-					Maximum: &beerproto.BitternessType{},
+				i: &beerprotov1.BitternessRangeType{
+					Minimum: &beerprotov1.BitternessType{},
+					Maximum: &beerprotov1.BitternessType{},
 				},
 			},
 			wantErr: false,
@@ -2178,8 +2151,8 @@ func TestToJSONBitternessRangeType(t *testing.T) {
 		{
 			name: "Maximum",
 			args: args{
-				i: &beerproto.BitternessRangeType{
-					Minimum: &beerproto.BitternessType{},
+				i: &beerprotov1.BitternessRangeType{
+					Minimum: &beerprotov1.BitternessType{},
 				},
 			},
 			wantErr: true,
@@ -2187,8 +2160,8 @@ func TestToJSONBitternessRangeType(t *testing.T) {
 		{
 			name: "Minimum",
 			args: args{
-				i: &beerproto.BitternessRangeType{
-					Maximum: &beerproto.BitternessType{},
+				i: &beerprotov1.BitternessRangeType{
+					Maximum: &beerprotov1.BitternessType{},
 				},
 			},
 			wantErr: true,
@@ -2223,7 +2196,7 @@ func TestToJSONBitternessRangeType(t *testing.T) {
 
 func TestToJSONBitternessType(t *testing.T) {
 	type args struct {
-		i *beerproto.BitternessType
+		i *beerprotov1.BitternessType
 	}
 	tests := []struct {
 		name string
@@ -2232,17 +2205,16 @@ func TestToJSONBitternessType(t *testing.T) {
 		{
 			name: "IBU",
 			args: args{
-				i: &beerproto.BitternessType{
+				i: &beerprotov1.BitternessType{
 					Value: 35,
-					Unit:  beerproto.BitternessType_IBUs,
+					Unit:  beerprotov1.BitternessUnit_BITTERNESS_UNIT_IBUS,
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.BitternessType{
-				},
+				i: &beerprotov1.BitternessType{},
 			},
 		},
 		{
@@ -2265,25 +2237,25 @@ func TestToJSONBitternessType(t *testing.T) {
 
 func TestToJSONMiscellaneousType(t *testing.T) {
 	type args struct {
-		i *beerproto.MiscellaneousType
+		i *beerprotov1.MiscellaneousType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.MiscellaneousType{
+				i: &beerprotov1.MiscellaneousType{
 					UseFor:    "UseFor",
 					Notes:     "Notes",
 					Name:      "Name",
 					Producer:  "Producer",
 					ProductId: "ProductId",
-					Type:      beerproto.MiscellaneousBaseType_FLAVOR,
-					Inventory: &beerproto.MiscellaneousInventoryType{
-						Amount: &beerproto.MiscellaneousInventoryType_Mass{},
+					Type:      beerprotov1.MiscellaneousBaseType_MISCELLANEOUS_BASE_TYPE_FLAVOR,
+					Inventory: &beerprotov1.MiscellaneousInventoryType{
+						Amount: &beerprotov1.MiscellaneousInventoryType_Mass{},
 					},
 				},
 			},
@@ -2292,9 +2264,9 @@ func TestToJSONMiscellaneousType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.MiscellaneousType{
-					Name:      "Name",
-					Type:      beerproto.MiscellaneousBaseType_FLAVOR,
+				i: &beerprotov1.MiscellaneousType{
+					Name: "Name",
+					Type: beerprotov1.MiscellaneousBaseType_MISCELLANEOUS_BASE_TYPE_FLAVOR,
 				},
 			},
 			wantErr: false,
@@ -2302,8 +2274,7 @@ func TestToJSONMiscellaneousType(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.MiscellaneousType{
-				},
+				i: &beerprotov1.MiscellaneousType{},
 			},
 			wantErr: true,
 		},
@@ -2337,18 +2308,18 @@ func TestToJSONMiscellaneousType(t *testing.T) {
 
 func TestToJSONMiscellaneousInventoryType(t *testing.T) {
 	type args struct {
-		i *beerproto.MiscellaneousInventoryType
+		i *beerprotov1.MiscellaneousInventoryType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Mass",
 			args: args{
-				i: &beerproto.MiscellaneousInventoryType{
-					Amount: &beerproto.MiscellaneousInventoryType_Mass{},
+				i: &beerprotov1.MiscellaneousInventoryType{
+					Amount: &beerprotov1.MiscellaneousInventoryType_Mass{},
 				},
 			},
 			wantErr: false,
@@ -2356,8 +2327,8 @@ func TestToJSONMiscellaneousInventoryType(t *testing.T) {
 		{
 			name: "Unit",
 			args: args{
-				i: &beerproto.MiscellaneousInventoryType{
-					Amount: &beerproto.MiscellaneousInventoryType_Unit{},
+				i: &beerprotov1.MiscellaneousInventoryType{
+					Amount: &beerprotov1.MiscellaneousInventoryType_Unit{},
 				},
 			},
 			wantErr: false,
@@ -2365,8 +2336,8 @@ func TestToJSONMiscellaneousInventoryType(t *testing.T) {
 		{
 			name: "Volume",
 			args: args{
-				i: &beerproto.MiscellaneousInventoryType{
-					Amount: &beerproto.MiscellaneousInventoryType_Volume{},
+				i: &beerprotov1.MiscellaneousInventoryType{
+					Amount: &beerprotov1.MiscellaneousInventoryType_Volume{},
 				},
 			},
 			wantErr: false,
@@ -2374,8 +2345,7 @@ func TestToJSONMiscellaneousInventoryType(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.MiscellaneousInventoryType{
-				},
+				i: &beerprotov1.MiscellaneousInventoryType{},
 			},
 			wantErr: true,
 		},
@@ -2409,17 +2379,17 @@ func TestToJSONMiscellaneousInventoryType(t *testing.T) {
 
 func TestToJSONTasteType(t *testing.T) {
 	type args struct {
-		i *beerproto.TasteType
+		i *beerprotov1.TasteType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.TasteType{
+				i: &beerprotov1.TasteType{
 					Notes:  "Notes",
 					Rating: 10,
 				},
@@ -2432,7 +2402,6 @@ func TestToJSONTasteType(t *testing.T) {
 				i: nil,
 			},
 			wantErr: false,
-
 		},
 	}
 	for _, tt := range tests {
@@ -2457,7 +2426,7 @@ func TestToJSONTasteType(t *testing.T) {
 
 func TestToJSONBoilProcedureType(t *testing.T) {
 	type args struct {
-		i *beerproto.BoilProcedureType
+		i *beerprotov1.BoilProcedureType
 	}
 	tests := []struct {
 		name    string
@@ -2467,13 +2436,13 @@ func TestToJSONBoilProcedureType(t *testing.T) {
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.BoilProcedureType{
-					PreBoilSize: &beerproto.VolumeType{},
-					BoilTime: &beerproto.TimeType{
+				i: &beerprotov1.BoilProcedureType{
+					PreBoilSize: &beerprotov1.VolumeType{},
+					BoilTime: &beerprotov1.TimeType{
 						Value: 60,
-						Unit:  beerproto.TimeType_MIN,
+						Unit:  beerprotov1.TimeUnit_TIME_UNIT_MIN,
 					},
-					BoilSteps:   []*beerproto.BoilStepType{},
+					BoilSteps:   []*beerprotov1.BoilStepType{},
 					Name:        "Name",
 					Description: "Description",
 					Notes:       "Notes",
@@ -2484,10 +2453,10 @@ func TestToJSONBoilProcedureType(t *testing.T) {
 		{
 			name: "BoilTime error",
 			args: args{
-				i: &beerproto.BoilProcedureType{
-					PreBoilSize: &beerproto.VolumeType{},
+				i: &beerprotov1.BoilProcedureType{
+					PreBoilSize: &beerprotov1.VolumeType{},
 					BoilTime:    nil,
-					BoilSteps:   []*beerproto.BoilStepType{},
+					BoilSteps:   []*beerprotov1.BoilStepType{},
 					Name:        "Name",
 					Description: "Description",
 					Notes:       "Notes",
@@ -2524,28 +2493,28 @@ func TestToJSONBoilProcedureType(t *testing.T) {
 
 func TestToJSONBoilStepType(t *testing.T) {
 	type args struct {
-		i *beerproto.BoilStepType
+		i *beerprotov1.BoilStepType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Batch",
 			args: args{
-				i: &beerproto.BoilStepType{
-					EndGravity:       &beerproto.GravityType{},
-					ChillingType:     beerproto.BoilStepTypeChillingType_BATCH,
+				i: &beerprotov1.BoilStepType{
+					EndGravity:       &beerprotov1.GravityType{},
+					ChillingType:     beerprotov1.BoilStepTypeChillingType_BOIL_STEP_TYPE_CHILLING_TYPE_BATCH,
 					Description:      "Description",
-					EndTemperature:   &beerproto.TemperatureType{},
-					RampTime:         &beerproto.TimeType{},
-					StepTime:         &beerproto.TimeType{},
-					StartGravity:     &beerproto.GravityType{},
-					StartPh:          &beerproto.AcidityType{},
-					EndPh:            &beerproto.AcidityType{},
+					EndTemperature:   &beerprotov1.TemperatureType{},
+					RampTime:         &beerprotov1.TimeType{},
+					StepTime:         &beerprotov1.TimeType{},
+					StartGravity:     &beerprotov1.GravityType{},
+					StartPh:          &beerprotov1.AcidityType{},
+					EndPh:            &beerprotov1.AcidityType{},
 					Name:             "Name",
-					StartTemperature: &beerproto.TemperatureType{},
+					StartTemperature: &beerprotov1.TemperatureType{},
 				},
 			},
 			wantErr: false,
@@ -2553,18 +2522,18 @@ func TestToJSONBoilStepType(t *testing.T) {
 		{
 			name: "Inline",
 			args: args{
-				i: &beerproto.BoilStepType{
-					EndGravity:       &beerproto.GravityType{},
-					ChillingType:     beerproto.BoilStepTypeChillingType_INLINE,
+				i: &beerprotov1.BoilStepType{
+					EndGravity:       &beerprotov1.GravityType{},
+					ChillingType:     beerprotov1.BoilStepTypeChillingType_BOIL_STEP_TYPE_CHILLING_TYPE_INLINE,
 					Description:      "Description",
-					EndTemperature:   &beerproto.TemperatureType{},
-					RampTime:         &beerproto.TimeType{},
-					StepTime:         &beerproto.TimeType{},
-					StartGravity:     &beerproto.GravityType{},
-					StartPh:          &beerproto.AcidityType{},
-					EndPh:            &beerproto.AcidityType{},
+					EndTemperature:   &beerprotov1.TemperatureType{},
+					RampTime:         &beerprotov1.TimeType{},
+					StepTime:         &beerprotov1.TimeType{},
+					StartGravity:     &beerprotov1.GravityType{},
+					StartPh:          &beerprotov1.AcidityType{},
+					EndPh:            &beerprotov1.AcidityType{},
 					Name:             "Name",
-					StartTemperature: &beerproto.TemperatureType{},
+					StartTemperature: &beerprotov1.TemperatureType{},
 				},
 			},
 			wantErr: false,
@@ -2572,7 +2541,7 @@ func TestToJSONBoilStepType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.BoilStepType{
+				i: &beerprotov1.BoilStepType{
 					Name: "Name",
 				},
 			},
@@ -2608,7 +2577,7 @@ func TestToJSONBoilStepType(t *testing.T) {
 
 func TestToJSONTimeType(t *testing.T) {
 	type args struct {
-		i *beerproto.TimeType
+		i *beerprotov1.TimeType
 	}
 	tests := []struct {
 		name string
@@ -2617,52 +2586,52 @@ func TestToJSONTimeType(t *testing.T) {
 		{
 			name: "Sec",
 			args: args{
-				i: &beerproto.TimeType{
+				i: &beerprotov1.TimeType{
 					Value: 10,
-					Unit:  beerproto.TimeType_SEC,
+					Unit:  beerprotov1.TimeUnit_TIME_UNIT_SEC,
 				},
 			},
 		},
 		{
 			name: "Min",
 			args: args{
-				i: &beerproto.TimeType{
+				i: &beerprotov1.TimeType{
 					Value: 10,
-					Unit:  beerproto.TimeType_MIN,
+					Unit:  beerprotov1.TimeUnit_TIME_UNIT_MIN,
 				},
 			},
 		},
 		{
 			name: "Hour",
 			args: args{
-				i: &beerproto.TimeType{
+				i: &beerprotov1.TimeType{
 					Value: 10,
-					Unit:  beerproto.TimeType_HR,
+					Unit:  beerprotov1.TimeUnit_TIME_UNIT_HR,
 				},
 			},
 		},
 		{
 			name: "Day",
 			args: args{
-				i: &beerproto.TimeType{
+				i: &beerprotov1.TimeType{
 					Value: 10,
-					Unit:  beerproto.TimeType_DAY,
+					Unit:  beerprotov1.TimeUnit_TIME_UNIT_DAY,
 				},
 			},
 		},
 		{
 			name: "Week",
 			args: args{
-				i: &beerproto.TimeType{
+				i: &beerprotov1.TimeType{
 					Value: 10,
-					Unit:  beerproto.TimeType_WEEK,
+					Unit:  beerprotov1.TimeUnit_TIME_UNIT_WEEK,
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.TimeType{},
+				i: &beerprotov1.TimeType{},
 			},
 		},
 		{
@@ -2685,31 +2654,30 @@ func TestToJSONTimeType(t *testing.T) {
 
 func TestToJSONPackagingProcedureType(t *testing.T) {
 	type args struct {
-		i *beerproto.PackagingProcedureType
+		i *beerprotov1.PackagingProcedureType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.PackagingProcedureType{
+				i: &beerprotov1.PackagingProcedureType{
 					Name:             "Name",
-					PackagedVolume:   &beerproto.VolumeType{},
+					PackagedVolume:   &beerprotov1.VolumeType{},
 					Description:      "Description",
 					Notes:            "Notes",
-					PackagingVessels: []*beerproto.PackagingVesselType{},
+					PackagingVessels: []*beerprotov1.PackagingVesselType{},
 				},
 			},
 			wantErr: false,
-
 		},
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.PackagingProcedureType{
+				i: &beerprotov1.PackagingProcedureType{
 					Name: "Name",
 				},
 			},
@@ -2745,31 +2713,31 @@ func TestToJSONPackagingProcedureType(t *testing.T) {
 
 func TestToJSONPackagingVesselType(t *testing.T) {
 	type args struct {
-		i *beerproto.PackagingVesselType
+		i *beerprotov1.PackagingVesselType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.PackagingVesselType{
-					Type:             beerproto.PackagingVesselType_BOTTLE,
-					StartGravity:     &beerproto.GravityType{},
+				i: &beerprotov1.PackagingVesselType{
+					Type:             beerprotov1.PackagingVesselUnit_PACKAGING_VESSEL_UNIT_BOTTLE,
+					StartGravity:     &beerprotov1.GravityType{},
 					Name:             "Name",
 					PackageDate:      "PackageDate",
-					StepTime:         &beerproto.TimeType{},
-					EndGravity:       &beerproto.GravityType{},
-					VesselVolume:     &beerproto.VolumeType{},
+					StepTime:         &beerprotov1.TimeType{},
+					EndGravity:       &beerprotov1.GravityType{},
+					VesselVolume:     &beerprotov1.VolumeType{},
 					VesselQuantity:   10,
 					Description:      "Description",
-					StartPh:          &beerproto.AcidityType{},
+					StartPh:          &beerprotov1.AcidityType{},
 					Carbonation:      80,
-					StartTemperature: &beerproto.TemperatureType{},
-					EndPh:            &beerproto.AcidityType{},
-					EndTemperature:   &beerproto.TemperatureType{},
+					StartTemperature: &beerprotov1.TemperatureType{},
+					EndPh:            &beerprotov1.AcidityType{},
+					EndTemperature:   &beerprotov1.TemperatureType{},
 				},
 			},
 			wantErr: false,
@@ -2777,7 +2745,7 @@ func TestToJSONPackagingVesselType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.PackagingVesselType{
+				i: &beerprotov1.PackagingVesselType{
 					Name: "Name",
 				},
 			},
@@ -2813,7 +2781,7 @@ func TestToJSONPackagingVesselType(t *testing.T) {
 
 func TestToJSONHopAdditionType(t *testing.T) {
 	type args struct {
-		i *beerproto.HopAdditionType
+		i *beerprotov1.HopAdditionType
 	}
 	tests := []struct {
 		name    string
@@ -2823,17 +2791,17 @@ func TestToJSONHopAdditionType(t *testing.T) {
 		{
 			name: "Mass",
 			args: args{
-				i: &beerproto.HopAdditionType{
-					BetaAcid:  &beerproto.PercentType{},
+				i: &beerprotov1.HopAdditionType{
+					BetaAcid:  &beerprotov1.PercentType{},
 					Producer:  "Producer",
 					Origin:    "Origin",
 					Year:      "Year",
-					Form:      beerproto.HopVarietyBaseForm_PELLET,
-					Timing:    &beerproto.TimingType{},
+					Form:      beerprotov1.HopVarietyBaseForm_HOP_VARIETY_BASE_FORM_PELLET,
+					Timing:    &beerprotov1.TimingType{},
 					Name:      "Name",
 					ProductId: "ProductId",
-					AlphaAcid: &beerproto.PercentType{},
-					Amount:    &beerproto.HopAdditionType_Mass{},
+					AlphaAcid: &beerprotov1.PercentType{},
+					Amount:    &beerprotov1.HopAdditionType_Mass{},
 				},
 			},
 			wantErr: false,
@@ -2841,17 +2809,17 @@ func TestToJSONHopAdditionType(t *testing.T) {
 		{
 			name: "Volume",
 			args: args{
-				i: &beerproto.HopAdditionType{
-					BetaAcid:  &beerproto.PercentType{},
+				i: &beerprotov1.HopAdditionType{
+					BetaAcid:  &beerprotov1.PercentType{},
 					Producer:  "Producer",
 					Origin:    "Origin",
 					Year:      "Year",
-					Form:      beerproto.HopVarietyBaseForm_POWDER,
-					Timing:    &beerproto.TimingType{},
+					Form:      beerprotov1.HopVarietyBaseForm_HOP_VARIETY_BASE_FORM_POWDER,
+					Timing:    &beerprotov1.TimingType{},
 					Name:      "Name",
 					ProductId: "ProductId",
-					AlphaAcid: &beerproto.PercentType{},
-					Amount:    &beerproto.HopAdditionType_Volume{},
+					AlphaAcid: &beerprotov1.PercentType{},
+					Amount:    &beerprotov1.HopAdditionType_Volume{},
 				},
 			},
 			wantErr: false,
@@ -2859,8 +2827,7 @@ func TestToJSONHopAdditionType(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.HopAdditionType{
-				},
+				i: &beerprotov1.HopAdditionType{},
 			},
 			wantErr: true,
 		},
@@ -2893,7 +2860,7 @@ func TestToJSONHopAdditionType(t *testing.T) {
 
 func TestToJSONFermentableAdditionType(t *testing.T) {
 	type args struct {
-		i *beerproto.FermentableAdditionType
+		i *beerprotov1.FermentableAdditionType
 	}
 	tests := []struct {
 		name    string
@@ -2903,17 +2870,17 @@ func TestToJSONFermentableAdditionType(t *testing.T) {
 		{
 			name: "Mass",
 			args: args{
-				i: &beerproto.FermentableAdditionType{
-					Type:       beerproto.FermentableBaseType_GRAIN,
+				i: &beerprotov1.FermentableAdditionType{
+					Type:       beerprotov1.FermentableBaseType_FERMENTABLE_BASE_TYPE_GRAIN,
 					Origin:     "Origin",
-					GrainGroup: beerproto.GrainGroup_BASE,
-					Yield:      &beerproto.YieldType{},
-					Color:      &beerproto.ColorType{},
+					GrainGroup: beerprotov1.GrainGroup_GRAIN_GROUP_BASE,
+					Yield:      &beerprotov1.YieldType{},
+					Color:      &beerprotov1.ColorType{},
 					Name:       "Name",
 					Producer:   "Producer",
 					ProductId:  "ProductId",
-					Timing:     &beerproto.TimingType{},
-					Amount:     &beerproto.FermentableAdditionType_Mass{},
+					Timing:     &beerprotov1.TimingType{},
+					Amount:     &beerprotov1.FermentableAdditionType_Mass{},
 				},
 			},
 			wantErr: false,
@@ -2921,17 +2888,17 @@ func TestToJSONFermentableAdditionType(t *testing.T) {
 		{
 			name: "Volume",
 			args: args{
-				i: &beerproto.FermentableAdditionType{
-					Type:       beerproto.FermentableBaseType_DRY_EXTRACT,
+				i: &beerprotov1.FermentableAdditionType{
+					Type:       beerprotov1.FermentableBaseType_FERMENTABLE_BASE_TYPE_DRY_EXTRACT,
 					Origin:     "Origin",
-					GrainGroup: beerproto.GrainGroup_CARAMEL,
-					Yield:      &beerproto.YieldType{},
-					Color:      &beerproto.ColorType{},
+					GrainGroup: beerprotov1.GrainGroup_GRAIN_GROUP_CARAMEL,
+					Yield:      &beerprotov1.YieldType{},
+					Color:      &beerprotov1.ColorType{},
 					Name:       "Name",
 					Producer:   "Producer",
 					ProductId:  "ProductId",
-					Timing:     &beerproto.TimingType{},
-					Amount:     &beerproto.FermentableAdditionType_Volume{},
+					Timing:     &beerprotov1.TimingType{},
+					Amount:     &beerprotov1.FermentableAdditionType_Volume{},
 				},
 			},
 			wantErr: false,
@@ -2939,13 +2906,13 @@ func TestToJSONFermentableAdditionType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.FermentableAdditionType{
-					Type:       beerproto.FermentableBaseType_DRY_EXTRACT,
-					Yield:      &beerproto.YieldType{},
-					Color:      &beerproto.ColorType{},
-					Name:       "Name",
-					Timing:     &beerproto.TimingType{},
-					Amount:     &beerproto.FermentableAdditionType_Volume{},
+				i: &beerprotov1.FermentableAdditionType{
+					Type:   beerprotov1.FermentableBaseType_FERMENTABLE_BASE_TYPE_DRY_EXTRACT,
+					Yield:  &beerprotov1.YieldType{},
+					Color:  &beerprotov1.ColorType{},
+					Name:   "Name",
+					Timing: &beerprotov1.TimingType{},
+					Amount: &beerprotov1.FermentableAdditionType_Volume{},
 				},
 			},
 			wantErr: false,
@@ -2953,8 +2920,7 @@ func TestToJSONFermentableAdditionType(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.FermentableAdditionType{
-				},
+				i: &beerprotov1.FermentableAdditionType{},
 			},
 			wantErr: true,
 		},
@@ -2987,7 +2953,7 @@ func TestToJSONFermentableAdditionType(t *testing.T) {
 
 func TestToJSONYieldType(t *testing.T) {
 	type args struct {
-		i *beerproto.YieldType
+		i *beerprotov1.YieldType
 	}
 	tests := []struct {
 		name string
@@ -2996,19 +2962,18 @@ func TestToJSONYieldType(t *testing.T) {
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.YieldType{
-					FineGrind:            &beerproto.PercentType{},
-					CoarseGrind:          &beerproto.PercentType{},
-					FineCoarseDifference: &beerproto.PercentType{},
-					Potential:            &beerproto.GravityType{},
+				i: &beerprotov1.YieldType{
+					FineGrind:            &beerprotov1.PercentType{},
+					CoarseGrind:          &beerprotov1.PercentType{},
+					FineCoarseDifference: &beerprotov1.PercentType{},
+					Potential:            &beerprotov1.GravityType{},
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.YieldType{
-				},
+				i: &beerprotov1.YieldType{},
 			},
 		},
 		{
@@ -3031,32 +2996,32 @@ func TestToJSONYieldType(t *testing.T) {
 
 func TestToJSONWaterAdditionType(t *testing.T) {
 	type args struct {
-		i *beerproto.WaterAdditionType
+		i *beerprotov1.WaterAdditionType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.WaterAdditionType{
-					Flouride:    &beerproto.ConcentrationType{},
-					Sulfate:     &beerproto.ConcentrationType{},
+				i: &beerprotov1.WaterAdditionType{
+					Flouride:    &beerprotov1.ConcentrationType{},
+					Sulfate:     &beerprotov1.ConcentrationType{},
 					Producer:    "Producer",
-					Nitrate:     &beerproto.ConcentrationType{},
-					Nitrite:     &beerproto.ConcentrationType{},
-					Chloride:    &beerproto.ConcentrationType{},
-					Amount:      &beerproto.VolumeType{},
+					Nitrate:     &beerprotov1.ConcentrationType{},
+					Nitrite:     &beerprotov1.ConcentrationType{},
+					Chloride:    &beerprotov1.ConcentrationType{},
+					Amount:      &beerprotov1.VolumeType{},
 					Name:        "Name",
-					Potassium:   &beerproto.ConcentrationType{},
-					Magnesium:   &beerproto.ConcentrationType{},
-					Iron:        &beerproto.ConcentrationType{},
-					Bicarbonate: &beerproto.ConcentrationType{},
-					Calcium:     &beerproto.ConcentrationType{},
-					Carbonate:   &beerproto.ConcentrationType{},
-					Sodium:      &beerproto.ConcentrationType{},
+					Potassium:   &beerprotov1.ConcentrationType{},
+					Magnesium:   &beerprotov1.ConcentrationType{},
+					Iron:        &beerprotov1.ConcentrationType{},
+					Bicarbonate: &beerprotov1.ConcentrationType{},
+					Calcium:     &beerprotov1.ConcentrationType{},
+					Carbonate:   &beerprotov1.ConcentrationType{},
+					Sodium:      &beerprotov1.ConcentrationType{},
 				},
 			},
 			wantErr: false,
@@ -3064,14 +3029,14 @@ func TestToJSONWaterAdditionType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.WaterAdditionType{
-					Sulfate:     &beerproto.ConcentrationType{},
-					Chloride:    &beerproto.ConcentrationType{},
+				i: &beerprotov1.WaterAdditionType{
+					Sulfate:     &beerprotov1.ConcentrationType{},
+					Chloride:    &beerprotov1.ConcentrationType{},
 					Name:        "Name",
-					Magnesium:   &beerproto.ConcentrationType{},
-					Bicarbonate: &beerproto.ConcentrationType{},
-					Calcium:     &beerproto.ConcentrationType{},
-					Sodium:      &beerproto.ConcentrationType{},
+					Magnesium:   &beerprotov1.ConcentrationType{},
+					Bicarbonate: &beerprotov1.ConcentrationType{},
+					Calcium:     &beerprotov1.ConcentrationType{},
+					Sodium:      &beerprotov1.ConcentrationType{},
 				},
 			},
 			wantErr: false,
@@ -3079,8 +3044,7 @@ func TestToJSONWaterAdditionType(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.WaterAdditionType{
-				},
+				i: &beerprotov1.WaterAdditionType{},
 			},
 			wantErr: true,
 		},
@@ -3090,7 +3054,6 @@ func TestToJSONWaterAdditionType(t *testing.T) {
 				i: nil,
 			},
 			wantErr: false,
-
 		},
 	}
 	for _, tt := range tests {
@@ -3115,27 +3078,27 @@ func TestToJSONWaterAdditionType(t *testing.T) {
 
 func TestToJSONCultureAdditionType(t *testing.T) {
 	type args struct {
-		i *beerproto.CultureAdditionType
+		i *beerprotov1.CultureAdditionType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Mass",
 			args: args{
-				i: &beerproto.CultureAdditionType{
-					Form:              beerproto.CultureBaseForm_DRY,
+				i: &beerprotov1.CultureAdditionType{
+					Form:              beerprotov1.CultureBaseForm_CULTURE_BASE_FORM_DRY,
 					ProductId:         "ProductId",
 					Name:              "Name",
 					CellCountBillions: 800,
 					TimesCultured:     4,
 					Producer:          "Producer",
-					Type:              beerproto.CultureBaseType_ALE,
-					Attenuation:       &beerproto.PercentType{},
-					Timing:            &beerproto.TimingType{},
-					Amount:            &beerproto.CultureAdditionType_Mass{},
+					Type:              beerprotov1.CultureBaseType_CULTURE_BASE_TYPE_ALE,
+					Attenuation:       &beerprotov1.PercentType{},
+					Timing:            &beerprotov1.TimingType{},
+					Amount:            &beerprotov1.CultureAdditionType_Mass{},
 				},
 			},
 			wantErr: false,
@@ -3143,17 +3106,17 @@ func TestToJSONCultureAdditionType(t *testing.T) {
 		{
 			name: "Unit",
 			args: args{
-				i: &beerproto.CultureAdditionType{
-					Form:              beerproto.CultureBaseForm_CULTURE,
+				i: &beerprotov1.CultureAdditionType{
+					Form:              beerprotov1.CultureBaseForm_CULTURE_BASE_FORM_CULTURE,
 					ProductId:         "ProductId",
 					Name:              "Name",
 					CellCountBillions: 800,
 					TimesCultured:     4,
 					Producer:          "Producer",
-					Type:              beerproto.CultureBaseType_LAGER,
-					Attenuation:       &beerproto.PercentType{},
-					Timing:            &beerproto.TimingType{},
-					Amount:            &beerproto.CultureAdditionType_Unit{},
+					Type:              beerprotov1.CultureBaseType_CULTURE_BASE_TYPE_LAGER,
+					Attenuation:       &beerprotov1.PercentType{},
+					Timing:            &beerprotov1.TimingType{},
+					Amount:            &beerprotov1.CultureAdditionType_Unit{},
 				},
 			},
 			wantErr: false,
@@ -3161,17 +3124,17 @@ func TestToJSONCultureAdditionType(t *testing.T) {
 		{
 			name: "Volume",
 			args: args{
-				i: &beerproto.CultureAdditionType{
-					Form:              beerproto.CultureBaseForm_LIQUID,
+				i: &beerprotov1.CultureAdditionType{
+					Form:              beerprotov1.CultureBaseForm_CULTURE_BASE_FORM_LIQUID,
 					ProductId:         "ProductId",
 					Name:              "Name",
 					CellCountBillions: 800,
 					TimesCultured:     4,
 					Producer:          "Producer",
-					Type:              beerproto.CultureBaseType_BACTERIA,
-					Attenuation:       &beerproto.PercentType{},
-					Timing:            &beerproto.TimingType{},
-					Amount:            &beerproto.CultureAdditionType_Volume{},
+					Type:              beerprotov1.CultureBaseType_CULTURE_BASE_TYPE_BACTERIA,
+					Attenuation:       &beerprotov1.PercentType{},
+					Timing:            &beerprotov1.TimingType{},
+					Amount:            &beerprotov1.CultureAdditionType_Volume{},
 				},
 			},
 			wantErr: false,
@@ -3179,10 +3142,10 @@ func TestToJSONCultureAdditionType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.CultureAdditionType{
-					Form:              beerproto.CultureBaseForm_LIQUID,
-					Name:              "Name",
-					Type:              beerproto.CultureBaseType_BACTERIA,
+				i: &beerprotov1.CultureAdditionType{
+					Form: beerprotov1.CultureBaseForm_CULTURE_BASE_FORM_LIQUID,
+					Name: "Name",
+					Type: beerprotov1.CultureBaseType_CULTURE_BASE_TYPE_BACTERIA,
 				},
 			},
 			wantErr: false,
@@ -3190,8 +3153,7 @@ func TestToJSONCultureAdditionType(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.CultureAdditionType{
-				},
+				i: &beerprotov1.CultureAdditionType{},
 			},
 			wantErr: true,
 		},
@@ -3225,7 +3187,7 @@ func TestToJSONCultureAdditionType(t *testing.T) {
 
 func TestToJSONMiscellaneousAdditionType(t *testing.T) {
 	type args struct {
-		i *beerproto.MiscellaneousAdditionType
+		i *beerprotov1.MiscellaneousAdditionType
 	}
 	tests := []struct {
 		name    string
@@ -3235,13 +3197,13 @@ func TestToJSONMiscellaneousAdditionType(t *testing.T) {
 		{
 			name: "Mass",
 			args: args{
-				i: &beerproto.MiscellaneousAdditionType{
+				i: &beerprotov1.MiscellaneousAdditionType{
 					Name:      "Name",
 					Producer:  "Producer",
-					Timing:    &beerproto.TimingType{},
+					Timing:    &beerprotov1.TimingType{},
 					ProductId: "ProductId",
-					Type:      beerproto.MiscellaneousBaseType_FLAVOR,
-					Amount:    &beerproto.MiscellaneousAdditionType_Mass{},
+					Type:      beerprotov1.MiscellaneousBaseType_MISCELLANEOUS_BASE_TYPE_FLAVOR,
+					Amount:    &beerprotov1.MiscellaneousAdditionType_Mass{},
 				},
 			},
 			wantErr: false,
@@ -3249,13 +3211,13 @@ func TestToJSONMiscellaneousAdditionType(t *testing.T) {
 		{
 			name: "Unit",
 			args: args{
-				i: &beerproto.MiscellaneousAdditionType{
+				i: &beerprotov1.MiscellaneousAdditionType{
 					Name:      "Name",
 					Producer:  "Producer",
-					Timing:    &beerproto.TimingType{},
+					Timing:    &beerprotov1.TimingType{},
 					ProductId: "ProductId",
-					Type:      beerproto.MiscellaneousBaseType_FINING,
-					Amount:    &beerproto.MiscellaneousAdditionType_Unit{},
+					Type:      beerprotov1.MiscellaneousBaseType_MISCELLANEOUS_BASE_TYPE_FINING,
+					Amount:    &beerprotov1.MiscellaneousAdditionType_Unit{},
 				},
 			},
 			wantErr: false,
@@ -3263,13 +3225,13 @@ func TestToJSONMiscellaneousAdditionType(t *testing.T) {
 		{
 			name: "Volume",
 			args: args{
-				i: &beerproto.MiscellaneousAdditionType{
+				i: &beerprotov1.MiscellaneousAdditionType{
 					Name:      "Name",
 					Producer:  "Producer",
-					Timing:    &beerproto.TimingType{},
+					Timing:    &beerprotov1.TimingType{},
 					ProductId: "ProductId",
-					Type:      beerproto.MiscellaneousBaseType_HERB,
-					Amount:    &beerproto.MiscellaneousAdditionType_Volume{},
+					Type:      beerprotov1.MiscellaneousBaseType_MISCELLANEOUS_BASE_TYPE_HERB,
+					Amount:    &beerprotov1.MiscellaneousAdditionType_Volume{},
 				},
 			},
 			wantErr: false,
@@ -3277,11 +3239,11 @@ func TestToJSONMiscellaneousAdditionType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.MiscellaneousAdditionType{
-					Name: "Name",
-					Type: beerproto.MiscellaneousBaseType_SPICE,
-					Timing: &beerproto.TimingType{},
-					Amount: &beerproto.MiscellaneousAdditionType_Volume{},
+				i: &beerprotov1.MiscellaneousAdditionType{
+					Name:   "Name",
+					Type:   beerprotov1.MiscellaneousBaseType_MISCELLANEOUS_BASE_TYPE_SPICE,
+					Timing: &beerprotov1.TimingType{},
+					Amount: &beerprotov1.MiscellaneousAdditionType_Volume{},
 				},
 			},
 			wantErr: false,
@@ -3289,8 +3251,7 @@ func TestToJSONMiscellaneousAdditionType(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.MiscellaneousAdditionType{
-				},
+				i: &beerprotov1.MiscellaneousAdditionType{},
 			},
 			wantErr: true,
 		},
@@ -3323,7 +3284,7 @@ func TestToJSONMiscellaneousAdditionType(t *testing.T) {
 
 func TestToJSONUnitType(t *testing.T) {
 	type args struct {
-		i *beerproto.UnitType
+		i *beerprotov1.UnitType
 	}
 	tests := []struct {
 		name string
@@ -3332,53 +3293,52 @@ func TestToJSONUnitType(t *testing.T) {
 		{
 			name: "one",
 			args: args{
-				i: &beerproto.UnitType{
+				i: &beerprotov1.UnitType{
 					Value: 60,
-					Unit:  beerproto.UnitUnitType_ONE,
+					Unit:  beerprotov1.UnitUnit_UNIT_UNIT_ONE,
 				},
 			},
 		},
 		{
 			name: "unit",
 			args: args{
-				i: &beerproto.UnitType{
+				i: &beerprotov1.UnitType{
 					Value: 60,
-					Unit:  beerproto.UnitUnitType_UNIT,
+					Unit:  beerprotov1.UnitUnit_UNIT_UNIT_UNIT,
 				},
 			},
 		},
 		{
 			name: "each",
 			args: args{
-				i: &beerproto.UnitType{
+				i: &beerprotov1.UnitType{
 					Value: 60,
-					Unit:  beerproto.UnitUnitType_EACH,
+					Unit:  beerprotov1.UnitUnit_UNIT_UNIT_EACH,
 				},
 			},
 		},
 		{
 			name: "dimensionless",
 			args: args{
-				i: &beerproto.UnitType{
+				i: &beerprotov1.UnitType{
 					Value: 60,
-					Unit:  beerproto.UnitUnitType_DIMENSIONLESS,
+					Unit:  beerprotov1.UnitUnit_UNIT_UNIT_DIMENSIONLESS,
 				},
 			},
 		},
 		{
 			name: "pkg",
 			args: args{
-				i: &beerproto.UnitType{
+				i: &beerprotov1.UnitType{
 					Value: 60,
-					Unit:  beerproto.UnitUnitType_PKG,
+					Unit:  beerprotov1.UnitUnit_UNIT_UNIT_PKG,
 				},
 			},
 		},
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.UnitType{
-				},
+				i: &beerprotov1.UnitType{},
 			},
 		},
 		{
@@ -3401,7 +3361,7 @@ func TestToJSONUnitType(t *testing.T) {
 
 func TestToJSONTimingType(t *testing.T) {
 	type args struct {
-		i *beerproto.TimingType
+		i *beerprotov1.TimingType
 	}
 	tests := []struct {
 		name string
@@ -3410,12 +3370,12 @@ func TestToJSONTimingType(t *testing.T) {
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.TimingType{
-					Time:            &beerproto.TimeType{},
-					Duration:        &beerproto.TimeType{},
+				i: &beerprotov1.TimingType{
+					Time:            &beerprotov1.TimeType{},
+					Duration:        &beerprotov1.TimeType{},
 					Continuous:      true,
-					SpecificGravity: &beerproto.GravityType{},
-					Ph:              &beerproto.AcidityType{},
+					SpecificGravity: &beerprotov1.GravityType{},
+					Ph:              &beerprotov1.AcidityType{},
 					Step:            4,
 					Use:             1,
 				},
@@ -3424,8 +3384,7 @@ func TestToJSONTimingType(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.TimingType{
-				},
+				i: &beerprotov1.TimingType{},
 			},
 		},
 		{
@@ -3448,7 +3407,7 @@ func TestToJSONTimingType(t *testing.T) {
 
 func TestToJSONFermentationProcedureType(t *testing.T) {
 	type args struct {
-		i *beerproto.FermentationProcedureType
+		i *beerprotov1.FermentationProcedureType
 	}
 	tests := []struct {
 		name    string
@@ -3458,10 +3417,10 @@ func TestToJSONFermentationProcedureType(t *testing.T) {
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.FermentationProcedureType{
+				i: &beerprotov1.FermentationProcedureType{
 					Description:       "Description",
 					Notes:             "Notes",
-					FermentationSteps: []*beerproto.FermentationStepType{},
+					FermentationSteps: []*beerprotov1.FermentationStepType{},
 					Name:              "Name",
 				},
 			},
@@ -3470,9 +3429,9 @@ func TestToJSONFermentationProcedureType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.FermentationProcedureType{
+				i: &beerprotov1.FermentationProcedureType{
 					Name:              "Name",
-					FermentationSteps: []*beerproto.FermentationStepType{},
+					FermentationSteps: []*beerprotov1.FermentationStepType{},
 				},
 			},
 			wantErr: false,
@@ -3480,8 +3439,7 @@ func TestToJSONFermentationProcedureType(t *testing.T) {
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.FermentationProcedureType{
-				},
+				i: &beerprotov1.FermentationProcedureType{},
 			},
 			wantErr: true,
 		},
@@ -3515,27 +3473,27 @@ func TestToJSONFermentationProcedureType(t *testing.T) {
 
 func TestToJSONFermentationStepType(t *testing.T) {
 	type args struct {
-		i *beerproto.FermentationStepType
+		i *beerprotov1.FermentationStepType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.FermentationStepType{
+				i: &beerprotov1.FermentationStepType{
 					Name:             "Name",
-					EndTemperature:   &beerproto.TemperatureType{},
-					StepTime:         &beerproto.TimeType{},
+					EndTemperature:   &beerprotov1.TemperatureType{},
+					StepTime:         &beerprotov1.TimeType{},
 					FreeRise:         true,
-					StartGravity:     &beerproto.GravityType{},
-					EndGravity:       &beerproto.GravityType{},
-					StartPh:          &beerproto.AcidityType{},
+					StartGravity:     &beerprotov1.GravityType{},
+					EndGravity:       &beerprotov1.GravityType{},
+					StartPh:          &beerprotov1.AcidityType{},
 					Description:      "Description",
-					StartTemperature: &beerproto.TemperatureType{},
-					EndPh:            &beerproto.AcidityType{},
+					StartTemperature: &beerprotov1.TemperatureType{},
+					EndPh:            &beerprotov1.AcidityType{},
 					Vessel:           "Vessel",
 				},
 			},
@@ -3544,9 +3502,8 @@ func TestToJSONFermentationStepType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.FermentationStepType{
+				i: &beerprotov1.FermentationStepType{
 					Name: "Name",
-
 				},
 			},
 			wantErr: false,
@@ -3581,18 +3538,18 @@ func TestToJSONFermentationStepType(t *testing.T) {
 
 func TestToJSONRecipeStyleType(t *testing.T) {
 	type args struct {
-		i *beerproto.RecipeStyleType
+		i *beerprotov1.RecipeStyleType
 	}
 	tests := []struct {
-		name string
-		args args
+		name    string
+		args    args
 		wantErr bool
 	}{
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.RecipeStyleType{
-					Type:           beerproto.RecipeStyleType_BEER,
+				i: &beerprotov1.RecipeStyleType{
+					Type:           beerprotov1.RecipeStyleType_STYLE_CATEGORIES_BEER,
 					Name:           "Name",
 					Category:       "Category",
 					CategoryNumber: 10,
@@ -3605,11 +3562,11 @@ func TestToJSONRecipeStyleType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.RecipeStyleType{
-					Type:           beerproto.RecipeStyleType_BEER,
-					Name:           "Name",
-					Category:       "Category",
-					StyleGuide:     "StyleGuide",
+				i: &beerprotov1.RecipeStyleType{
+					Type:       beerprotov1.RecipeStyleType_STYLE_CATEGORIES_BEER,
+					Name:       "Name",
+					Category:   "Category",
+					StyleGuide: "StyleGuide",
 				},
 			},
 			wantErr: false,
@@ -3617,8 +3574,7 @@ func TestToJSONRecipeStyleType(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.RecipeStyleType{
-				},
+				i: &beerprotov1.RecipeStyleType{},
 			},
 			wantErr: true,
 		},
@@ -3652,7 +3608,7 @@ func TestToJSONRecipeStyleType(t *testing.T) {
 
 func TestToJSONEfficiencyType(t *testing.T) {
 	type args struct {
-		i *beerproto.EfficiencyType
+		i *beerprotov1.EfficiencyType
 	}
 	tests := []struct {
 		name    string
@@ -3662,11 +3618,11 @@ func TestToJSONEfficiencyType(t *testing.T) {
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.EfficiencyType{
-					Conversion: &beerproto.PercentType{},
-					Lauter:     &beerproto.PercentType{},
-					Mash:       &beerproto.PercentType{},
-					Brewhouse:  &beerproto.PercentType{},
+				i: &beerprotov1.EfficiencyType{
+					Conversion: &beerprotov1.PercentType{},
+					Lauter:     &beerprotov1.PercentType{},
+					Mash:       &beerprotov1.PercentType{},
+					Brewhouse:  &beerprotov1.PercentType{},
 				},
 			},
 			wantErr: false,
@@ -3674,8 +3630,8 @@ func TestToJSONEfficiencyType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.EfficiencyType{
-					Brewhouse: &beerproto.PercentType{},
+				i: &beerprotov1.EfficiencyType{
+					Brewhouse: &beerprotov1.PercentType{},
 				},
 			},
 			wantErr: false,
@@ -3683,8 +3639,7 @@ func TestToJSONEfficiencyType(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.EfficiencyType{
-				},
+				i: &beerprotov1.EfficiencyType{},
 			},
 			wantErr: true,
 		},
@@ -3719,7 +3674,7 @@ func TestToJSONEfficiencyType(t *testing.T) {
 
 func TestToJSONMashProcedureType(t *testing.T) {
 	type args struct {
-		i *beerproto.MashProcedureType
+		i *beerprotov1.MashProcedureType
 	}
 	tests := []struct {
 		name    string
@@ -3729,10 +3684,10 @@ func TestToJSONMashProcedureType(t *testing.T) {
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.MashProcedureType{
-					GrainTemperature: &beerproto.TemperatureType{},
+				i: &beerprotov1.MashProcedureType{
+					GrainTemperature: &beerprotov1.TemperatureType{},
 					Notes:            "Notes",
-					MashSteps:        []*beerproto.MashStepType{},
+					MashSteps:        []*beerprotov1.MashStepType{},
 					Name:             "Name",
 				},
 			},
@@ -3741,9 +3696,9 @@ func TestToJSONMashProcedureType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.MashProcedureType{
-					GrainTemperature: &beerproto.TemperatureType{},
-					MashSteps:        []*beerproto.MashStepType{},
+				i: &beerprotov1.MashProcedureType{
+					GrainTemperature: &beerprotov1.TemperatureType{},
+					MashSteps:        []*beerprotov1.MashStepType{},
 					Name:             "Name",
 				},
 			},
@@ -3752,8 +3707,7 @@ func TestToJSONMashProcedureType(t *testing.T) {
 		{
 			name: "Nil",
 			args: args{
-				i: &beerproto.MashProcedureType{
-				},
+				i: &beerprotov1.MashProcedureType{},
 			},
 			wantErr: true,
 		},
@@ -3787,7 +3741,7 @@ func TestToJSONMashProcedureType(t *testing.T) {
 
 func TestToJSONMashStepType(t *testing.T) {
 	type args struct {
-		i *beerproto.MashStepType
+		i *beerprotov1.MashStepType
 	}
 	tests := []struct {
 		name    string
@@ -3797,19 +3751,19 @@ func TestToJSONMashStepType(t *testing.T) {
 		{
 			name: "Basic",
 			args: args{
-				i: &beerproto.MashStepType{
-					StepTime:          &beerproto.TimeType{},
-					RampTime:          &beerproto.TimeType{},
-					EndTemperature:    &beerproto.TemperatureType{},
+				i: &beerprotov1.MashStepType{
+					StepTime:          &beerprotov1.TimeType{},
+					RampTime:          &beerprotov1.TimeType{},
+					EndTemperature:    &beerprotov1.TemperatureType{},
 					Description:       "Description",
-					InfuseTemperature: &beerproto.TemperatureType{},
-					StartPh:           &beerproto.AcidityType{},
-					EndPh:             &beerproto.AcidityType{},
+					InfuseTemperature: &beerprotov1.TemperatureType{},
+					StartPh:           &beerprotov1.AcidityType{},
+					EndPh:             &beerprotov1.AcidityType{},
 					Name:              "Name",
-					Type:              beerproto.MashStepType_DRAIN_MASH_TUN,
-					Amount:            &beerproto.VolumeType{},
-					StepTemperature:   &beerproto.TemperatureType{},
-					WaterGrainRatio:   &beerproto.SpecificVolumeType{},
+					Type:              beerprotov1.MashStepType_MASH_STEP_UNIT_DRAIN_MASH_TUN,
+					Amount:            &beerprotov1.VolumeType{},
+					StepTemperature:   &beerprotov1.TemperatureType{},
+					WaterGrainRatio:   &beerprotov1.SpecificVolumeType{},
 				},
 			},
 			wantErr: false,
@@ -3817,11 +3771,11 @@ func TestToJSONMashStepType(t *testing.T) {
 		{
 			name: "Required",
 			args: args{
-				i: &beerproto.MashStepType{
-					StepTime:        &beerproto.TimeType{},
+				i: &beerprotov1.MashStepType{
+					StepTime:        &beerprotov1.TimeType{},
 					Name:            "Name",
-					StepTemperature: &beerproto.TemperatureType{},
-					Type:            beerproto.MashStepType_DECOCTION,
+					StepTemperature: &beerprotov1.TemperatureType{},
+					Type:            beerprotov1.MashStepType_MASH_STEP_UNIT_DECOCTION,
 				},
 			},
 			wantErr: false,

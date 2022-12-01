@@ -3,15 +3,16 @@ package beerJSON
 import (
 	"context"
 	"fmt"
-	"github.com/beerproto/parser"
 	"reflect"
 	"strings"
 
+	"github.com/beerproto/parser"
+
 	"github.com/beerproto/beerjson.go"
-	beerproto "github.com/beerproto/beerproto_go"
+	beerprotov1 "github.com/beerproto/beerproto_go"
 )
 
-func MapToJSON(context context.Context, i *beerproto.Recipe) (*beerjson.Beerjson, error) {
+func MapToJSON(context context.Context, i *beerprotov1.Recipe) (*beerjson.Beerjson, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -34,7 +35,6 @@ func MapToJSON(context context.Context, i *beerproto.Recipe) (*beerjson.Beerjson
 	output.Boil = []beerjson.BoilProcedureType{}
 	output.Version = beerjson.VersionType(i.Version)
 	output.Fermentables = []beerjson.FermentableType{}
-	output.TimingObject = ToJSONTimingType(context, i.TimingObject)
 	output.Cultures = []beerjson.CultureInformation{}
 	output.Equipments = []beerjson.EquipmentType{}
 	output.Packaging = []beerjson.PackagingProcedureType{}
@@ -176,7 +176,7 @@ func MapToJSON(context context.Context, i *beerproto.Recipe) (*beerjson.Beerjson
 	return output, stack.Errors()
 }
 
-func ToJSONWaterBase(context context.Context, i *beerproto.WaterBase) (*beerjson.WaterBase, error) {
+func ToJSONWaterBase(context context.Context, i *beerprotov1.WaterBase) (*beerjson.WaterBase, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -232,7 +232,7 @@ func ToJSONWaterBase(context context.Context, i *beerproto.WaterBase) (*beerjson
 	return waterBase, stack.Errors()
 }
 
-func ToJSONVarietyInformation(context context.Context, i *beerproto.VarietyInformation) (*beerjson.VarietyInformation, error) {
+func ToJSONVarietyInformation(context context.Context, i *beerprotov1.VarietyInformation) (*beerjson.VarietyInformation, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -261,7 +261,7 @@ func ToJSONVarietyInformation(context context.Context, i *beerproto.VarietyInfor
 	}, stack.Errors()
 }
 
-func ToJSONOilContentType(context context.Context, i *beerproto.OilContentType) *beerjson.OilContentType {
+func ToJSONOilContentType(context context.Context, i *beerprotov1.OilContentType) *beerjson.OilContentType {
 	if i == nil {
 		return nil
 	}
@@ -284,35 +284,35 @@ func ToJSONOilContentType(context context.Context, i *beerproto.OilContentType) 
 	}
 }
 
-func ToJSONVarietyInformationType(context context.Context, i beerproto.VarietyInformation_VarietyInformationType) *beerjson.VarietyInformationType {
-	if i == beerproto.VarietyInformation_NULL_VARIETYINFORMATIONTYPE {
+func ToJSONVarietyInformationType(context context.Context, i beerprotov1.VarietyInformationType) *beerjson.VarietyInformationType {
+	if i == beerprotov1.VarietyInformationType_VARIETY_INFORMATION_TYPE_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.VarietyInformation_VarietyInformationType_name[int32(i)]
+	unit := beerprotov1.VarietyInformationType_name[int32(i)]
 	t := beerjson.VarietyInformationType(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONHopInventoryType(context context.Context, i *beerproto.HopInventoryType) *beerjson.HopInventoryType {
+func ToJSONHopInventoryType(context context.Context, i *beerprotov1.HopInventoryType) *beerjson.HopInventoryType {
 	if i == nil {
 		return nil
 	}
 
 	hopInventoryType := &beerjson.HopInventoryType{}
 
-	if mass, ok := i.Amount.(*beerproto.HopInventoryType_Mass); ok {
+	if mass, ok := i.Amount.(*beerprotov1.HopInventoryType_Mass); ok {
 		hopInventoryType.Amount = ToJSONMassType(context, mass.Mass)
 	}
 
-	if volume, ok := i.Amount.(*beerproto.HopInventoryType_Volume); ok {
+	if volume, ok := i.Amount.(*beerprotov1.HopInventoryType_Volume); ok {
 		hopInventoryType.Amount = ToJSONVolumeType(context, volume.Volume)
 	}
 
 	return hopInventoryType
 }
 
-func ToJSONEquipmentType(context context.Context, i *beerproto.EquipmentType) (*beerjson.EquipmentType, error) {
+func ToJSONEquipmentType(context context.Context, i *beerprotov1.EquipmentType) (*beerjson.EquipmentType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -345,7 +345,7 @@ func ToJSONEquipmentType(context context.Context, i *beerproto.EquipmentType) (*
 	return equipmentType, stack.Errors()
 }
 
-func ToJSONEquipmentItemType(context context.Context, i *beerproto.EquipmentItemType) (*beerjson.EquipmentItemType, error) {
+func ToJSONEquipmentItemType(context context.Context, i *beerprotov1.EquipmentItemType) (*beerjson.EquipmentItemType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -354,7 +354,7 @@ func ToJSONEquipmentItemType(context context.Context, i *beerproto.EquipmentItem
 
 	equipmentItemType := &beerjson.EquipmentItemType{}
 
-	if i.Form == beerproto.EquipmentItemType_NULL {
+	if i.Form == beerprotov1.EquipmentItemType_EQUIPMENT_BASE_FORM_UNSPECIFIED {
 		stack.AppendError(fmt.Errorf("form is required"))
 	}
 
@@ -382,14 +382,13 @@ func ToJSONEquipmentItemType(context context.Context, i *beerproto.EquipmentItem
 	return equipmentItemType, stack.Errors()
 }
 
-func ToJSONSpecificHeatType(context context.Context, i *beerproto.SpecificHeatType) *beerjson.SpecificHeatType {
+func ToJSONSpecificHeatType(context context.Context, i *beerprotov1.SpecificHeatType) *beerjson.SpecificHeatType {
 	if i == nil {
 		return nil
 	}
 
-	if i.Unit == beerproto.SpecificHeatUnitType_NULL_SPECIFICHEATUNITTYPE {
-		return &beerjson.SpecificHeatType{
-		}
+	if i.Unit == beerprotov1.SpecificHeatUnit_SPECIFIC_HEAT_UNIT_UNSPECIFIED {
+		return &beerjson.SpecificHeatType{}
 	}
 
 	return &beerjson.SpecificHeatType{
@@ -398,54 +397,54 @@ func ToJSONSpecificHeatType(context context.Context, i *beerproto.SpecificHeatTy
 	}
 }
 
-func ToJSONSpecificHeatUnitType(context context.Context, i beerproto.SpecificHeatUnitType) *beerjson.SpecificHeatUnitType {
-	if i == beerproto.SpecificHeatUnitType_NULL_SPECIFICHEATUNITTYPE {
+func ToJSONSpecificHeatUnitType(context context.Context, i beerprotov1.SpecificHeatUnit) *beerjson.SpecificHeatUnitType {
+	if i == beerprotov1.SpecificHeatUnit_SPECIFIC_HEAT_UNIT_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.SpecificHeatUnitType_name[int32(i)]
+	unit := beerprotov1.SpecificHeatUnit_name[int32(i)]
 	t := beerjson.SpecificHeatUnitType(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONEquipmentBaseForm(context context.Context, i beerproto.EquipmentItemType_EquipmentBaseForm) *beerjson.EquipmentBaseForm {
-	if i == beerproto.EquipmentItemType_NULL {
+func ToJSONEquipmentBaseForm(context context.Context, i beerprotov1.EquipmentItemType_EquipmentBaseForm) *beerjson.EquipmentBaseForm {
+	if i == beerprotov1.EquipmentItemType_EQUIPMENT_BASE_FORM_UNSPECIFIED {
 		return nil
 	}
 
 	var t beerjson.EquipmentBaseForm
 	switch i {
-	case beerproto.EquipmentItemType_HLT:
+	case beerprotov1.EquipmentItemType_EQUIPMENT_BASE_FORM_HLT:
 		t = beerjson.EquipmentBaseForm_HLT
-	case beerproto.EquipmentItemType_MASH_TUN:
+	case beerprotov1.EquipmentItemType_EQUIPMENT_BASE_FORM_MASH_TUN:
 		t = beerjson.EquipmentBaseForm_MashTun
-	case beerproto.EquipmentItemType_LAUTER_TUN:
+	case beerprotov1.EquipmentItemType_EQUIPMENT_BASE_FORM_LAUTER_TUN:
 		t = beerjson.EquipmentBaseForm_LauterTun
-	case beerproto.EquipmentItemType_BREW_KETTLE:
+	case beerprotov1.EquipmentItemType_EQUIPMENT_BASE_FORM_BREW_KETTLE:
 		t = beerjson.EquipmentBaseForm_BrewKettle
-	case beerproto.EquipmentItemType_FERMENTER:
+	case beerprotov1.EquipmentItemType_EQUIPMENT_BASE_FORM_FERMENTER:
 		t = beerjson.EquipmentBaseForm_Fermenter
-	case beerproto.EquipmentItemType_AGING_VESSEL:
+	case beerprotov1.EquipmentItemType_EQUIPMENT_BASE_FORM_AGING_VESSEL:
 		t = beerjson.EquipmentBaseForm_AgingVessel
-	case beerproto.EquipmentItemType_PACKAGING_VESSEL:
+	case beerprotov1.EquipmentItemType_EQUIPMENT_BASE_FORM_PACKAGING_VESSEL:
 		t = beerjson.EquipmentBaseForm_PackagingVessel
 	}
 
 	return &t
 }
 
-func ToJSONCultureInformation(context context.Context, i *beerproto.CultureInformation) (*beerjson.CultureInformation, error) {
+func ToJSONCultureInformation(context context.Context, i *beerprotov1.CultureInformation) (*beerjson.CultureInformation, error) {
 	if i == nil {
 		return nil, nil
 	}
 
 	context, stack := parser.StackToContext(context)
 
-	if i.Type == beerproto.CultureBaseType_NULL_CULTUREBASETYPE {
+	if i.Type == beerprotov1.CultureBaseType_CULTURE_BASE_TYPE_UNSPECIFIED {
 		stack.AppendError(fmt.Errorf("type is required"))
 	}
 
-	if i.Form == beerproto.CultureBaseForm_NULL_CULTUREBASEFORM {
+	if i.Form == beerprotov1.CultureBaseForm_CULTURE_BASE_FORM_UNSPECIFIED {
 		stack.AppendError(fmt.Errorf("form is required"))
 	}
 
@@ -485,7 +484,7 @@ func ToJSONCultureInformation(context context.Context, i *beerproto.CultureInfor
 	}, stack.Errors()
 }
 
-func ToJSONZymocide(context context.Context, i *beerproto.Zymocide) *beerjson.Zymocide {
+func ToJSONZymocide(context context.Context, i *beerprotov1.Zymocide) *beerjson.Zymocide {
 	if i == nil {
 		return nil
 	}
@@ -498,27 +497,27 @@ func ToJSONZymocide(context context.Context, i *beerproto.Zymocide) *beerjson.Zy
 	}
 }
 
-func ToJSONQualitativeRangeType(context context.Context, i beerproto.QualitativeRangeType) *beerjson.QualitativeRangeType {
-	if i == beerproto.QualitativeRangeType_NULL_QUALITATIVERANGETYPE {
+func ToJSONQualitativeRangeType(context context.Context, i beerprotov1.QualitativeRangeUnit) *beerjson.QualitativeRangeType {
+	if i == beerprotov1.QualitativeRangeUnit_QUALITATIVE_RANGE_UNIT_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.QualitativeRangeType_name[int32(i)]
+	unit := beerprotov1.QualitativeRangeUnit_name[int32(i)]
 	t := beerjson.QualitativeRangeType(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONCultureBaseType(context context.Context, i beerproto.CultureBaseType) *beerjson.CultureBaseType {
-	if i == beerproto.CultureBaseType_NULL_CULTUREBASETYPE {
+func ToJSONCultureBaseType(context context.Context, i beerprotov1.CultureBaseType) *beerjson.CultureBaseType {
+	if i == beerprotov1.CultureBaseType_CULTURE_BASE_TYPE_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.CultureBaseType_name[int32(i)]
+	unit := beerprotov1.CultureBaseType_name[int32(i)]
 	t := beerjson.CultureBaseType(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONCultureInventoryType(context context.Context, i *beerproto.CultureInventoryType) *beerjson.CultureInventoryType {
+func ToJSONCultureInventoryType(context context.Context, i *beerprotov1.CultureInventoryType) *beerjson.CultureInventoryType {
 	if i == nil {
 		return nil
 	}
@@ -530,7 +529,7 @@ func ToJSONCultureInventoryType(context context.Context, i *beerproto.CultureInv
 	}
 }
 
-func ToJSONTemperatureRangeType(context context.Context, i *beerproto.TemperatureRangeType) (*beerjson.TemperatureRangeType, error) {
+func ToJSONTemperatureRangeType(context context.Context, i *beerprotov1.TemperatureRangeType) (*beerjson.TemperatureRangeType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -553,14 +552,14 @@ func ToJSONTemperatureRangeType(context context.Context, i *beerproto.Temperatur
 	return temperatureRangeType, stack.Errors()
 }
 
-func ToJSONFermentableType(context context.Context, i *beerproto.FermentableType) (*beerjson.FermentableType, error) {
+func ToJSONFermentableType(context context.Context, i *beerprotov1.FermentableType) (*beerjson.FermentableType, error) {
 	if i == nil {
 		return nil, nil
 	}
 
 	context, stack := parser.StackToContext(context)
 
-	if i.Type == beerproto.FermentableBaseType_NULL_FERMENTABLEBASETYPE {
+	if i.Type == beerprotov1.FermentableBaseType_FERMENTABLE_BASE_TYPE_UNSPECIFIED {
 		stack.AppendError(fmt.Errorf("type is required"))
 	}
 
@@ -588,7 +587,7 @@ func ToJSONFermentableType(context context.Context, i *beerproto.FermentableType
 		Moisture:                  ToJSONPercentType(context, i.Moisture),
 		Origin:                    &i.Origin,
 		Inventory:                 ToJSONFermentableInventoryType(context, i.Inventory),
-		KolbachIndex:              &i.KolbachIndex,
+		KolbachIndex:              ToJSONPercentType(context, i.KolbachIndex),
 		Notes:                     &i.Notes,
 		Glassy:                    ToJSONPercentType(context, i.Glassy),
 		Plump:                     ToJSONPercentType(context, i.Plump),
@@ -605,12 +604,12 @@ func ToJSONFermentableType(context context.Context, i *beerproto.FermentableType
 	}, stack.Errors()
 }
 
-func ToJSONViscosityType(context context.Context, i *beerproto.ViscosityType) *beerjson.ViscosityType {
+func ToJSONViscosityType(context context.Context, i *beerprotov1.ViscosityType) *beerjson.ViscosityType {
 	if i == nil {
 		return nil
 	}
 
-	if i.Unit == beerproto.ViscosityUnitType_NULL_VISCOSITYUNITTYPE {
+	if i.Unit == beerprotov1.ViscosityUnit_VISCOSITY_UNIT_UNSPECIFIED {
 		return &beerjson.ViscosityType{}
 	}
 	return &beerjson.ViscosityType{
@@ -619,22 +618,22 @@ func ToJSONViscosityType(context context.Context, i *beerproto.ViscosityType) *b
 	}
 }
 
-func ToJSONViscosityUnitType(context context.Context, i beerproto.ViscosityUnitType) *beerjson.ViscosityUnitType {
-	if i == beerproto.ViscosityUnitType_NULL_VISCOSITYUNITTYPE {
+func ToJSONViscosityUnitType(context context.Context, i beerprotov1.ViscosityUnit) *beerjson.ViscosityUnitType {
+	if i == beerprotov1.ViscosityUnit_VISCOSITY_UNIT_UNSPECIFIED {
 		return nil
 	}
 
-	if i == beerproto.ViscosityUnitType_CP {
+	if i == beerprotov1.ViscosityUnit_VISCOSITY_UNIT_CP {
 		t := beerjson.ViscosityUnitType_CP
 		return &t
 	}
 
-	if i == beerproto.ViscosityUnitType_MPAS {
+	if i == beerprotov1.ViscosityUnit_VISCOSITY_UNIT_MPAS {
 		t := beerjson.ViscosityUnitType_MPAS
 		return &t
 	}
 
-	if unit, ok := beerproto.ViscosityUnitType_name[int32(i)]; ok {
+	if unit, ok := beerprotov1.ViscosityUnit_name[int32(i)]; ok {
 		t := beerjson.ViscosityUnitType(strings.ToLower(unit))
 		return &t
 	}
@@ -642,30 +641,30 @@ func ToJSONViscosityUnitType(context context.Context, i beerproto.ViscosityUnitT
 	return nil
 }
 
-func ToJSONFermentableInventoryType(context context.Context, i *beerproto.FermentableInventoryType) *beerjson.FermentableInventoryType {
+func ToJSONFermentableInventoryType(context context.Context, i *beerprotov1.FermentableInventoryType) *beerjson.FermentableInventoryType {
 	if i == nil {
 		return nil
 	}
 
 	fermentableInventoryType := &beerjson.FermentableInventoryType{}
 
-	if mass, ok := i.Amount.(*beerproto.FermentableInventoryType_Mass); ok {
+	if mass, ok := i.Amount.(*beerprotov1.FermentableInventoryType_Mass); ok {
 		fermentableInventoryType.Amount = ToJSONMassType(context, mass.Mass)
 	}
 
-	if volume, ok := i.Amount.(*beerproto.FermentableInventoryType_Volume); ok {
+	if volume, ok := i.Amount.(*beerprotov1.FermentableInventoryType_Volume); ok {
 		fermentableInventoryType.Amount = ToJSONVolumeType(context, volume.Volume)
 	}
 
 	return fermentableInventoryType
 }
 
-func ToJSONDiastaticPowerType(context context.Context, i *beerproto.DiastaticPowerType) *beerjson.DiastaticPowerType {
+func ToJSONDiastaticPowerType(context context.Context, i *beerprotov1.DiastaticPowerType) *beerjson.DiastaticPowerType {
 	if i == nil {
 		return nil
 	}
 
-	if i.Unit == beerproto.DiastaticPowerUnitType_NULL_DIASTATICPOWERUNITTYPE {
+	if i.Unit == beerprotov1.DiastaticPowerUnit_DIASTATIC_POWER_UNIT_UNSPECIFIED {
 		return &beerjson.DiastaticPowerType{}
 	}
 
@@ -675,27 +674,27 @@ func ToJSONDiastaticPowerType(context context.Context, i *beerproto.DiastaticPow
 	}
 }
 
-func ToJSONDiastaticPowerUnitType(context context.Context, i beerproto.DiastaticPowerUnitType) beerjson.DiastaticPowerUnitType {
-	if i == beerproto.DiastaticPowerUnitType_NULL_DIASTATICPOWERUNITTYPE {
+func ToJSONDiastaticPowerUnitType(context context.Context, i beerprotov1.DiastaticPowerUnit) beerjson.DiastaticPowerUnitType {
+	if i == beerprotov1.DiastaticPowerUnit_DIASTATIC_POWER_UNIT_UNSPECIFIED {
 		return beerjson.DiastaticPowerUnitType_Lintner
 	}
 
-	if i == beerproto.DiastaticPowerUnitType_WK {
+	if i == beerprotov1.DiastaticPowerUnit_DIASTATIC_POWER_UNIT_WK {
 		return beerjson.DiastaticPowerUnitType_WK
 	}
 
-	unit := beerproto.DiastaticPowerUnitType_name[int32(i)]
+	unit := beerprotov1.DiastaticPowerUnit_name[int32(i)]
 	return beerjson.DiastaticPowerUnitType(strings.Title(strings.ToLower(unit)))
 }
 
-func ToJSONStyleType(context context.Context, i *beerproto.StyleType) (*beerjson.StyleType, error) {
+func ToJSONStyleType(context context.Context, i *beerprotov1.StyleType) (*beerjson.StyleType, error) {
 	if i == nil {
 		return nil, nil
 	}
 
 	context, stack := parser.StackToContext(context)
 
-	if i.Type == beerproto.StyleType_NULL_STYLECATEGORIES {
+	if i.Type == beerprotov1.StyleType_STYLE_CATEGORIES_UNSPECIFIED {
 		stack.AppendError(fmt.Errorf("type is required"))
 	}
 
@@ -771,17 +770,17 @@ func ToJSONStyleType(context context.Context, i *beerproto.StyleType) (*beerjson
 	}, stack.Errors()
 }
 
-func ToJSONStyleType_StyleCategories(context context.Context, i beerproto.StyleType_StyleCategories) *beerjson.StyleCategories {
-	if i == beerproto.StyleType_NULL_STYLECATEGORIES {
+func ToJSONStyleType_StyleCategories(context context.Context, i beerprotov1.StyleType_StyleCategories) *beerjson.StyleCategories {
+	if i == beerprotov1.StyleType_STYLE_CATEGORIES_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.StyleType_StyleCategories_name[int32(i)]
+	unit := beerprotov1.StyleType_StyleCategories_name[int32(i)]
 	t := beerjson.StyleCategories(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONBitternessRangeType(context context.Context, i *beerproto.BitternessRangeType) (*beerjson.BitternessRangeType, error) {
+func ToJSONBitternessRangeType(context context.Context, i *beerprotov1.BitternessRangeType) (*beerjson.BitternessRangeType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -804,12 +803,12 @@ func ToJSONBitternessRangeType(context context.Context, i *beerproto.BitternessR
 	return bitternessRangeType, stack.Errors()
 }
 
-func ToJSONBitternessType(context context.Context, i *beerproto.BitternessType) *beerjson.BitternessType {
+func ToJSONBitternessType(context context.Context, i *beerprotov1.BitternessType) *beerjson.BitternessType {
 	if i == nil {
 		return nil
 	}
 
-	if i.Unit == beerproto.BitternessType_NULL {
+	if i.Unit == beerprotov1.BitternessUnit_BITTERNESS_UNIT_UNSPECIFIED {
 		return &beerjson.BitternessType{}
 	}
 
@@ -819,20 +818,20 @@ func ToJSONBitternessType(context context.Context, i *beerproto.BitternessType) 
 	}
 }
 
-func ToJSONBitternessUnitType(context context.Context, i beerproto.BitternessType_BitternessUnitType) beerjson.BitternessUnitType {
-	if i == beerproto.BitternessType_NULL {
+func ToJSONBitternessUnitType(context context.Context, i beerprotov1.BitternessUnit) beerjson.BitternessUnitType {
+	if i == beerprotov1.BitternessUnit_BITTERNESS_UNIT_UNSPECIFIED {
 		return beerjson.BitternessUnitType_IBUs
 	}
 
 	switch i {
-	case beerproto.BitternessType_IBUs:
+	case beerprotov1.BitternessUnit_BITTERNESS_UNIT_IBUS:
 		return beerjson.BitternessUnitType_IBUs
 	}
 
 	return beerjson.BitternessUnitType_IBUs
 }
 
-func ToJSONPercentRangeType(context context.Context, i *beerproto.PercentRangeType) (*beerjson.PercentRangeType, error) {
+func ToJSONPercentRangeType(context context.Context, i *beerprotov1.PercentRangeType) (*beerjson.PercentRangeType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -855,7 +854,7 @@ func ToJSONPercentRangeType(context context.Context, i *beerproto.PercentRangeTy
 	return percentRangeType, stack.Errors()
 }
 
-func ToJSONCarbonationRangeType(context context.Context, i *beerproto.CarbonationRangeType) (*beerjson.CarbonationRangeType, error) {
+func ToJSONCarbonationRangeType(context context.Context, i *beerprotov1.CarbonationRangeType) (*beerjson.CarbonationRangeType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -876,14 +875,13 @@ func ToJSONCarbonationRangeType(context context.Context, i *beerproto.Carbonatio
 
 	return carbonationRangeType, stack.Errors()
 }
-func ToJSONCarbonationType(context context.Context, i *beerproto.CarbonationType) *beerjson.CarbonationType {
+func ToJSONCarbonationType(context context.Context, i *beerprotov1.CarbonationType) *beerjson.CarbonationType {
 	if i == nil {
 		return nil
 	}
 
-	if i.Unit == beerproto.CarbonationUnitType_NULL_CARBONATIONUNITTYPE {
-		return &beerjson.CarbonationType{
-		}
+	if i.Unit == beerprotov1.CarbonationUnit_CARBONATION_UNIT_UNSPECIFIED {
+		return &beerjson.CarbonationType{}
 	}
 
 	return &beerjson.CarbonationType{
@@ -892,17 +890,17 @@ func ToJSONCarbonationType(context context.Context, i *beerproto.CarbonationType
 	}
 }
 
-func ToJSONCarbonationUnitType(context context.Context, i beerproto.CarbonationUnitType) *beerjson.CarbonationUnitType {
-	if i == beerproto.CarbonationUnitType_NULL_CARBONATIONUNITTYPE {
+func ToJSONCarbonationUnitType(context context.Context, i beerprotov1.CarbonationUnit) *beerjson.CarbonationUnitType {
+	if i == beerprotov1.CarbonationUnit_CARBONATION_UNIT_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.CarbonationUnitType_name[int32(i)]
+	unit := beerprotov1.CarbonationUnit_name[int32(i)]
 	t := beerjson.CarbonationUnitType(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONColorRangeType(context context.Context, i *beerproto.ColorRangeType) (*beerjson.ColorRangeType, error) {
+func ToJSONColorRangeType(context context.Context, i *beerprotov1.ColorRangeType) (*beerjson.ColorRangeType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -925,7 +923,7 @@ func ToJSONColorRangeType(context context.Context, i *beerproto.ColorRangeType) 
 	return colorRangeType, stack.Errors()
 }
 
-func ToJSONGravityRangeType(context context.Context, i *beerproto.GravityRangeType) (*beerjson.GravityRangeType, error) {
+func ToJSONGravityRangeType(context context.Context, i *beerprotov1.GravityRangeType) (*beerjson.GravityRangeType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -947,14 +945,14 @@ func ToJSONGravityRangeType(context context.Context, i *beerproto.GravityRangeTy
 	return gravityRangeType, stack.Errors()
 }
 
-func ToJSONMiscellaneousType(context context.Context, i *beerproto.MiscellaneousType) (*beerjson.MiscellaneousType, error) {
+func ToJSONMiscellaneousType(context context.Context, i *beerprotov1.MiscellaneousType) (*beerjson.MiscellaneousType, error) {
 	if i == nil {
 		return nil, nil
 	}
 
 	context, stack := parser.StackToContext(context)
 
-	if i.Type == beerproto.MiscellaneousBaseType_NULL {
+	if i.Type == beerprotov1.MiscellaneousBaseType_MISCELLANEOUS_BASE_TYPE_UNSPECIFIED {
 		stack.AppendError(fmt.Errorf("type is required"))
 
 	}
@@ -966,7 +964,7 @@ func ToJSONMiscellaneousType(context context.Context, i *beerproto.Miscellaneous
 	miscellaneousType.Producer = &i.Producer
 	miscellaneousType.ProductId = &i.ProductId
 
-	if i.Type != beerproto.MiscellaneousBaseType_NULL {
+	if i.Type != beerprotov1.MiscellaneousBaseType_MISCELLANEOUS_BASE_TYPE_UNSPECIFIED {
 		miscellaneousType.MiscellaneousBaseType = ToJSONMiscellaneousBaseType(context, i.Type)
 	}
 
@@ -985,7 +983,7 @@ func ToJSONMiscellaneousType(context context.Context, i *beerproto.Miscellaneous
 	return miscellaneousType, stack.Errors()
 }
 
-func ToJSONMiscellaneousInventoryType(context context.Context, i *beerproto.MiscellaneousInventoryType) (*beerjson.MiscellaneousInventoryType, error) {
+func ToJSONMiscellaneousInventoryType(context context.Context, i *beerprotov1.MiscellaneousInventoryType) (*beerjson.MiscellaneousInventoryType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -998,21 +996,21 @@ func ToJSONMiscellaneousInventoryType(context context.Context, i *beerproto.Misc
 
 	miscellaneousInventoryType := &beerjson.MiscellaneousInventoryType{}
 
-	if mass, ok := i.Amount.(*beerproto.MiscellaneousInventoryType_Mass); ok {
+	if mass, ok := i.Amount.(*beerprotov1.MiscellaneousInventoryType_Mass); ok {
 		miscellaneousInventoryType.Amount = ToJSONMassType(context, mass.Mass)
 	}
 
-	if unit, ok := i.Amount.(*beerproto.MiscellaneousInventoryType_Unit); ok {
+	if unit, ok := i.Amount.(*beerprotov1.MiscellaneousInventoryType_Unit); ok {
 		miscellaneousInventoryType.Amount = ToJSONUnitType(context, unit.Unit)
 	}
-	if volume, ok := i.Amount.(*beerproto.MiscellaneousInventoryType_Volume); ok {
+	if volume, ok := i.Amount.(*beerprotov1.MiscellaneousInventoryType_Volume); ok {
 		miscellaneousInventoryType.Amount = ToJSONVolumeType(context, volume.Volume)
 	}
 
 	return miscellaneousInventoryType, stack.Errors()
 }
 
-func ToJSONRecipeType(context context.Context, i *beerproto.RecipeType) (*beerjson.RecipeType, error) {
+func ToJSONRecipeType(context context.Context, i *beerprotov1.RecipeType) (*beerjson.RecipeType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -1020,7 +1018,7 @@ func ToJSONRecipeType(context context.Context, i *beerproto.RecipeType) (*beerjs
 	context, stack := parser.StackToContext(context)
 	recipeType := &beerjson.RecipeType{}
 
-	if i.Type != beerproto.RecipeType_NULL_RECIPETYPETYPE {
+	if i.Type != beerprotov1.RecipeUnit_RECIPE_UNIT_UNSPECIFIED {
 		stack.AppendError(fmt.Errorf("type is required"))
 	}
 
@@ -1135,7 +1133,7 @@ func ToJSONRecipeType(context context.Context, i *beerproto.RecipeType) (*beerjs
 	return recipeType, stack.Errors()
 }
 
-func ToJSONTasteType(context context.Context, i *beerproto.TasteType) (*beerjson.TasteType, error) {
+func ToJSONTasteType(context context.Context, i *beerprotov1.TasteType) (*beerjson.TasteType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -1148,7 +1146,7 @@ func ToJSONTasteType(context context.Context, i *beerproto.TasteType) (*beerjson
 	}, stack.Errors()
 }
 
-func ToJSONBoilProcedureType(context context.Context, i *beerproto.BoilProcedureType) (*beerjson.BoilProcedureType, error) {
+func ToJSONBoilProcedureType(context context.Context, i *beerprotov1.BoilProcedureType) (*beerjson.BoilProcedureType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -1191,7 +1189,7 @@ func ToJSONBoilProcedureType(context context.Context, i *beerproto.BoilProcedure
 	return boilProcedureType, stack.Errors()
 }
 
-func ToJSONBoilStepType(context context.Context, i *beerproto.BoilStepType) (*beerjson.BoilStepType, error) {
+func ToJSONBoilStepType(context context.Context, i *beerprotov1.BoilStepType) (*beerjson.BoilStepType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -1213,17 +1211,17 @@ func ToJSONBoilStepType(context context.Context, i *beerproto.BoilStepType) (*be
 	}, stack.Errors()
 }
 
-func ToJSONChillingType(context context.Context, i beerproto.BoilStepTypeChillingType) *beerjson.BoilStepTypeChillingType {
-	if i == beerproto.BoilStepTypeChillingType_NULL_BOILSTEPTYPECHILLINGTYPE {
+func ToJSONChillingType(context context.Context, i beerprotov1.BoilStepTypeChillingType) *beerjson.BoilStepTypeChillingType {
+	if i == beerprotov1.BoilStepTypeChillingType_BOIL_STEP_TYPE_CHILLING_TYPE_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.BoilStepTypeChillingType_name[int32(i)]
+	unit := beerprotov1.BoilStepTypeChillingType_name[int32(i)]
 	t := beerjson.BoilStepTypeChillingType(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONPackagingProcedureType(context context.Context, i *beerproto.PackagingProcedureType) (*beerjson.PackagingProcedureType, error) {
+func ToJSONPackagingProcedureType(context context.Context, i *beerprotov1.PackagingProcedureType) (*beerjson.PackagingProcedureType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -1259,7 +1257,7 @@ func ToJSONPackagingProcedureType(context context.Context, i *beerproto.Packagin
 	return packagingProcedureType, stack.Errors()
 }
 
-func ToJSONPackagingVesselType(context context.Context, i *beerproto.PackagingVesselType) (*beerjson.PackagingVesselType, error) {
+func ToJSONPackagingVesselType(context context.Context, i *beerprotov1.PackagingVesselType) (*beerjson.PackagingVesselType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -1288,17 +1286,17 @@ func ToJSONPackagingVesselType(context context.Context, i *beerproto.PackagingVe
 	}, stack.Errors()
 }
 
-func ToJSONPackagingVesselTypeType(context context.Context, i beerproto.PackagingVesselType_PackagingVesselTypeType) *beerjson.PackagingVesselTypeType {
-	if i == beerproto.PackagingVesselType_NULL_PACKAGINGVESSELTYPETYPE {
+func ToJSONPackagingVesselTypeType(context context.Context, i beerprotov1.PackagingVesselUnit) *beerjson.PackagingVesselTypeType {
+	if i == beerprotov1.PackagingVesselUnit_PACKAGING_VESSEL_UNIT_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.PackagingVesselType_PackagingVesselTypeType_name[int32(i)]
+	unit := beerprotov1.PackagingVesselUnit_name[int32(i)]
 	t := beerjson.PackagingVesselTypeType(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONIngredientsType(context context.Context, i *beerproto.IngredientsType) (*beerjson.IngredientsType, error) {
+func ToJSONIngredientsType(context context.Context, i *beerprotov1.IngredientsType) (*beerjson.IngredientsType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -1387,7 +1385,7 @@ func ToJSONIngredientsType(context context.Context, i *beerproto.IngredientsType
 	return ingredientsType, stack.Errors()
 }
 
-func ToJSONHopAdditionType(context context.Context, i *beerproto.HopAdditionType) (*beerjson.HopAdditionType, error) {
+func ToJSONHopAdditionType(context context.Context, i *beerprotov1.HopAdditionType) (*beerjson.HopAdditionType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -1414,51 +1412,50 @@ func ToJSONHopAdditionType(context context.Context, i *beerproto.HopAdditionType
 	hopAdditionType.ProductId = &i.ProductId
 	hopAdditionType.AlphaAcid = ToJSONPercentType(context, i.AlphaAcid)
 
-	if mass, ok := i.Amount.(*beerproto.HopAdditionType_Mass); ok {
+	if mass, ok := i.Amount.(*beerprotov1.HopAdditionType_Mass); ok {
 		hopAdditionType.Amount = ToJSONMassType(context, mass.Mass)
 	}
 
-	if volume, ok := i.Amount.(*beerproto.HopAdditionType_Volume); ok {
+	if volume, ok := i.Amount.(*beerprotov1.HopAdditionType_Volume); ok {
 		hopAdditionType.Amount = ToJSONVolumeType(context, volume.Volume)
 	}
 
 	return hopAdditionType, stack.Errors()
 }
 
-func ToJSONHopVarietyBaseForm(context context.Context, i beerproto.HopVarietyBaseForm) *beerjson.HopVarietyBaseForm {
-	if i == beerproto.HopVarietyBaseForm_NULL_HOPVARIETYBASEFORM {
+func ToJSONHopVarietyBaseForm(context context.Context, i beerprotov1.HopVarietyBaseForm) *beerjson.HopVarietyBaseForm {
+	if i == beerprotov1.HopVarietyBaseForm_HOP_VARIETY_BASE_FORM_UNSPECIFIED {
 		return nil
 	}
 
 	var t beerjson.HopVarietyBaseForm
 
 	switch i {
-	case beerproto.HopVarietyBaseForm_EXTRACT_HOPVARIETYBASEFORM:
+	case beerprotov1.HopVarietyBaseForm_HOP_VARIETY_BASE_FORM_EXTRACT:
 		t = beerjson.HopVarietyBaseForm_Extract
-	case beerproto.HopVarietyBaseForm_LEAF:
+	case beerprotov1.HopVarietyBaseForm_HOP_VARIETY_BASE_FORM_LEAF:
 		t = beerjson.HopVarietyBaseForm_Leaf
-	case beerproto.HopVarietyBaseForm_LEAFWET:
+	case beerprotov1.HopVarietyBaseForm_HOP_VARIETY_BASE_FORM_LEAFWET:
 		t = beerjson.HopVarietyBaseForm_LeafWet
-	case beerproto.HopVarietyBaseForm_PELLET:
+	case beerprotov1.HopVarietyBaseForm_HOP_VARIETY_BASE_FORM_PELLET:
 		t = beerjson.HopVarietyBaseForm_Pellet
-	case beerproto.HopVarietyBaseForm_POWDER:
+	case beerprotov1.HopVarietyBaseForm_HOP_VARIETY_BASE_FORM_POWDER:
 		t = beerjson.HopVarietyBaseForm_Powder
-	case beerproto.HopVarietyBaseForm_PLUG:
+	case beerprotov1.HopVarietyBaseForm_HOP_VARIETY_BASE_FORM_PLUG:
 		t = beerjson.HopVarietyBaseForm_Plug
 	}
 
 	return &t
 }
 
-func ToJSONFermentableAdditionType(context context.Context, i *beerproto.FermentableAdditionType) (*beerjson.FermentableAdditionType, error) {
+func ToJSONFermentableAdditionType(context context.Context, i *beerprotov1.FermentableAdditionType) (*beerjson.FermentableAdditionType, error) {
 	if i == nil {
 		return nil, nil
 	}
 
 	context, stack := parser.StackToContext(context)
 
-
-	if i.Type == beerproto.FermentableBaseType_NULL_FERMENTABLEBASETYPE {
+	if i.Type == beerprotov1.FermentableBaseType_FERMENTABLE_BASE_TYPE_UNSPECIFIED {
 		stack.AppendError(fmt.Errorf("type is required"))
 	}
 
@@ -1486,18 +1483,18 @@ func ToJSONFermentableAdditionType(context context.Context, i *beerproto.Ferment
 		Timing:                    ToJSONTimingType(context, i.Timing),
 	}
 
-	if mass, ok := i.Amount.(*beerproto.FermentableAdditionType_Mass); ok {
+	if mass, ok := i.Amount.(*beerprotov1.FermentableAdditionType_Mass); ok {
 		fermentableAdditionType.Amount = ToJSONMassType(context, mass.Mass)
 	}
 
-	if volume, ok := i.Amount.(*beerproto.FermentableAdditionType_Volume); ok {
+	if volume, ok := i.Amount.(*beerprotov1.FermentableAdditionType_Volume); ok {
 		fermentableAdditionType.Amount = ToJSONVolumeType(context, volume.Volume)
 	}
 
 	return fermentableAdditionType, stack.Errors()
 }
 
-func ToJSONYieldType(context context.Context, i *beerproto.YieldType) *beerjson.YieldType {
+func ToJSONYieldType(context context.Context, i *beerprotov1.YieldType) *beerjson.YieldType {
 	if i == nil {
 		return nil
 	}
@@ -1510,27 +1507,27 @@ func ToJSONYieldType(context context.Context, i *beerproto.YieldType) *beerjson.
 	}
 }
 
-func ToJSONGrainGroup(context context.Context, i beerproto.GrainGroup) *beerjson.FermentableBaseGrainGroup {
-	if i == beerproto.GrainGroup_NULL_GRAINGROUP {
+func ToJSONGrainGroup(context context.Context, i beerprotov1.GrainGroup) *beerjson.FermentableBaseGrainGroup {
+	if i == beerprotov1.GrainGroup_GRAIN_GROUP_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.GrainGroup_name[int32(i)]
+	unit := beerprotov1.GrainGroup_name[int32(i)]
 	t := beerjson.FermentableBaseGrainGroup(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONFermentableBaseType(context context.Context, i beerproto.FermentableBaseType) *beerjson.FermentableBaseType {
-	if i == beerproto.FermentableBaseType_NULL_FERMENTABLEBASETYPE {
+func ToJSONFermentableBaseType(context context.Context, i beerprotov1.FermentableBaseType) *beerjson.FermentableBaseType {
+	if i == beerprotov1.FermentableBaseType_FERMENTABLE_BASE_TYPE_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.FermentableBaseType_name[int32(i)]
+	unit := beerprotov1.FermentableBaseType_name[int32(i)]
 	t := beerjson.FermentableBaseType(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONWaterAdditionType(context context.Context, i *beerproto.WaterAdditionType) (*beerjson.WaterAdditionType, error) {
+func ToJSONWaterAdditionType(context context.Context, i *beerprotov1.WaterAdditionType) (*beerjson.WaterAdditionType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -1580,12 +1577,12 @@ func ToJSONWaterAdditionType(context context.Context, i *beerproto.WaterAddition
 	}, stack.Errors()
 }
 
-func ToJSONConcentrationType(context context.Context, i *beerproto.ConcentrationType) *beerjson.ConcentrationType {
+func ToJSONConcentrationType(context context.Context, i *beerprotov1.ConcentrationType) *beerjson.ConcentrationType {
 	if i == nil {
 		return nil
 	}
 
-	if i.Unit == beerproto.ConcentrationUnitType_NULL_CONCENTRATIONUNITTYPE {
+	if i.Unit == beerprotov1.ConcentrationUnit_CONCENTRATION_UNIT_UNSPECIFIED {
 		return &beerjson.ConcentrationType{}
 	}
 
@@ -1595,17 +1592,17 @@ func ToJSONConcentrationType(context context.Context, i *beerproto.Concentration
 	}
 }
 
-func ToJSONConcentrationUnitType(context context.Context, i beerproto.ConcentrationUnitType) *beerjson.ConcentrationUnitType {
-	if i == beerproto.ConcentrationUnitType_NULL_CONCENTRATIONUNITTYPE {
+func ToJSONConcentrationUnitType(context context.Context, i beerprotov1.ConcentrationUnit) *beerjson.ConcentrationUnitType {
+	if i == beerprotov1.ConcentrationUnit_CONCENTRATION_UNIT_UNSPECIFIED {
 		return nil
 	}
 
-	if i == beerproto.ConcentrationUnitType_MGL {
+	if i == beerprotov1.ConcentrationUnit_CONCENTRATION_UNIT_MGL {
 		t := beerjson.ConcentrationUnitType_MgL
 		return &t
 	}
 
-	if unit, ok := beerproto.ConcentrationUnitType_name[int32(i)]; ok {
+	if unit, ok := beerprotov1.ConcentrationUnit_name[int32(i)]; ok {
 		t := beerjson.ConcentrationUnitType(strings.ToLower(unit))
 		return &t
 	}
@@ -1613,19 +1610,18 @@ func ToJSONConcentrationUnitType(context context.Context, i beerproto.Concentrat
 	return nil
 }
 
-func ToJSONCultureAdditionType(context context.Context, i *beerproto.CultureAdditionType) (*beerjson.CultureAdditionType, error) {
+func ToJSONCultureAdditionType(context context.Context, i *beerprotov1.CultureAdditionType) (*beerjson.CultureAdditionType, error) {
 	if i == nil {
 		return nil, nil
 	}
 
 	context, stack := parser.StackToContext(context)
 
-
-	if i.Type == beerproto.CultureBaseType_NULL_CULTUREBASETYPE {
+	if i.Type == beerprotov1.CultureBaseType_CULTURE_BASE_TYPE_UNSPECIFIED {
 		stack.AppendError(fmt.Errorf("type is required"))
 	}
 
-	if i.Form == beerproto.CultureBaseForm_NULL_CULTUREBASEFORM {
+	if i.Form == beerprotov1.CultureBaseForm_CULTURE_BASE_FORM_UNSPECIFIED {
 		stack.AppendError(fmt.Errorf("form is required"))
 	}
 
@@ -1641,38 +1637,38 @@ func ToJSONCultureAdditionType(context context.Context, i *beerproto.CultureAddi
 		Timing:            ToJSONTimingType(context, i.Timing),
 	}
 
-	if mass, ok := i.Amount.(*beerproto.CultureAdditionType_Mass); ok {
+	if mass, ok := i.Amount.(*beerprotov1.CultureAdditionType_Mass); ok {
 		cultureAdditionType.Amount = ToJSONMassType(context, mass.Mass)
 	}
 
-	if unit, ok := i.Amount.(*beerproto.CultureAdditionType_Unit); ok {
+	if unit, ok := i.Amount.(*beerprotov1.CultureAdditionType_Unit); ok {
 		cultureAdditionType.Amount = ToJSONUnitType(context, unit.Unit)
 	}
-	if volume, ok := i.Amount.(*beerproto.CultureAdditionType_Volume); ok {
+	if volume, ok := i.Amount.(*beerprotov1.CultureAdditionType_Volume); ok {
 		cultureAdditionType.Amount = ToJSONVolumeType(context, volume.Volume)
 	}
 
 	return cultureAdditionType, stack.Errors()
 }
 
-func ToJSONCultureBaseForm(context context.Context, i beerproto.CultureBaseForm) *beerjson.CultureBaseForm {
-	if i == beerproto.CultureBaseForm_NULL_CULTUREBASEFORM {
+func ToJSONCultureBaseForm(context context.Context, i beerprotov1.CultureBaseForm) *beerjson.CultureBaseForm {
+	if i == beerprotov1.CultureBaseForm_CULTURE_BASE_FORM_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.CultureBaseForm_name[int32(i)]
+	unit := beerprotov1.CultureBaseForm_name[int32(i)]
 	t := beerjson.CultureBaseForm(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONMiscellaneousAdditionType(context context.Context, i *beerproto.MiscellaneousAdditionType) (*beerjson.MiscellaneousAdditionType, error) {
+func ToJSONMiscellaneousAdditionType(context context.Context, i *beerprotov1.MiscellaneousAdditionType) (*beerjson.MiscellaneousAdditionType, error) {
 	if i == nil {
 		return nil, nil
 	}
 
 	context, stack := parser.StackToContext(context)
 
-	if i.Type == beerproto.MiscellaneousBaseType_NULL {
+	if i.Type == beerprotov1.MiscellaneousBaseType_MISCELLANEOUS_BASE_TYPE_UNSPECIFIED {
 		stack.AppendError(fmt.Errorf("type is required"))
 	}
 
@@ -1692,26 +1688,26 @@ func ToJSONMiscellaneousAdditionType(context context.Context, i *beerproto.Misce
 		MiscellaneousBaseType: ToJSONMiscellaneousBaseType(context, i.Type),
 	}
 
-	if mass, ok := i.Amount.(*beerproto.MiscellaneousAdditionType_Mass); ok {
+	if mass, ok := i.Amount.(*beerprotov1.MiscellaneousAdditionType_Mass); ok {
 		miscellaneousAdditionType.Amount = ToJSONMassType(context, mass.Mass)
 	}
 
-	if unit, ok := i.Amount.(*beerproto.MiscellaneousAdditionType_Unit); ok {
+	if unit, ok := i.Amount.(*beerprotov1.MiscellaneousAdditionType_Unit); ok {
 		miscellaneousAdditionType.Amount = ToJSONUnitType(context, unit.Unit)
 	}
-	if volume, ok := i.Amount.(*beerproto.MiscellaneousAdditionType_Volume); ok {
+	if volume, ok := i.Amount.(*beerprotov1.MiscellaneousAdditionType_Volume); ok {
 		miscellaneousAdditionType.Amount = ToJSONVolumeType(context, volume.Volume)
 	}
 
 	return miscellaneousAdditionType, stack.Errors()
 }
 
-func ToJSONUnitType(context context.Context, i *beerproto.UnitType) *beerjson.UnitType {
+func ToJSONUnitType(context context.Context, i *beerprotov1.UnitType) *beerjson.UnitType {
 	if i == nil {
 		return nil
 	}
 
-	if i.Unit == beerproto.UnitUnitType_NULL_UNITUNITTYPE {
+	if i.Unit == beerprotov1.UnitUnit_UNIT_UNIT_UNSPECIFIED {
 		return &beerjson.UnitType{}
 	}
 
@@ -1721,22 +1717,22 @@ func ToJSONUnitType(context context.Context, i *beerproto.UnitType) *beerjson.Un
 	}
 }
 
-func ToJSONUnitUnitType(context context.Context, i beerproto.UnitUnitType) *beerjson.UnitUnitType {
-	if i == beerproto.UnitUnitType_NULL_UNITUNITTYPE {
+func ToJSONUnitUnitType(context context.Context, i beerprotov1.UnitUnit) *beerjson.UnitUnitType {
+	if i == beerprotov1.UnitUnit_UNIT_UNIT_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.UnitUnitType_name[int32(i)]
+	unit := beerprotov1.UnitUnit_name[int32(i)]
 	t := beerjson.UnitUnitType(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONMassType(context context.Context, i *beerproto.MassType) *beerjson.MassType {
+func ToJSONMassType(context context.Context, i *beerprotov1.MassType) *beerjson.MassType {
 	if i == nil {
 		return nil
 	}
 
-	if i.Unit == beerproto.MassUnitType_NULL_MASSUNITTYPE {
+	if i.Unit == beerprotov1.MassUnit_MASS_UNIT_UNSPECIFIED {
 		return &beerjson.MassType{}
 	}
 
@@ -1746,27 +1742,27 @@ func ToJSONMassType(context context.Context, i *beerproto.MassType) *beerjson.Ma
 	}
 }
 
-func ToJSONMassUnitType(context context.Context, i beerproto.MassUnitType) *beerjson.MassUnitType {
-	if i == beerproto.MassUnitType_NULL_MASSUNITTYPE {
+func ToJSONMassUnitType(context context.Context, i beerprotov1.MassUnit) *beerjson.MassUnitType {
+	if i == beerprotov1.MassUnit_MASS_UNIT_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.MassUnitType_name[int32(i)]
+	unit := beerprotov1.MassUnit_name[int32(i)]
 	t := beerjson.MassUnitType(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONMiscellaneousBaseType(context context.Context, i beerproto.MiscellaneousBaseType) *beerjson.MiscellaneousBaseType {
-	if i == beerproto.MiscellaneousBaseType_NULL {
+func ToJSONMiscellaneousBaseType(context context.Context, i beerprotov1.MiscellaneousBaseType) *beerjson.MiscellaneousBaseType {
+	if i == beerprotov1.MiscellaneousBaseType_MISCELLANEOUS_BASE_TYPE_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.MiscellaneousBaseType_name[int32(i)]
+	unit := beerprotov1.MiscellaneousBaseType_name[int32(i)]
 	t := beerjson.MiscellaneousBaseType(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONTimingType(context context.Context, i *beerproto.TimingType) *beerjson.TimingType {
+func ToJSONTimingType(context context.Context, i *beerprotov1.TimingType) *beerjson.TimingType {
 	if i == nil {
 		return nil
 	}
@@ -1781,17 +1777,17 @@ func ToJSONTimingType(context context.Context, i *beerproto.TimingType) *beerjso
 	}
 }
 
-func ToJSONUseType(context context.Context, i beerproto.UseType) *beerjson.UseType {
-	if i == beerproto.UseType_NULL_USETYPE {
+func ToJSONUseType(context context.Context, i beerprotov1.UseType) *beerjson.UseType {
+	if i == beerprotov1.UseType_USE_TYPE_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.UseType_name[int32(i)]
+	unit := beerprotov1.UseType_name[int32(i)]
 	t := beerjson.UseType(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONFermentationProcedureType(context context.Context, i *beerproto.FermentationProcedureType) (*beerjson.FermentationProcedureType, error) {
+func ToJSONFermentationProcedureType(context context.Context, i *beerprotov1.FermentationProcedureType) (*beerjson.FermentationProcedureType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -1826,7 +1822,7 @@ func ToJSONFermentationProcedureType(context context.Context, i *beerproto.Ferme
 	return fermentationProcedureType, stack.Errors()
 }
 
-func ToJSONFermentationStepType(context context.Context, i *beerproto.FermentationStepType) (*beerjson.FermentationStepType, error) {
+func ToJSONFermentationStepType(context context.Context, i *beerprotov1.FermentationStepType) (*beerjson.FermentationStepType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -1848,12 +1844,12 @@ func ToJSONFermentationStepType(context context.Context, i *beerproto.Fermentati
 	}, stack.Errors()
 }
 
-func ToJSONGravityType(context context.Context, i *beerproto.GravityType) *beerjson.GravityType {
+func ToJSONGravityType(context context.Context, i *beerprotov1.GravityType) *beerjson.GravityType {
 	if i == nil {
 		return nil
 	}
 
-	if i.Unit == beerproto.GravityUnitType_NULL_GRAVITYUNITTYPE {
+	if i.Unit == beerprotov1.GravityUnit_GRAVITY_UNIT_UNSPECIFIED {
 		return &beerjson.GravityType{}
 	}
 
@@ -1863,30 +1859,30 @@ func ToJSONGravityType(context context.Context, i *beerproto.GravityType) *beerj
 	}
 }
 
-func ToJSONGravityUnitType(context context.Context, i beerproto.GravityUnitType) *beerjson.GravityUnitType {
-	if i == beerproto.GravityUnitType_NULL_GRAVITYUNITTYPE {
+func ToJSONGravityUnitType(context context.Context, i beerprotov1.GravityUnit) *beerjson.GravityUnitType {
+	if i == beerprotov1.GravityUnit_GRAVITY_UNIT_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.GravityUnitType_name[int32(i)]
+	unit := beerprotov1.GravityUnit_name[int32(i)]
 	t := beerjson.GravityUnitType(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONRecipeTypeType(context context.Context, i beerproto.RecipeType_RecipeTypeType) beerjson.RecipeTypeType {
-	if i == beerproto.RecipeType_NULL_RECIPETYPETYPE {
+func ToJSONRecipeTypeType(context context.Context, i beerprotov1.RecipeUnit) beerjson.RecipeTypeType {
+	if i == beerprotov1.RecipeUnit_RECIPE_UNIT_UNSPECIFIED {
 		return beerjson.RecipeTypeType_AllGrain
 	}
 
 	return beerjson.RecipeTypeType(strings.ToLower(i.String()))
 }
 
-func ToJSONColorType(context context.Context, i *beerproto.ColorType) *beerjson.ColorType {
+func ToJSONColorType(context context.Context, i *beerprotov1.ColorType) *beerjson.ColorType {
 	if i == nil {
 		return nil
 	}
 
-	if i.Unit == beerproto.ColorUnitType_NULL_COLORUNITTYPE {
+	if i.Unit == beerprotov1.ColorUnit_COLOR_UNIT_UNSPECIFIED {
 		return &beerjson.ColorType{}
 	}
 
@@ -1896,21 +1892,21 @@ func ToJSONColorType(context context.Context, i *beerproto.ColorType) *beerjson.
 	}
 }
 
-func ToJSONColorUnitType(context context.Context, i beerproto.ColorUnitType) *beerjson.ColorUnitType {
-	if i == beerproto.ColorUnitType_NULL_COLORUNITTYPE {
+func ToJSONColorUnitType(context context.Context, i beerprotov1.ColorUnit) *beerjson.ColorUnitType {
+	if i == beerprotov1.ColorUnit_COLOR_UNIT_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.ColorUnitType_name[int32(i)]
+	unit := beerprotov1.ColorUnit_name[int32(i)]
 
-	if i == beerproto.ColorUnitType_LOVI {
+	if i == beerprotov1.ColorUnit_COLOR_UNIT_LOVI {
 		unit = strings.Title(strings.ToLower(unit))
 	}
 	t := beerjson.ColorUnitType(unit)
 	return &t
 }
 
-func ToJSONIBUEstimateType(context context.Context, i *beerproto.IBUEstimateType) *beerjson.IBUEstimateType {
+func ToJSONIBUEstimateType(context context.Context, i *beerprotov1.IBUEstimateType) *beerjson.IBUEstimateType {
 	if i == nil {
 		return nil
 	}
@@ -1920,24 +1916,24 @@ func ToJSONIBUEstimateType(context context.Context, i *beerproto.IBUEstimateType
 	}
 }
 
-func ToJSONIBUMethodType(context context.Context, i beerproto.IBUEstimateType_IBUMethodType) *beerjson.IBUMethodType {
-	if i == beerproto.IBUEstimateType_NULL_IBUMETHODTYPE {
+func ToJSONIBUMethodType(context context.Context, i beerprotov1.IBUMethodUnit) *beerjson.IBUMethodType {
+	if i == beerprotov1.IBUMethodUnit_IBU_METHOD_UNIT_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.IBUEstimateType_IBUMethodType_name[int32(i)]
+	unit := beerprotov1.IBUMethodUnit_name[int32(i)]
 	t := beerjson.IBUMethodType(strings.Title(strings.ToLower(unit)))
 	return &t
 }
 
-func ToJSONRecipeStyleType(context context.Context, i *beerproto.RecipeStyleType) (*beerjson.RecipeStyleType, error) {
+func ToJSONRecipeStyleType(context context.Context, i *beerprotov1.RecipeStyleType) (*beerjson.RecipeStyleType, error) {
 	if i == nil {
 		return nil, nil
 	}
 
 	context, stack := parser.StackToContext(context)
 
-	if i.Type == beerproto.RecipeStyleType_NULL_STYLECATEGORIES {
+	if i.Type == beerprotov1.RecipeStyleType_STYLE_CATEGORIES_UNSPECIFIED {
 		stack.AppendError(fmt.Errorf("type is required"))
 
 	}
@@ -1952,17 +1948,17 @@ func ToJSONRecipeStyleType(context context.Context, i *beerproto.RecipeStyleType
 	}, stack.Errors()
 }
 
-func ToJSONRecipeStyleType_StyleCategories(context context.Context, i beerproto.RecipeStyleType_StyleCategories) *beerjson.StyleCategories {
-	if i == beerproto.RecipeStyleType_NULL_STYLECATEGORIES {
+func ToJSONRecipeStyleType_StyleCategories(context context.Context, i beerprotov1.RecipeStyleType_StyleCategories) *beerjson.StyleCategories {
+	if i == beerprotov1.RecipeStyleType_STYLE_CATEGORIES_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.RecipeStyleType_StyleCategories_name[int32(i)]
+	unit := beerprotov1.RecipeStyleType_StyleCategories_name[int32(i)]
 	t := beerjson.StyleCategories(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONEfficiencyType(context context.Context, i *beerproto.EfficiencyType) (*beerjson.EfficiencyType, error) {
+func ToJSONEfficiencyType(context context.Context, i *beerprotov1.EfficiencyType) (*beerjson.EfficiencyType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -1982,7 +1978,7 @@ func ToJSONEfficiencyType(context context.Context, i *beerproto.EfficiencyType) 
 	return efficiencyType, stack.Errors()
 }
 
-func ToJSONPercentType(context context.Context, i *beerproto.PercentType) *beerjson.PercentType {
+func ToJSONPercentType(context context.Context, i *beerprotov1.PercentType) *beerjson.PercentType {
 	if i == nil {
 		return nil
 	}
@@ -1993,15 +1989,15 @@ func ToJSONPercentType(context context.Context, i *beerproto.PercentType) *beerj
 	}
 }
 
-func ToJSONPercentUnitType(context context.Context, i beerproto.PercentType_PercentUnitType) beerjson.PercentUnitType {
-	if i == beerproto.PercentType_NULL {
+func ToJSONPercentUnitType(context context.Context, i beerprotov1.PercentUnit) beerjson.PercentUnitType {
+	if i == beerprotov1.PercentUnit_PERCENT_UNIT_UNSPECIFIED {
 		return beerjson.PercentUnitType_No
 	}
 
 	return beerjson.PercentUnitType(strings.ToLower(i.String()))
 }
 
-func ToJSONMashProcedureType(context context.Context, i *beerproto.MashProcedureType) (*beerjson.MashProcedureType, error) {
+func ToJSONMashProcedureType(context context.Context, i *beerprotov1.MashProcedureType) (*beerjson.MashProcedureType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -2039,7 +2035,7 @@ func ToJSONMashProcedureType(context context.Context, i *beerproto.MashProcedure
 	return mashProcedureType, stack.Errors()
 }
 
-func ToJSONMashStepType(context context.Context, i *beerproto.MashStepType) (*beerjson.MashStepType, error) {
+func ToJSONMashStepType(context context.Context, i *beerprotov1.MashStepType) (*beerjson.MashStepType, error) {
 	if i == nil {
 		return nil, nil
 	}
@@ -2054,7 +2050,7 @@ func ToJSONMashStepType(context context.Context, i *beerproto.MashStepType) (*be
 		stack.AppendError(fmt.Errorf("stepTime is required"))
 	}
 
-	if i.Type == beerproto.MashStepType_NULL {
+	if i.Type == beerprotov1.MashStepType_MASH_STEP_UNIT_UNSPECIFIED {
 		stack.AppendError(fmt.Errorf("type is required"))
 	}
 
@@ -2077,14 +2073,13 @@ func ToJSONMashStepType(context context.Context, i *beerproto.MashStepType) (*be
 	return mashStepType, stack.Errors()
 }
 
-func ToJSONVolumeType(context context.Context, i *beerproto.VolumeType) *beerjson.VolumeType {
+func ToJSONVolumeType(context context.Context, i *beerprotov1.VolumeType) *beerjson.VolumeType {
 	if i == nil {
 		return nil
 	}
 
-	if i.Unit == beerproto.VolumeType_NULL {
-		return &beerjson.VolumeType{
-		}
+	if i.Unit == beerprotov1.VolumeUnit_VOLUME_UNIT_UNSPECIFIED {
+		return &beerjson.VolumeType{}
 	}
 
 	return &beerjson.VolumeType{
@@ -2093,21 +2088,20 @@ func ToJSONVolumeType(context context.Context, i *beerproto.VolumeType) *beerjso
 	}
 }
 
-func ToJSONVolumeUnitType(context context.Context, i beerproto.VolumeType_VolumeUnitType) beerjson.VolumeUnitType {
-	if i == beerproto.VolumeType_NULL {
+func ToJSONVolumeUnitType(context context.Context, i beerprotov1.VolumeUnit) beerjson.VolumeUnitType {
+	if i == beerprotov1.VolumeUnit_VOLUME_UNIT_UNSPECIFIED {
 		return beerjson.VolumeUnitType_Ml
 	}
 
 	return beerjson.VolumeUnitType(strings.ToLower(i.String()))
 }
 
-func ToJSONSpecificVolumeType(context context.Context, i *beerproto.SpecificVolumeType) *beerjson.SpecificVolumeType {
+func ToJSONSpecificVolumeType(context context.Context, i *beerprotov1.SpecificVolumeType) *beerjson.SpecificVolumeType {
 	if i == nil {
 		return nil
 	}
-	if i.Unit == beerproto.SpecificVolumeType_NULL {
-		return &beerjson.SpecificVolumeType{
-		}
+	if i.Unit == beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_UNSPECIFIED {
+		return &beerjson.SpecificVolumeType{}
 	}
 	return &beerjson.SpecificVolumeType{
 		Value: i.Value,
@@ -2115,49 +2109,49 @@ func ToJSONSpecificVolumeType(context context.Context, i *beerproto.SpecificVolu
 	}
 }
 
-func ToJSONSpecificVolumeUnitType(context context.Context, i beerproto.SpecificVolumeType_SpecificVolumeUnitType) beerjson.SpecificVolumeUnitType {
-	if i == beerproto.SpecificVolumeType_NULL {
+func ToJSONSpecificVolumeUnitType(context context.Context, i beerprotov1.SpecificVolumeUnit) beerjson.SpecificVolumeUnitType {
+	if i == beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_UNSPECIFIED {
 		return beerjson.SpecificVolumeUnitType_LG
 	}
 
 	switch i {
-	case beerproto.SpecificVolumeType_QTLB:
+	case beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_QTLB:
 		return beerjson.SpecificVolumeUnitType_QtLb
-	case beerproto.SpecificVolumeType_GALLB:
+	case beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_GALLB:
 		return beerjson.SpecificVolumeUnitType_GalLb
-	case beerproto.SpecificVolumeType_GALOZ:
+	case beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_GALOZ:
 		return beerjson.SpecificVolumeUnitType_GalOz
-	case beerproto.SpecificVolumeType_LG:
+	case beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_LG:
 		return beerjson.SpecificVolumeUnitType_LG
-	case beerproto.SpecificVolumeType_LKG:
+	case beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_LKG:
 		return beerjson.SpecificVolumeUnitType_LKg
-	case beerproto.SpecificVolumeType_FLOZOZ:
+	case beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_FLOZOZ:
 		return beerjson.SpecificVolumeUnitType_FlozOz
-	case beerproto.SpecificVolumeType_M3KG:
+	case beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_M3KG:
 		return beerjson.SpecificVolumeUnitType_M3Kg
-	case beerproto.SpecificVolumeType_FT3LB:
+	case beerprotov1.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_FT3LB:
 		return beerjson.SpecificVolumeUnitType_Ft3Lb
 	}
 
 	return beerjson.SpecificVolumeUnitType(i.String())
 }
 
-func ToJSONMashStepTypeType(context context.Context, i beerproto.MashStepType_MashStepTypeType) *beerjson.MashStepTypeType {
-	if i == beerproto.MashStepType_NULL {
+func ToJSONMashStepTypeType(context context.Context, i beerprotov1.MashStepType_MashStepUnit) *beerjson.MashStepTypeType {
+	if i == beerprotov1.MashStepType_MASH_STEP_UNIT_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.MashStepType_MashStepTypeType_name[int32(i)]
+	unit := beerprotov1.MashStepType_MashStepUnit_name[int32(i)]
 	t := beerjson.MashStepTypeType(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONAcidityType(context context.Context, i *beerproto.AcidityType) *beerjson.AcidityType {
+func ToJSONAcidityType(context context.Context, i *beerprotov1.AcidityType) *beerjson.AcidityType {
 	if i == nil {
 		return nil
 	}
 
-	if i.Unit == beerproto.AcidityUnitType_NULL_ACIDITYUNITTYPE {
+	if i.Unit == beerprotov1.AcidityUnit_ACIDITY_UNIT_UNSPECIFIED {
 		return &beerjson.AcidityType{}
 	}
 
@@ -2167,22 +2161,22 @@ func ToJSONAcidityType(context context.Context, i *beerproto.AcidityType) *beerj
 	}
 }
 
-func ToJSONAcidityUnitType(context context.Context, i beerproto.AcidityUnitType) *beerjson.AcidityUnitType {
-	if i == beerproto.AcidityUnitType_NULL_ACIDITYUNITTYPE {
+func ToJSONAcidityUnitType(context context.Context, i beerprotov1.AcidityUnit) *beerjson.AcidityUnitType {
+	if i == beerprotov1.AcidityUnit_ACIDITY_UNIT_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.AcidityUnitType_name[int32(i)]
+	unit := beerprotov1.AcidityUnit_name[int32(i)]
 	t := beerjson.AcidityUnitType(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONTimeType(context context.Context, i *beerproto.TimeType) *beerjson.TimeType {
+func ToJSONTimeType(context context.Context, i *beerprotov1.TimeType) *beerjson.TimeType {
 	if i == nil {
 		return nil
 	}
 
-	if i.Unit == beerproto.TimeType_NULL {
+	if i.Unit == beerprotov1.TimeUnit_TIME_UNIT_UNSPECIFIED {
 		return &beerjson.TimeType{}
 	}
 
@@ -2192,11 +2186,11 @@ func ToJSONTimeType(context context.Context, i *beerproto.TimeType) *beerjson.Ti
 	}
 }
 
-func ToJSONTemperatureType(context context.Context, i *beerproto.TemperatureType) *beerjson.TemperatureType {
+func ToJSONTemperatureType(context context.Context, i *beerprotov1.TemperatureType) *beerjson.TemperatureType {
 	if i == nil {
 		return nil
 	}
-	if i.Unit == beerproto.TemperatureUnitType_NULL_TEMPERATUREUNITTYPE {
+	if i.Unit == beerprotov1.TemperatureUnit_TEMPERATURE_UNIT_UNSPECIFIED {
 		return &beerjson.TemperatureType{}
 	}
 
@@ -2206,22 +2200,22 @@ func ToJSONTemperatureType(context context.Context, i *beerproto.TemperatureType
 	}
 }
 
-func ToJSONTimeUnitType(context context.Context, i beerproto.TimeType_TimeUnitType) *beerjson.TimeUnitType {
-	if i == beerproto.TimeType_NULL {
+func ToJSONTimeUnitType(context context.Context, i beerprotov1.TimeUnit) *beerjson.TimeUnitType {
+	if i == beerprotov1.TimeUnit_TIME_UNIT_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.TimeType_TimeUnitType_name[int32(i)]
+	unit := beerprotov1.TimeUnit_name[int32(i)]
 	t := beerjson.TimeUnitType(strings.ToLower(unit))
 	return &t
 }
 
-func ToJSONTemperatureUnitType(context context.Context, i beerproto.TemperatureUnitType) *beerjson.TemperatureUnitType {
-	if i == beerproto.TemperatureUnitType_NULL_TEMPERATUREUNITTYPE {
+func ToJSONTemperatureUnitType(context context.Context, i beerprotov1.TemperatureUnit) *beerjson.TemperatureUnitType {
+	if i == beerprotov1.TemperatureUnit_TEMPERATURE_UNIT_UNSPECIFIED {
 		return nil
 	}
 
-	unit := beerproto.TemperatureUnitType_name[int32(i)]
+	unit := beerprotov1.TemperatureUnit_name[int32(i)]
 	t := beerjson.TemperatureUnitType(unit)
 	return &t
 }

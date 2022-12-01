@@ -1,8 +1,9 @@
 package beerJSON
 
 import (
-	beerproto "github.com/beerproto/beerproto_go"
 	"strings"
+
+	beerproto "github.com/beerproto/beerproto_go"
 
 	"github.com/beerproto/beerjson.go"
 )
@@ -21,7 +22,6 @@ func MapToProto(i *beerjson.Beerjson) *beerproto.Recipe {
 		Boil:                     []*beerproto.BoilProcedureType{},
 		Version:                  float64(i.Version),
 		Fermentables:             []*beerproto.FermentableType{},
-		TimingObject:             ToProtoTimingType(i.TimingObject),
 		Cultures:                 []*beerproto.CultureInformation{},
 		Equipments:               []*beerproto.EquipmentType{},
 		Packaging:                []*beerproto.PackagingProcedureType{},
@@ -80,12 +80,12 @@ func MapToProto(i *beerjson.Beerjson) *beerproto.Recipe {
 	return output
 }
 
-func ToProtoCarbonationUnitType(i *beerjson.CarbonationUnitType) beerproto.CarbonationUnitType {
+func ToProtoCarbonationUnitType(i *beerjson.CarbonationUnitType) beerproto.CarbonationUnit {
 	if i == nil {
-		return beerproto.CarbonationUnitType_NULL_CARBONATIONUNITTYPE
+		return beerproto.CarbonationUnit_CARBONATION_UNIT_UNSPECIFIED
 	}
-	unit := beerproto.CarbonationUnitType_value[strings.ToUpper(string(*i))]
-	return beerproto.CarbonationUnitType(unit)
+	unit := beerproto.CarbonationUnit_value[strings.ToUpper(string(*i))]
+	return beerproto.CarbonationUnit(unit)
 }
 
 func ToProtoColorRangeType(i *beerjson.ColorRangeType) *beerproto.ColorRangeType {
@@ -243,19 +243,17 @@ func ToProtoBoilProcedureType(i *beerjson.BoilProcedureType) *beerproto.BoilProc
 
 	boilProcedureType.BoilTime = ToProtoTimeType(&i.BoilTime)
 
-
 	if i.Name != nil {
 		boilProcedureType.Name = UseString(i.Name)
 	}
 
 	if i.Description != nil {
-		boilProcedureType.Description =UseString(i.Description)
+		boilProcedureType.Description = UseString(i.Description)
 	}
 
 	if i.Notes != nil {
 		boilProcedureType.Notes = UseString(i.Notes)
 	}
-
 
 	return boilProcedureType
 }
@@ -282,7 +280,7 @@ func ToProtoBoilStepType(i *beerjson.BoilStepType) *beerproto.BoilStepType {
 
 func ToProtoChillingType(i *beerjson.BoilStepTypeChillingType) beerproto.BoilStepTypeChillingType {
 	if i == nil {
-		return beerproto.BoilStepTypeChillingType_NULL_BOILSTEPTYPECHILLINGTYPE
+		return beerproto.BoilStepTypeChillingType_BOIL_STEP_TYPE_CHILLING_TYPE_UNSPECIFIED
 	}
 	unit := beerproto.BoilStepTypeChillingType_value[strings.ToUpper(string(*i))]
 	return beerproto.BoilStepTypeChillingType(unit)
@@ -304,7 +302,6 @@ func ToProtoPackagingProcedureType(i *beerjson.PackagingProcedureType) *beerprot
 		packagingProcedureType.PackagingVessels = packagingVessels
 	}
 
-
 	if i.Name != "" {
 		packagingProcedureType.Name = i.Name
 	}
@@ -320,7 +317,6 @@ func ToProtoPackagingProcedureType(i *beerjson.PackagingProcedureType) *beerprot
 	if i.PackagedVolume != nil {
 		packagingProcedureType.PackagedVolume = ToProtoVolumeType(i.PackagedVolume)
 	}
-
 
 	return packagingProcedureType
 }
@@ -352,12 +348,12 @@ func ToProtoPackagingVesselType(i *beerjson.PackagingVesselType) *beerproto.Pack
 	}
 }
 
-func ToProtoPackagingVesselTypeType(i *beerjson.PackagingVesselTypeType) beerproto.PackagingVesselType_PackagingVesselTypeType {
+func ToProtoPackagingVesselTypeType(i *beerjson.PackagingVesselTypeType) beerproto.PackagingVesselUnit {
 	if i == nil {
-		return beerproto.PackagingVesselType_NULL_PACKAGINGVESSELTYPETYPE
+		return beerproto.PackagingVesselUnit_PACKAGING_VESSEL_UNIT_UNSPECIFIED
 	}
-	unit := beerproto.PackagingVesselType_PackagingVesselTypeType_value[strings.ToUpper(string(*i))]
-	return beerproto.PackagingVesselType_PackagingVesselTypeType(unit)
+	unit := beerproto.PackagingVesselUnit_value[strings.ToUpper(string(*i))]
+	return beerproto.PackagingVesselUnit(unit)
 }
 
 func ToProtoEquipmentItemType(i *beerjson.EquipmentItemType) *beerproto.EquipmentItemType {
@@ -448,13 +444,13 @@ func ToProtoOilContentType(i *beerjson.OilContentType) *beerproto.OilContentType
 	}
 }
 
-func ToProtoVarietyInformationType(i *beerjson.VarietyInformationType) beerproto.VarietyInformation_VarietyInformationType {
+func ToProtoVarietyInformationType(i *beerjson.VarietyInformationType) beerproto.VarietyInformationType {
 	if i == nil {
-		return beerproto.VarietyInformation_NULL_VARIETYINFORMATIONTYPE
+		return beerproto.VarietyInformationType_VARIETY_INFORMATION_TYPE_UNSPECIFIED
 	}
 
-	unit := beerproto.VarietyInformation_VarietyInformationType_value[strings.ToUpper(string(*i))]
-	return beerproto.VarietyInformation_VarietyInformationType(unit)
+	unit := beerproto.VarietyInformationType_value[strings.ToUpper(string(*i))]
+	return beerproto.VarietyInformationType(unit)
 }
 
 func ToProtoHopInventoryType(i *beerjson.HopInventoryType) *beerproto.HopInventoryType {
@@ -505,8 +501,7 @@ func ToProtoSpecificHeatType(i *beerjson.SpecificHeatType) *beerproto.SpecificHe
 	}
 
 	if i.Unit == "" {
-		return &beerproto.SpecificHeatType{
-		}
+		return &beerproto.SpecificHeatType{}
 	}
 
 	return &beerproto.SpecificHeatType{
@@ -515,38 +510,38 @@ func ToProtoSpecificHeatType(i *beerjson.SpecificHeatType) *beerproto.SpecificHe
 	}
 }
 
-func ToProtoSpecificHeatUnitType(i *beerjson.SpecificHeatUnitType) beerproto.SpecificHeatUnitType {
+func ToProtoSpecificHeatUnitType(i *beerjson.SpecificHeatUnitType) beerproto.SpecificHeatUnit {
 	if i == nil {
-		return beerproto.SpecificHeatUnitType_NULL_SPECIFICHEATUNITTYPE
+		return beerproto.SpecificHeatUnit_SPECIFIC_HEAT_UNIT_UNSPECIFIED
 	}
 
-	unit := beerproto.SpecificHeatUnitType_value[strings.ToUpper(string(*i))]
-	return beerproto.SpecificHeatUnitType(unit)
+	unit := beerproto.SpecificHeatUnit_value[strings.ToUpper(string(*i))]
+	return beerproto.SpecificHeatUnit(unit)
 }
 
 func ToProtoEquipmentBaseForm(i *beerjson.EquipmentBaseForm) beerproto.EquipmentItemType_EquipmentBaseForm {
 	if i == nil {
-		return beerproto.EquipmentItemType_NULL
+		return beerproto.EquipmentItemType_EQUIPMENT_BASE_FORM_UNSPECIFIED
 	}
 
 	switch *i {
 	case beerjson.EquipmentBaseForm_HLT:
-		return beerproto.EquipmentItemType_HLT
+		return beerproto.EquipmentItemType_EQUIPMENT_BASE_FORM_HLT
 	case beerjson.EquipmentBaseForm_MashTun:
-		return beerproto.EquipmentItemType_MASH_TUN
+		return beerproto.EquipmentItemType_EQUIPMENT_BASE_FORM_MASH_TUN
 	case beerjson.EquipmentBaseForm_LauterTun:
-		return beerproto.EquipmentItemType_LAUTER_TUN
+		return beerproto.EquipmentItemType_EQUIPMENT_BASE_FORM_LAUTER_TUN
 	case beerjson.EquipmentBaseForm_BrewKettle:
-		return beerproto.EquipmentItemType_BREW_KETTLE
+		return beerproto.EquipmentItemType_EQUIPMENT_BASE_FORM_BREW_KETTLE
 	case beerjson.EquipmentBaseForm_Fermenter:
-		return beerproto.EquipmentItemType_FERMENTER
+		return beerproto.EquipmentItemType_EQUIPMENT_BASE_FORM_FERMENTER
 	case beerjson.EquipmentBaseForm_AgingVessel:
-		return beerproto.EquipmentItemType_AGING_VESSEL
+		return beerproto.EquipmentItemType_EQUIPMENT_BASE_FORM_AGING_VESSEL
 	case beerjson.EquipmentBaseForm_PackagingVessel:
-		return beerproto.EquipmentItemType_PACKAGING_VESSEL
+		return beerproto.EquipmentItemType_EQUIPMENT_BASE_FORM_PACKAGING_VESSEL
 	}
 
-	return beerproto.EquipmentItemType_NULL
+	return beerproto.EquipmentItemType_EQUIPMENT_BASE_FORM_UNSPECIFIED
 }
 
 func ToProtoCultureInformation(i *beerjson.CultureInformation) *beerproto.CultureInformation {
@@ -586,17 +581,17 @@ func ToProtoZymocide(i *beerjson.Zymocide) *beerproto.Zymocide {
 		Neutral: UseBool(i.Neutral),
 	}
 }
-func ToProtoQualitativeRangeType(i *beerjson.QualitativeRangeType) beerproto.QualitativeRangeType {
+func ToProtoQualitativeRangeType(i *beerjson.QualitativeRangeType) beerproto.QualitativeRangeUnit {
 	if i == nil {
-		return beerproto.QualitativeRangeType_NULL_QUALITATIVERANGETYPE
+		return beerproto.QualitativeRangeUnit_QUALITATIVE_RANGE_UNIT_UNSPECIFIED
 	}
-	unit := beerproto.QualitativeRangeType_value[strings.ToUpper(string(*i))]
-	return beerproto.QualitativeRangeType(unit)
+	unit := beerproto.QualitativeRangeUnit_value[strings.ToUpper(string(*i))]
+	return beerproto.QualitativeRangeUnit(unit)
 }
 
 func ToProtoCultureBaseType(i *beerjson.CultureBaseType) beerproto.CultureBaseType {
 	if i == nil {
-		return beerproto.CultureBaseType_NULL_CULTUREBASETYPE
+		return beerproto.CultureBaseType_CULTURE_BASE_TYPE_UNSPECIFIED
 	}
 	unit := beerproto.CultureBaseType_value[strings.ToUpper(string(*i))]
 	return beerproto.CultureBaseType(unit)
@@ -647,7 +642,7 @@ func ToProtoFermentableType(i *beerjson.FermentableType) *beerproto.FermentableT
 		Moisture:       ToProtoPercentType(i.Moisture),
 		Origin:         UseString(i.Origin),
 		Inventory:      ToProtoFermentableInventoryType(i.Inventory),
-		KolbachIndex:   UseFloat(i.KolbachIndex),
+		KolbachIndex:   ToProtoPercentType(i.KolbachIndex),
 		Notes:          UseString(i.Notes),
 		BetaGlucan:     ToProtoConcentrationType(i.BetaGlucan),
 		Glassy:         ToProtoPercentType(i.Glassy),
@@ -701,21 +696,21 @@ func ToProtoViscosityType(i *beerjson.ViscosityType) *beerproto.ViscosityType {
 	}
 }
 
-func ToProtoViscosityUnitType(i *beerjson.ViscosityUnitType) beerproto.ViscosityUnitType {
+func ToProtoViscosityUnitType(i *beerjson.ViscosityUnitType) beerproto.ViscosityUnit {
 	if i == nil {
-		return beerproto.ViscosityUnitType_NULL_VISCOSITYUNITTYPE
+		return beerproto.ViscosityUnit_VISCOSITY_UNIT_UNSPECIFIED
 	}
 
 	if *i == beerjson.ViscosityUnitType_MPAS {
-		return beerproto.ViscosityUnitType_MPAS
+		return beerproto.ViscosityUnit_VISCOSITY_UNIT_MPAS
 	}
 
 	if *i == beerjson.ViscosityUnitType_CP {
-		return beerproto.ViscosityUnitType_CP
+		return beerproto.ViscosityUnit_VISCOSITY_UNIT_CP
 	}
 
-	unit := beerproto.ViscosityUnitType_value[strings.ToUpper(string(*i))]
-	return beerproto.ViscosityUnitType(unit)
+	unit := beerproto.ViscosityUnit_value[strings.ToUpper(string(*i))]
+	return beerproto.ViscosityUnit(unit)
 }
 
 func ToProtoDiastaticPowerType(i *beerjson.DiastaticPowerType) *beerproto.DiastaticPowerType {
@@ -733,13 +728,13 @@ func ToProtoDiastaticPowerType(i *beerjson.DiastaticPowerType) *beerproto.Diasta
 	}
 }
 
-func ToProtoDiastaticPowerUnitType(i *beerjson.DiastaticPowerUnitType) beerproto.DiastaticPowerUnitType {
+func ToProtoDiastaticPowerUnitType(i *beerjson.DiastaticPowerUnitType) beerproto.DiastaticPowerUnit {
 	if i == nil {
-		return beerproto.DiastaticPowerUnitType_NULL_DIASTATICPOWERUNITTYPE
+		return beerproto.DiastaticPowerUnit_DIASTATIC_POWER_UNIT_UNSPECIFIED
 	}
 
-	unit := beerproto.DiastaticPowerUnitType_value[strings.ToUpper(string(*i))]
-	return beerproto.DiastaticPowerUnitType(unit)
+	unit := beerproto.DiastaticPowerUnit_value[strings.ToUpper(string(*i))]
+	return beerproto.DiastaticPowerUnit(unit)
 }
 
 func ToProtoStyleType(i *beerjson.StyleType) *beerproto.StyleType {
@@ -773,7 +768,7 @@ func ToProtoStyleType(i *beerjson.StyleType) *beerproto.StyleType {
 
 func ToProtoStyleType_StyleCategories(i *beerjson.StyleCategories) beerproto.StyleType_StyleCategories {
 	if i == nil {
-		return beerproto.StyleType_NULL_STYLECATEGORIES
+		return beerproto.StyleType_STYLE_CATEGORIES_UNSPECIFIED
 	}
 	unit := beerproto.StyleType_StyleCategories_value[strings.ToUpper(string(*i))]
 	return beerproto.StyleType_StyleCategories(unit)
@@ -804,17 +799,17 @@ func ToProtoBitternessType(i *beerjson.BitternessType) *beerproto.BitternessType
 	}
 }
 
-func ToProtoBitternessUnitType(i *beerjson.BitternessUnitType) beerproto.BitternessType_BitternessUnitType {
+func ToProtoBitternessUnitType(i *beerjson.BitternessUnitType) beerproto.BitternessUnit {
 	if i == nil {
-		return beerproto.BitternessType_NULL
+		return beerproto.BitternessUnit_BITTERNESS_UNIT_UNSPECIFIED
 	}
 
 	if *i == beerjson.BitternessUnitType_IBUs {
-		return beerproto.BitternessType_IBUs
+		return beerproto.BitternessUnit_BITTERNESS_UNIT_IBUS
 	}
 
-	unit := beerproto.BitternessType_BitternessUnitType_value[strings.ToUpper(string(*i))]
-	return beerproto.BitternessType_BitternessUnitType(unit)
+	unit := beerproto.BitternessUnit_value[strings.ToUpper(string(*i))]
+	return beerproto.BitternessUnit(unit)
 }
 
 func ToProtoPercentRangeType(i *beerjson.PercentRangeType) *beerproto.PercentRangeType {
@@ -842,8 +837,7 @@ func ToProtoCarbonationType(i *beerjson.CarbonationType) *beerproto.CarbonationT
 	}
 
 	if i.Unit == "" {
-		return &beerproto.CarbonationType{
-		}
+		return &beerproto.CarbonationType{}
 	}
 
 	return &beerproto.CarbonationType{
@@ -936,22 +930,22 @@ func ToProtoHopAdditionType(i *beerjson.HopAdditionType) *beerproto.HopAdditionT
 
 func ToProtoHopVarietyBaseForm(i *beerjson.HopVarietyBaseForm) beerproto.HopVarietyBaseForm {
 	if i == nil {
-		return beerproto.HopVarietyBaseForm_NULL_HOPVARIETYBASEFORM
+		return beerproto.HopVarietyBaseForm_HOP_VARIETY_BASE_FORM_UNSPECIFIED
 	}
 
 	switch *i {
 	case beerjson.HopVarietyBaseForm_Extract:
-		return beerproto.HopVarietyBaseForm_EXTRACT_HOPVARIETYBASEFORM
+		return beerproto.HopVarietyBaseForm_HOP_VARIETY_BASE_FORM_EXTRACT
 	case beerjson.HopVarietyBaseForm_Leaf:
-		return beerproto.HopVarietyBaseForm_LEAF
+		return beerproto.HopVarietyBaseForm_HOP_VARIETY_BASE_FORM_LEAF
 	case beerjson.HopVarietyBaseForm_LeafWet:
-		return beerproto.HopVarietyBaseForm_LEAFWET
+		return beerproto.HopVarietyBaseForm_HOP_VARIETY_BASE_FORM_LEAFWET
 	case beerjson.HopVarietyBaseForm_Pellet:
-		return beerproto.HopVarietyBaseForm_PELLET
+		return beerproto.HopVarietyBaseForm_HOP_VARIETY_BASE_FORM_PELLET
 	case beerjson.HopVarietyBaseForm_Powder:
-		return beerproto.HopVarietyBaseForm_POWDER
+		return beerproto.HopVarietyBaseForm_HOP_VARIETY_BASE_FORM_POWDER
 	case beerjson.HopVarietyBaseForm_Plug:
-		return beerproto.HopVarietyBaseForm_PLUG
+		return beerproto.HopVarietyBaseForm_HOP_VARIETY_BASE_FORM_PLUG
 	}
 
 	unit := beerproto.HopVarietyBaseForm_value[strings.ToUpper(string(*i))]
@@ -1005,7 +999,7 @@ func ToProtoYieldType(i *beerjson.YieldType) *beerproto.YieldType {
 
 func ToProtoGrainGroup(i *beerjson.FermentableBaseGrainGroup) beerproto.GrainGroup {
 	if i == nil {
-		return beerproto.GrainGroup_NULL_GRAINGROUP
+		return beerproto.GrainGroup_GRAIN_GROUP_UNSPECIFIED
 	}
 
 	unit := beerproto.GrainGroup_value[strings.ToUpper(string(*i))]
@@ -1014,7 +1008,7 @@ func ToProtoGrainGroup(i *beerjson.FermentableBaseGrainGroup) beerproto.GrainGro
 
 func ToProtoFermentableBaseType(i *beerjson.FermentableBaseType) beerproto.FermentableBaseType {
 	if i == nil {
-		return beerproto.FermentableBaseType_NULL_FERMENTABLEBASETYPE
+		return beerproto.FermentableBaseType_FERMENTABLE_BASE_TYPE_UNSPECIFIED
 	}
 
 	unit := beerproto.FermentableBaseType_value[strings.ToUpper(string(*i))]
@@ -1051,8 +1045,7 @@ func ToProtoConcentrationType(i *beerjson.ConcentrationType) *beerproto.Concentr
 	}
 
 	if i.Unit == "" {
-		return &beerproto.ConcentrationType{
-		}
+		return &beerproto.ConcentrationType{}
 	}
 
 	return &beerproto.ConcentrationType{
@@ -1061,13 +1054,13 @@ func ToProtoConcentrationType(i *beerjson.ConcentrationType) *beerproto.Concentr
 	}
 }
 
-func ToProtoConcentrationUnitType(i beerjson.ConcentrationUnitType) beerproto.ConcentrationUnitType {
+func ToProtoConcentrationUnitType(i beerjson.ConcentrationUnitType) beerproto.ConcentrationUnit {
 	if i == beerjson.ConcentrationUnitType_MgL {
-		return beerproto.ConcentrationUnitType_MGL
+		return beerproto.ConcentrationUnit_CONCENTRATION_UNIT_MGL
 	}
 
-	unit := beerproto.ConcentrationUnitType_value[strings.ToUpper(string(i))]
-	return beerproto.ConcentrationUnitType(unit)
+	unit := beerproto.ConcentrationUnit_value[strings.ToUpper(string(i))]
+	return beerproto.ConcentrationUnit(unit)
 }
 
 func ToProtoCultureAdditionType(i *beerjson.CultureAdditionType) *beerproto.CultureAdditionType {
@@ -1109,7 +1102,7 @@ func ToProtoCultureAdditionType(i *beerjson.CultureAdditionType) *beerproto.Cult
 
 func ToProtoCultureBaseForm(i *beerjson.CultureBaseForm) beerproto.CultureBaseForm {
 	if i == nil {
-		return beerproto.CultureBaseForm_NULL_CULTUREBASEFORM
+		return beerproto.CultureBaseForm_CULTURE_BASE_FORM_UNSPECIFIED
 	}
 	unit := beerproto.CultureBaseForm_value[strings.ToUpper(string(*i))]
 	return beerproto.CultureBaseForm(unit)
@@ -1128,7 +1121,7 @@ func ToProtoMiscellaneousAdditionType(i *beerjson.MiscellaneousAdditionType) *be
 	}
 
 	if i.MiscellaneousBaseType != nil {
-		miscellaneousAdditionType.Type =  ToProtoMiscellaneousBaseType(i.MiscellaneousBaseType)
+		miscellaneousAdditionType.Type = ToProtoMiscellaneousBaseType(i.MiscellaneousBaseType)
 	}
 
 	if mass, ok := i.Amount.(*beerjson.MassType); ok {
@@ -1157,7 +1150,7 @@ func ToProtoUnitType(i *beerjson.UnitType) *beerproto.UnitType {
 	}
 
 	if i.Unit == "" {
-		return &beerproto.UnitType{	}
+		return &beerproto.UnitType{}
 	}
 
 	return &beerproto.UnitType{
@@ -1166,9 +1159,9 @@ func ToProtoUnitType(i *beerjson.UnitType) *beerproto.UnitType {
 	}
 }
 
-func ToProtoUnitUnitType(i beerjson.UnitUnitType) beerproto.UnitUnitType {
-	unit := beerproto.UnitUnitType_value[strings.ToUpper(string(i))]
-	return beerproto.UnitUnitType(unit)
+func ToProtoUnitUnitType(i beerjson.UnitUnitType) beerproto.UnitUnit {
+	unit := beerproto.UnitUnit_value[strings.ToUpper(string(i))]
+	return beerproto.UnitUnit(unit)
 }
 
 func ToProtoMassType(i *beerjson.MassType) *beerproto.MassType {
@@ -1186,9 +1179,9 @@ func ToProtoMassType(i *beerjson.MassType) *beerproto.MassType {
 	}
 }
 
-func ToProtoMassUnitType(i beerjson.MassUnitType) beerproto.MassUnitType {
-	unit := beerproto.MassUnitType_value[strings.ToUpper(string(i))]
-	return beerproto.MassUnitType(unit)
+func ToProtoMassUnitType(i beerjson.MassUnitType) beerproto.MassUnit {
+	unit := beerproto.MassUnit_value[strings.ToUpper(string(i))]
+	return beerproto.MassUnit(unit)
 }
 
 func ToProtoMiscellaneousBaseType(i *beerjson.MiscellaneousBaseType) beerproto.MiscellaneousBaseType {
@@ -1213,7 +1206,7 @@ func ToProtoTimingType(i *beerjson.TimingType) *beerproto.TimingType {
 
 func ToProtoUseType(i *beerjson.UseType) beerproto.UseType {
 	if i == nil {
-		return beerproto.UseType_NULL_USETYPE
+		return beerproto.UseType_USE_TYPE_UNSPECIFIED
 	}
 	unit := beerproto.UseType_value[strings.ToUpper(string(*i))]
 	return beerproto.UseType(unit)
@@ -1270,14 +1263,14 @@ func ToProtoGravityType(i *beerjson.GravityType) *beerproto.GravityType {
 	}
 }
 
-func ToProtoGravityUnitType(i beerjson.GravityUnitType) beerproto.GravityUnitType {
-	unit := beerproto.GravityUnitType_value[strings.ToUpper(string(i))]
-	return beerproto.GravityUnitType(unit)
+func ToProtoGravityUnitType(i beerjson.GravityUnitType) beerproto.GravityUnit {
+	unit := beerproto.GravityUnit_value[strings.ToUpper(string(i))]
+	return beerproto.GravityUnit(unit)
 }
 
-func ToProtoRecipeTypeType(i beerjson.RecipeTypeType) beerproto.RecipeType_RecipeTypeType {
-	unit := beerproto.RecipeType_RecipeTypeType_value[strings.ToUpper(string(i))]
-	return beerproto.RecipeType_RecipeTypeType(unit)
+func ToProtoRecipeTypeType(i beerjson.RecipeTypeType) beerproto.RecipeUnit {
+	unit := beerproto.RecipeUnit_value[strings.ToUpper(string(i))]
+	return beerproto.RecipeUnit(unit)
 }
 
 func ToProtoColorType(i *beerjson.ColorType) *beerproto.ColorType {
@@ -1295,10 +1288,10 @@ func ToProtoColorType(i *beerjson.ColorType) *beerproto.ColorType {
 	}
 }
 
-func ToProtoColorUnitType(i beerjson.ColorUnitType) beerproto.ColorUnitType {
-	unit := beerproto.ColorUnitType_value[strings.ToUpper(string(i))]
+func ToProtoColorUnitType(i beerjson.ColorUnitType) beerproto.ColorUnit {
+	unit := beerproto.ColorUnit_value[strings.ToUpper(string(i))]
 
-	return beerproto.ColorUnitType(unit)
+	return beerproto.ColorUnit(unit)
 }
 
 func ToProtoIBUEstimateType(i *beerjson.IBUEstimateType) *beerproto.IBUEstimateType {
@@ -1311,12 +1304,12 @@ func ToProtoIBUEstimateType(i *beerjson.IBUEstimateType) *beerproto.IBUEstimateT
 	}
 }
 
-func ToProtoIBUMethodType(i *beerjson.IBUMethodType) beerproto.IBUEstimateType_IBUMethodType {
+func ToProtoIBUMethodType(i *beerjson.IBUMethodType) beerproto.IBUMethodUnit {
 	if i == nil {
-		return beerproto.IBUEstimateType_NULL_IBUMETHODTYPE
+		return beerproto.IBUMethodUnit_IBU_METHOD_UNIT_UNSPECIFIED
 	}
-	unit := beerproto.IBUEstimateType_IBUMethodType_value[strings.ToUpper(string(*i))]
-	return beerproto.IBUEstimateType_IBUMethodType(unit)
+	unit := beerproto.IBUMethodUnit_value[strings.ToUpper(string(*i))]
+	return beerproto.IBUMethodUnit(unit)
 }
 
 func ToProtoRecipeStyleType(i *beerjson.RecipeStyleType) *beerproto.RecipeStyleType {
@@ -1335,7 +1328,7 @@ func ToProtoRecipeStyleType(i *beerjson.RecipeStyleType) *beerproto.RecipeStyleT
 
 func ToProtoRecipeStyleType_StyleCategories(i *beerjson.StyleCategories) beerproto.RecipeStyleType_StyleCategories {
 	if i == nil {
-		return beerproto.RecipeStyleType_NULL_STYLECATEGORIES
+		return beerproto.RecipeStyleType_STYLE_CATEGORIES_UNSPECIFIED
 	}
 
 	unit := beerproto.RecipeStyleType_StyleCategories_value[strings.ToUpper(string(*i))]
@@ -1365,9 +1358,9 @@ func ToProtoPercentType(i *beerjson.PercentType) *beerproto.PercentType {
 	}
 }
 
-func ToProtoPercentUnitType(i beerjson.PercentUnitType) beerproto.PercentType_PercentUnitType {
-	unit := beerproto.PercentType_PercentUnitType_value[strings.ToUpper(string(i))]
-	return beerproto.PercentType_PercentUnitType(unit)
+func ToProtoPercentUnitType(i beerjson.PercentUnitType) beerproto.PercentUnit {
+	unit := beerproto.PercentUnit_value[strings.ToUpper(string(i))]
+	return beerproto.PercentUnit(unit)
 }
 
 func ToProtoMashProcedureType(i *beerjson.MashProcedureType) *beerproto.MashProcedureType {
@@ -1423,9 +1416,9 @@ func ToProtoVolumeType(i *beerjson.VolumeType) *beerproto.VolumeType {
 	}
 }
 
-func ToProtoVolumeUnitType(i beerjson.VolumeUnitType) beerproto.VolumeType_VolumeUnitType {
-	unit := beerproto.VolumeType_VolumeUnitType_value[strings.ToUpper(string(i))]
-	return beerproto.VolumeType_VolumeUnitType(unit)
+func ToProtoVolumeUnitType(i beerjson.VolumeUnitType) beerproto.VolumeUnit {
+	unit := beerproto.VolumeUnit_value[strings.ToUpper(string(i))]
+	return beerproto.VolumeUnit(unit)
 }
 
 func ToProtoSpecificVolumeType(i *beerjson.SpecificVolumeType) *beerproto.SpecificVolumeType {
@@ -1443,34 +1436,34 @@ func ToProtoSpecificVolumeType(i *beerjson.SpecificVolumeType) *beerproto.Specif
 	}
 }
 
-func ToProtoSpecificVolumeUnitType(i beerjson.SpecificVolumeUnitType) beerproto.SpecificVolumeType_SpecificVolumeUnitType {
-	unit := beerproto.SpecificVolumeType_SpecificVolumeUnitType_value[strings.ToUpper(string(i))]
+func ToProtoSpecificVolumeUnitType(i beerjson.SpecificVolumeUnitType) beerproto.SpecificVolumeUnit {
+	unit := beerproto.SpecificVolumeUnit_value[strings.ToUpper(string(i))]
 
 	switch i {
 	case beerjson.SpecificVolumeUnitType_QtLb:
-		return beerproto.SpecificVolumeType_QTLB
+		return beerproto.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_QTLB
 	case beerjson.SpecificVolumeUnitType_GalLb:
-		return beerproto.SpecificVolumeType_GALLB
+		return beerproto.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_GALLB
 	case beerjson.SpecificVolumeUnitType_GalOz:
-		return beerproto.SpecificVolumeType_GALOZ
+		return beerproto.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_GALOZ
 	case beerjson.SpecificVolumeUnitType_LG:
-		return beerproto.SpecificVolumeType_LG
+		return beerproto.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_LG
 	case beerjson.SpecificVolumeUnitType_LKg:
-		return beerproto.SpecificVolumeType_LKG
+		return beerproto.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_LKG
 	case beerjson.SpecificVolumeUnitType_FlozOz:
-		return beerproto.SpecificVolumeType_FLOZOZ
+		return beerproto.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_FLOZOZ
 	case beerjson.SpecificVolumeUnitType_M3Kg:
-		return beerproto.SpecificVolumeType_M3KG
+		return beerproto.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_M3KG
 	case beerjson.SpecificVolumeUnitType_Ft3Lb:
-		return beerproto.SpecificVolumeType_FT3LB
+		return beerproto.SpecificVolumeUnit_SPECIFIC_VOLUME_UNIT_FT3LB
 	}
 
-	return beerproto.SpecificVolumeType_SpecificVolumeUnitType(unit)
+	return beerproto.SpecificVolumeUnit(unit)
 }
 
-func ToProtoMashStepTypeType(i beerjson.MashStepTypeType) beerproto.MashStepType_MashStepTypeType {
-	unit := beerproto.MashStepType_MashStepTypeType_value[strings.ToUpper(string(i))]
-	return beerproto.MashStepType_MashStepTypeType(unit)
+func ToProtoMashStepTypeType(i beerjson.MashStepTypeType) beerproto.MashStepType_MashStepUnit {
+	unit := beerproto.MashStepType_MashStepUnit_value[strings.ToUpper(string(i))]
+	return beerproto.MashStepType_MashStepUnit(unit)
 }
 
 func ToProtoAcidityType(i *beerjson.AcidityType) *beerproto.AcidityType {
@@ -1488,9 +1481,9 @@ func ToProtoAcidityType(i *beerjson.AcidityType) *beerproto.AcidityType {
 	}
 }
 
-func ToProtoAcidityUnitType(i beerjson.AcidityUnitType) beerproto.AcidityUnitType {
-	unit := beerproto.AcidityUnitType_value[strings.ToUpper(string(i))]
-	return beerproto.AcidityUnitType(unit)
+func ToProtoAcidityUnitType(i beerjson.AcidityUnitType) beerproto.AcidityUnit {
+	unit := beerproto.AcidityUnit_value[strings.ToUpper(string(i))]
+	return beerproto.AcidityUnit(unit)
 }
 
 func ToProtoTimeType(i *beerjson.TimeType) *beerproto.TimeType {
@@ -1499,7 +1492,7 @@ func ToProtoTimeType(i *beerjson.TimeType) *beerproto.TimeType {
 	}
 
 	if i.Unit == "" {
-		return &beerproto.TimeType{	}
+		return &beerproto.TimeType{}
 	}
 
 	return &beerproto.TimeType{
@@ -1521,14 +1514,14 @@ func ToProtoTemperatureType(i *beerjson.TemperatureType) *beerproto.TemperatureT
 	}
 }
 
-func ToProtoTimeUnitType(i beerjson.TimeUnitType) beerproto.TimeType_TimeUnitType {
-	unit := beerproto.TimeType_TimeUnitType_value[strings.ToUpper(string(i))]
-	return beerproto.TimeType_TimeUnitType(unit)
+func ToProtoTimeUnitType(i beerjson.TimeUnitType) beerproto.TimeUnit {
+	unit := beerproto.TimeUnit_value[strings.ToUpper(string(i))]
+	return beerproto.TimeUnit(unit)
 }
 
-func ToProtoTemperatureUnitType(i beerjson.TemperatureUnitType) beerproto.TemperatureUnitType {
-	unit := beerproto.TemperatureUnitType_value[strings.ToUpper(string(i))]
-	return beerproto.TemperatureUnitType(unit)
+func ToProtoTemperatureUnitType(i beerjson.TemperatureUnitType) beerproto.TemperatureUnit {
+	unit := beerproto.TemperatureUnit_value[strings.ToUpper(string(i))]
+	return beerproto.TemperatureUnit(unit)
 }
 
 func UseString(s *string) string {
